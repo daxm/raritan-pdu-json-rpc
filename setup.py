@@ -1,21 +1,37 @@
 from setuptools import setup, find_packages
 
 
+__author__ = "Dax Mickelson"
+__author_email = "dmickels@cisco.com"
+__license__ = "BSD"
+
 setup(
-    name="pdu_python_api",
-    packages=find_packages(),
-    package_data={'raritan': ['resources/*']},
-    author='Neeba Chandy',
-    author_email='nechandy@cisco.com',
-    install_requires=[],
-    # the following makes a plugin available to pytest
-    # entry_points={
-    #
-    # },
-    url="http://d3b2us605ptvk2.cloudfront.net/download/px2/version-3.0.4/pdu-json-rpc-sdk-030004-41800.tgz",
-#    long_description=read('README.rst'),
-    # custom PyPI classifier for pytest plugins
+    name="raritan",
+    version="20210223.0",
+    description="SDK for interacting with Raritan PDU APIs.",
+    long_description="""SDK for interacting with Raritan PDU APIs.""",
+    url="https://github.com/daxm/raritan-pdu-json-rpc",
+    author=__author__,
+    author_email=__author_email,
+    license=__license__,
     classifiers=[
-        "Framework :: Pytest",
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Plugins",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Other Audience",
+        "License :: OSI Approved :: BSD License",
+        "Natural Language :: English",
+        "Operating System :: POSIX :: Linux",
+        "Operating System :: MacOS",
+        "Operating System :: Microsoft",
+        "Programming Language :: Python :: 3",
+        "Topic :: System :: Systems Administration",
+        "Topic :: Utilities",
     ],
+    keywords="raritan pdu",
+    packages=find_packages(exclude=["docs", "tests*"]),
+    install_requires=[],
+    python_requires=">=3.8",
+    package_data={'raritan': ['resources/*']},
+    data_files=None,
 )

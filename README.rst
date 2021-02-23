@@ -1,1 +1,0 @@
-Downloaded from https://www.raritan.com/support/product/px2/px2-version-3.0.4
