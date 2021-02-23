@@ -1,6 +1,6 @@
-echo "Building a new release of fmpsdk!"
+echo "Building a new release!"
 echo
-echo "Did you remember to run black???  e.g.  black fmpsdk --exclude \"venv|build\""
+echo "Did you remember to run black???  e.g.  black . --exclude \"venv|build\""
 read -p "(y/n): " -n 1 -r
 echo
 
@@ -17,7 +17,7 @@ then
         echo "Clean up old build"
         rm -Rf build
         rm -Rf dist
-        rm -Rf fmcapi.egg-info
+        rm -Rf raritan.egg-info
         echo
         echo "Make a new build"
         python3 setup.py bdist_wheel
