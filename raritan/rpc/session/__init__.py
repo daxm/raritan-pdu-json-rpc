@@ -6,16 +6,42 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.session
 
 
 # structure
 class Session(Structure):
     idlType = "session.Session:1.0.0"
-    elements = ["token", "username", "remoteIp", "clientType", "creationTime", "timeout", "idle", "userIdle"]
+    elements = [
+        "token",
+        "username",
+        "remoteIp",
+        "clientType",
+        "creationTime",
+        "timeout",
+        "idle",
+        "userIdle",
+    ]
 
-    def __init__(self, token, username, remoteIp, clientType, creationTime, timeout, idle, userIdle):
+    def __init__(
+        self,
+        token,
+        username,
+        remoteIp,
+        clientType,
+        creationTime,
+        timeout,
+        idle,
+        userIdle,
+    ):
         typecheck.is_string(token, AssertionError)
         typecheck.is_string(username, AssertionError)
         typecheck.is_string(remoteIp, AssertionError)
@@ -37,28 +63,29 @@ class Session(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            token = json['token'],
-            username = json['username'],
-            remoteIp = json['remoteIp'],
-            clientType = json['clientType'],
-            creationTime = raritan.rpc.Time.decode(json['creationTime']),
-            timeout = json['timeout'],
-            idle = json['idle'],
-            userIdle = json['userIdle'],
+            token=json["token"],
+            username=json["username"],
+            remoteIp=json["remoteIp"],
+            clientType=json["clientType"],
+            creationTime=raritan.rpc.Time.decode(json["creationTime"]),
+            timeout=json["timeout"],
+            idle=json["idle"],
+            userIdle=json["userIdle"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['token'] = self.token
-        json['username'] = self.username
-        json['remoteIp'] = self.remoteIp
-        json['clientType'] = self.clientType
-        json['creationTime'] = raritan.rpc.Time.encode(self.creationTime)
-        json['timeout'] = self.timeout
-        json['idle'] = self.idle
-        json['userIdle'] = self.userIdle
+        json["token"] = self.token
+        json["username"] = self.username
+        json["remoteIp"] = self.remoteIp
+        json["clientType"] = self.clientType
+        json["creationTime"] = raritan.rpc.Time.encode(self.creationTime)
+        json["timeout"] = self.timeout
+        json["idle"] = self.idle
+        json["userIdle"] = self.userIdle
         return json
+
 
 # structure
 class HistoryEntry(Structure):
@@ -77,18 +104,19 @@ class HistoryEntry(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            creationTime = raritan.rpc.Time.decode(json['creationTime']),
-            remoteIp = json['remoteIp'],
-            clientType = json['clientType'],
+            creationTime=raritan.rpc.Time.decode(json["creationTime"]),
+            remoteIp=json["remoteIp"],
+            clientType=json["clientType"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['creationTime'] = raritan.rpc.Time.encode(self.creationTime)
-        json['remoteIp'] = self.remoteIp
-        json['clientType'] = self.clientType
+        json["creationTime"] = raritan.rpc.Time.encode(self.creationTime)
+        json["remoteIp"] = self.remoteIp
+        json["clientType"] = self.clientType
         return json
+
 
 # interface
 class SessionManager(Interface):
@@ -99,7 +127,12 @@ class SessionManager(Interface):
     # enumeration
     class CloseReason(Enumeration):
         idlType = "session.SessionManager.CloseReason:1.0.0"
-        values = ["CLOSE_REASON_LOGOUT", "CLOSE_REASON_TIMEOUT", "CLOSE_REASON_BROWSER_CLOSED", "CLOSE_REASON_FORCED_DISCONNECT"]
+        values = [
+            "CLOSE_REASON_LOGOUT",
+            "CLOSE_REASON_TIMEOUT",
+            "CLOSE_REASON_BROWSER_CLOSED",
+            "CLOSE_REASON_FORCED_DISCONNECT",
+        ]
 
     CloseReason.CLOSE_REASON_LOGOUT = CloseReason(0)
     CloseReason.CLOSE_REASON_TIMEOUT = CloseReason(1)
@@ -109,9 +142,9 @@ class SessionManager(Interface):
     def newSession(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'newSession', args)
-        _ret_ = rsp['_ret_']
-        session = raritan.rpc.session.Session.decode(rsp['session'], agent)
+        rsp = agent.json_rpc(self.target, "newSession", args)
+        _ret_ = rsp["_ret_"]
+        session = raritan.rpc.session.Session.decode(rsp["session"], agent)
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_struct(session, raritan.rpc.session.Session, DecodeException)
         return (_ret_, session)
@@ -120,25 +153,25 @@ class SessionManager(Interface):
         agent = self.agent
         typecheck.is_string(token, AssertionError)
         args = {}
-        args['token'] = token
-        rsp = agent.json_rpc(self.target, 'getSession', args)
-        _ret_ = raritan.rpc.session.Session.decode(rsp['_ret_'], agent)
+        args["token"] = token
+        rsp = agent.json_rpc(self.target, "getSession", args)
+        _ret_ = raritan.rpc.session.Session.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.session.Session, DecodeException)
         return _ret_
 
     def getCurrentSession(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getCurrentSession', args)
-        _ret_ = raritan.rpc.session.Session.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getCurrentSession", args)
+        _ret_ = raritan.rpc.session.Session.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.session.Session, DecodeException)
         return _ret_
 
     def getSessions(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSessions', args)
-        _ret_ = [raritan.rpc.session.Session.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getSessions", args)
+        _ret_ = [raritan.rpc.session.Session.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_struct(x0, raritan.rpc.session.Session, DecodeException)
         return _ret_
@@ -146,38 +179,44 @@ class SessionManager(Interface):
     def closeSession(self, token, reason):
         agent = self.agent
         typecheck.is_string(token, AssertionError)
-        typecheck.is_enum(reason, raritan.rpc.session.SessionManager.CloseReason, AssertionError)
+        typecheck.is_enum(
+            reason, raritan.rpc.session.SessionManager.CloseReason, AssertionError
+        )
         args = {}
-        args['token'] = token
-        args['reason'] = raritan.rpc.session.SessionManager.CloseReason.encode(reason)
-        rsp = agent.json_rpc(self.target, 'closeSession', args)
+        args["token"] = token
+        args["reason"] = raritan.rpc.session.SessionManager.CloseReason.encode(reason)
+        rsp = agent.json_rpc(self.target, "closeSession", args)
 
     def closeCurrentSession(self, reason):
         agent = self.agent
-        typecheck.is_enum(reason, raritan.rpc.session.SessionManager.CloseReason, AssertionError)
+        typecheck.is_enum(
+            reason, raritan.rpc.session.SessionManager.CloseReason, AssertionError
+        )
         args = {}
-        args['reason'] = raritan.rpc.session.SessionManager.CloseReason.encode(reason)
-        rsp = agent.json_rpc(self.target, 'closeCurrentSession', args)
+        args["reason"] = raritan.rpc.session.SessionManager.CloseReason.encode(reason)
+        rsp = agent.json_rpc(self.target, "closeCurrentSession", args)
 
     def touchSession(self, token):
         agent = self.agent
         typecheck.is_string(token, AssertionError)
         args = {}
-        args['token'] = token
-        rsp = agent.json_rpc(self.target, 'touchSession', args)
+        args["token"] = token
+        rsp = agent.json_rpc(self.target, "touchSession", args)
 
     def touchCurrentSession(self, userActivity):
         agent = self.agent
         typecheck.is_bool(userActivity, AssertionError)
         args = {}
-        args['userActivity'] = userActivity
-        rsp = agent.json_rpc(self.target, 'touchCurrentSession', args)
+        args["userActivity"] = userActivity
+        rsp = agent.json_rpc(self.target, "touchCurrentSession", args)
 
     def getSessionHistory(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSessionHistory', args)
-        _ret_ = [raritan.rpc.session.HistoryEntry.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getSessionHistory", args)
+        _ret_ = [
+            raritan.rpc.session.HistoryEntry.decode(x0, agent) for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
             typecheck.is_struct(x0, raritan.rpc.session.HistoryEntry, DecodeException)
         return _ret_

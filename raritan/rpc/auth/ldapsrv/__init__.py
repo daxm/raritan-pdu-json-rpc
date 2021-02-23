@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.auth.ldapsrv
 
 
@@ -15,15 +22,55 @@ class ServerType(Enumeration):
     idlType = "auth.ldapsrv.ServerType:1.0.0"
     values = ["ACTIVE_DIRECTORY", "OPEN_LDAP"]
 
+
 ServerType.ACTIVE_DIRECTORY = ServerType(0)
 ServerType.OPEN_LDAP = ServerType(1)
 
 # structure
 class ServerSettings(Structure):
     idlType = "auth.ldapsrv.ServerSettings:1.0.0"
-    elements = ["id", "primaryServer", "secondaryServer", "adoptSettingsId", "type", "port", "sslPort", "useSSL", "forceTrustedCert", "certificate", "adsDomain", "useAnonymousBind", "bindDN", "bindPwd", "searchBaseDN", "loginNameAttr", "userEntryObjClass", "userSearchFilter"]
+    elements = [
+        "id",
+        "primaryServer",
+        "secondaryServer",
+        "adoptSettingsId",
+        "type",
+        "port",
+        "sslPort",
+        "useSSL",
+        "forceTrustedCert",
+        "certificate",
+        "adsDomain",
+        "useAnonymousBind",
+        "bindDN",
+        "bindPwd",
+        "searchBaseDN",
+        "loginNameAttr",
+        "userEntryObjClass",
+        "userSearchFilter",
+    ]
 
-    def __init__(self, id, primaryServer, secondaryServer, adoptSettingsId, type, port, sslPort, useSSL, forceTrustedCert, certificate, adsDomain, useAnonymousBind, bindDN, bindPwd, searchBaseDN, loginNameAttr, userEntryObjClass, userSearchFilter):
+    def __init__(
+        self,
+        id,
+        primaryServer,
+        secondaryServer,
+        adoptSettingsId,
+        type,
+        port,
+        sslPort,
+        useSSL,
+        forceTrustedCert,
+        certificate,
+        adsDomain,
+        useAnonymousBind,
+        bindDN,
+        bindPwd,
+        searchBaseDN,
+        loginNameAttr,
+        userEntryObjClass,
+        userSearchFilter,
+    ):
         typecheck.is_string(id, AssertionError)
         typecheck.is_string(primaryServer, AssertionError)
         typecheck.is_string(secondaryServer, AssertionError)
@@ -65,45 +112,45 @@ class ServerSettings(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            id = json['id'],
-            primaryServer = json['primaryServer'],
-            secondaryServer = json['secondaryServer'],
-            adoptSettingsId = json['adoptSettingsId'],
-            type = raritan.rpc.auth.ldapsrv.ServerType.decode(json['type']),
-            port = json['port'],
-            sslPort = json['sslPort'],
-            useSSL = json['useSSL'],
-            forceTrustedCert = json['forceTrustedCert'],
-            certificate = json['certificate'],
-            adsDomain = json['adsDomain'],
-            useAnonymousBind = json['useAnonymousBind'],
-            bindDN = json['bindDN'],
-            bindPwd = json['bindPwd'],
-            searchBaseDN = json['searchBaseDN'],
-            loginNameAttr = json['loginNameAttr'],
-            userEntryObjClass = json['userEntryObjClass'],
-            userSearchFilter = json['userSearchFilter'],
+            id=json["id"],
+            primaryServer=json["primaryServer"],
+            secondaryServer=json["secondaryServer"],
+            adoptSettingsId=json["adoptSettingsId"],
+            type=raritan.rpc.auth.ldapsrv.ServerType.decode(json["type"]),
+            port=json["port"],
+            sslPort=json["sslPort"],
+            useSSL=json["useSSL"],
+            forceTrustedCert=json["forceTrustedCert"],
+            certificate=json["certificate"],
+            adsDomain=json["adsDomain"],
+            useAnonymousBind=json["useAnonymousBind"],
+            bindDN=json["bindDN"],
+            bindPwd=json["bindPwd"],
+            searchBaseDN=json["searchBaseDN"],
+            loginNameAttr=json["loginNameAttr"],
+            userEntryObjClass=json["userEntryObjClass"],
+            userSearchFilter=json["userSearchFilter"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['id'] = self.id
-        json['primaryServer'] = self.primaryServer
-        json['secondaryServer'] = self.secondaryServer
-        json['adoptSettingsId'] = self.adoptSettingsId
-        json['type'] = raritan.rpc.auth.ldapsrv.ServerType.encode(self.type)
-        json['port'] = self.port
-        json['sslPort'] = self.sslPort
-        json['useSSL'] = self.useSSL
-        json['forceTrustedCert'] = self.forceTrustedCert
-        json['certificate'] = self.certificate
-        json['adsDomain'] = self.adsDomain
-        json['useAnonymousBind'] = self.useAnonymousBind
-        json['bindDN'] = self.bindDN
-        json['bindPwd'] = self.bindPwd
-        json['searchBaseDN'] = self.searchBaseDN
-        json['loginNameAttr'] = self.loginNameAttr
-        json['userEntryObjClass'] = self.userEntryObjClass
-        json['userSearchFilter'] = self.userSearchFilter
+        json["id"] = self.id
+        json["primaryServer"] = self.primaryServer
+        json["secondaryServer"] = self.secondaryServer
+        json["adoptSettingsId"] = self.adoptSettingsId
+        json["type"] = raritan.rpc.auth.ldapsrv.ServerType.encode(self.type)
+        json["port"] = self.port
+        json["sslPort"] = self.sslPort
+        json["useSSL"] = self.useSSL
+        json["forceTrustedCert"] = self.forceTrustedCert
+        json["certificate"] = self.certificate
+        json["adsDomain"] = self.adsDomain
+        json["useAnonymousBind"] = self.useAnonymousBind
+        json["bindDN"] = self.bindDN
+        json["bindPwd"] = self.bindPwd
+        json["searchBaseDN"] = self.searchBaseDN
+        json["loginNameAttr"] = self.loginNameAttr
+        json["userEntryObjClass"] = self.userEntryObjClass
+        json["userSearchFilter"] = self.userSearchFilter
         return json

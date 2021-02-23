@@ -1,5 +1,3 @@
-
-
 import time, calendar
 from datetime import datetime
 
@@ -16,8 +14,8 @@ class Time(datetime):
         return Time.utcfromtimestamp(json)
 
     def encode(self):
-        timestamp = calendar.timegm(self.utctimetuple()) 
+        timestamp = calendar.timegm(self.utctimetuple())
         return timestamp
 
     def __str__(self):
-        return self.isoformat(' ') + " (UTC)"
+        return self.isoformat(" ") + " (UTC)"

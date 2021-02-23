@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.radius
 
 
@@ -15,15 +22,35 @@ class AuthType(Enumeration):
     idlType = "radius.AuthType:1.0.0"
     values = ["PAP", "CHAP"]
 
+
 AuthType.PAP = AuthType(0)
 AuthType.CHAP = AuthType(1)
 
 # structure
 class ServerSettings(Structure):
     idlType = "radius.ServerSettings:1.0.0"
-    elements = ["id", "server", "sharedSecret", "udpAuthPort", "udpAccountPort", "timeout", "retries", "authType"]
+    elements = [
+        "id",
+        "server",
+        "sharedSecret",
+        "udpAuthPort",
+        "udpAccountPort",
+        "timeout",
+        "retries",
+        "authType",
+    ]
 
-    def __init__(self, id, server, sharedSecret, udpAuthPort, udpAccountPort, timeout, retries, authType):
+    def __init__(
+        self,
+        id,
+        server,
+        sharedSecret,
+        udpAuthPort,
+        udpAccountPort,
+        timeout,
+        retries,
+        authType,
+    ):
         typecheck.is_string(id, AssertionError)
         typecheck.is_string(server, AssertionError)
         typecheck.is_string(sharedSecret, AssertionError)
@@ -45,25 +72,25 @@ class ServerSettings(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            id = json['id'],
-            server = json['server'],
-            sharedSecret = json['sharedSecret'],
-            udpAuthPort = json['udpAuthPort'],
-            udpAccountPort = json['udpAccountPort'],
-            timeout = json['timeout'],
-            retries = json['retries'],
-            authType = raritan.rpc.radius.AuthType.decode(json['authType']),
+            id=json["id"],
+            server=json["server"],
+            sharedSecret=json["sharedSecret"],
+            udpAuthPort=json["udpAuthPort"],
+            udpAccountPort=json["udpAccountPort"],
+            timeout=json["timeout"],
+            retries=json["retries"],
+            authType=raritan.rpc.radius.AuthType.decode(json["authType"]),
         )
         return obj
 
     def encode(self):
         json = {}
-        json['id'] = self.id
-        json['server'] = self.server
-        json['sharedSecret'] = self.sharedSecret
-        json['udpAuthPort'] = self.udpAuthPort
-        json['udpAccountPort'] = self.udpAccountPort
-        json['timeout'] = self.timeout
-        json['retries'] = self.retries
-        json['authType'] = raritan.rpc.radius.AuthType.encode(self.authType)
+        json["id"] = self.id
+        json["server"] = self.server
+        json["sharedSecret"] = self.sharedSecret
+        json["udpAuthPort"] = self.udpAuthPort
+        json["udpAccountPort"] = self.udpAccountPort
+        json["timeout"] = self.timeout
+        json["retries"] = self.retries
+        json["authType"] = raritan.rpc.radius.AuthType.encode(self.authType)
         return json

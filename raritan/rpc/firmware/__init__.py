@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.firmware
 
 
@@ -14,6 +21,7 @@ import raritan.rpc.firmware
 class UpdateHistoryStatus(Enumeration):
     idlType = "firmware.UpdateHistoryStatus:1.0.0"
     values = ["SUCCESSFUL", "FAILED", "INCOMPLETE"]
+
 
 UpdateHistoryStatus.SUCCESSFUL = UpdateHistoryStatus(0)
 UpdateHistoryStatus.FAILED = UpdateHistoryStatus(1)
@@ -29,7 +37,9 @@ class UpdateHistoryEntry(Structure):
         typecheck.is_string(oldVersion, AssertionError)
         typecheck.is_string(imageVersion, AssertionError)
         typecheck.is_string(imageMD5, AssertionError)
-        typecheck.is_enum(status, raritan.rpc.firmware.UpdateHistoryStatus, AssertionError)
+        typecheck.is_enum(
+            status, raritan.rpc.firmware.UpdateHistoryStatus, AssertionError
+        )
 
         self.timestamp = timestamp
         self.oldVersion = oldVersion
@@ -40,27 +50,36 @@ class UpdateHistoryEntry(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            timestamp = raritan.rpc.Time.decode(json['timestamp']),
-            oldVersion = json['oldVersion'],
-            imageVersion = json['imageVersion'],
-            imageMD5 = json['imageMD5'],
-            status = raritan.rpc.firmware.UpdateHistoryStatus.decode(json['status']),
+            timestamp=raritan.rpc.Time.decode(json["timestamp"]),
+            oldVersion=json["oldVersion"],
+            imageVersion=json["imageVersion"],
+            imageMD5=json["imageMD5"],
+            status=raritan.rpc.firmware.UpdateHistoryStatus.decode(json["status"]),
         )
         return obj
 
     def encode(self):
         json = {}
-        json['timestamp'] = raritan.rpc.Time.encode(self.timestamp)
-        json['oldVersion'] = self.oldVersion
-        json['imageVersion'] = self.imageVersion
-        json['imageMD5'] = self.imageMD5
-        json['status'] = raritan.rpc.firmware.UpdateHistoryStatus.encode(self.status)
+        json["timestamp"] = raritan.rpc.Time.encode(self.timestamp)
+        json["oldVersion"] = self.oldVersion
+        json["imageVersion"] = self.imageVersion
+        json["imageMD5"] = self.imageMD5
+        json["status"] = raritan.rpc.firmware.UpdateHistoryStatus.encode(self.status)
         return json
+
 
 # enumeration
 class ImageState(Enumeration):
     idlType = "firmware.ImageState:1.0.0"
-    values = ["NONE", "UPLOADING", "UPLOAD_FAILED", "DOWNLOADING", "DOWNLOAD_FAILED", "COMPLETE"]
+    values = [
+        "NONE",
+        "UPLOADING",
+        "UPLOAD_FAILED",
+        "DOWNLOADING",
+        "DOWNLOAD_FAILED",
+        "COMPLETE",
+    ]
+
 
 ImageState.NONE = ImageState(0)
 ImageState.UPLOADING = ImageState(1)
@@ -90,29 +109,67 @@ class ImageStatus(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            state = raritan.rpc.firmware.ImageState.decode(json['state']),
-            error_message = json['error_message'],
-            time_started = raritan.rpc.Time.decode(json['time_started']),
-            size_total = json['size_total'],
-            size_done = json['size_done'],
+            state=raritan.rpc.firmware.ImageState.decode(json["state"]),
+            error_message=json["error_message"],
+            time_started=raritan.rpc.Time.decode(json["time_started"]),
+            size_total=json["size_total"],
+            size_done=json["size_done"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['state'] = raritan.rpc.firmware.ImageState.encode(self.state)
-        json['error_message'] = self.error_message
-        json['time_started'] = raritan.rpc.Time.encode(self.time_started)
-        json['size_total'] = self.size_total
-        json['size_done'] = self.size_done
+        json["state"] = raritan.rpc.firmware.ImageState.encode(self.state)
+        json["error_message"] = self.error_message
+        json["time_started"] = raritan.rpc.Time.encode(self.time_started)
+        json["size_total"] = self.size_total
+        json["size_done"] = self.size_done
         return json
+
 
 # structure
 class ImageInfo(Structure):
     idlType = "firmware.ImageInfo:1.0.1"
-    elements = ["valid", "version", "min_required_version", "min_downgrade_version", "product", "platform", "oem", "hwid_whitelist", "hwid_blacklist", "compatible", "signature_present", "signed_by", "signature_good", "certified_by", "certificate_good", "model_list_present", "model_supported"]
+    elements = [
+        "valid",
+        "version",
+        "min_required_version",
+        "min_downgrade_version",
+        "product",
+        "platform",
+        "oem",
+        "hwid_whitelist",
+        "hwid_blacklist",
+        "compatible",
+        "signature_present",
+        "signed_by",
+        "signature_good",
+        "certified_by",
+        "certificate_good",
+        "model_list_present",
+        "model_supported",
+    ]
 
-    def __init__(self, valid, version, min_required_version, min_downgrade_version, product, platform, oem, hwid_whitelist, hwid_blacklist, compatible, signature_present, signed_by, signature_good, certified_by, certificate_good, model_list_present, model_supported):
+    def __init__(
+        self,
+        valid,
+        version,
+        min_required_version,
+        min_downgrade_version,
+        product,
+        platform,
+        oem,
+        hwid_whitelist,
+        hwid_blacklist,
+        compatible,
+        signature_present,
+        signed_by,
+        signature_good,
+        certified_by,
+        certificate_good,
+        model_list_present,
+        model_supported,
+    ):
         typecheck.is_bool(valid, AssertionError)
         typecheck.is_string(version, AssertionError)
         typecheck.is_string(min_required_version, AssertionError)
@@ -152,51 +209,53 @@ class ImageInfo(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            valid = json['valid'],
-            version = json['version'],
-            min_required_version = json['min_required_version'],
-            min_downgrade_version = json['min_downgrade_version'],
-            product = json['product'],
-            platform = json['platform'],
-            oem = json['oem'],
-            hwid_whitelist = json['hwid_whitelist'],
-            hwid_blacklist = json['hwid_blacklist'],
-            compatible = json['compatible'],
-            signature_present = json['signature_present'],
-            signed_by = json['signed_by'],
-            signature_good = json['signature_good'],
-            certified_by = json['certified_by'],
-            certificate_good = json['certificate_good'],
-            model_list_present = json['model_list_present'],
-            model_supported = json['model_supported'],
+            valid=json["valid"],
+            version=json["version"],
+            min_required_version=json["min_required_version"],
+            min_downgrade_version=json["min_downgrade_version"],
+            product=json["product"],
+            platform=json["platform"],
+            oem=json["oem"],
+            hwid_whitelist=json["hwid_whitelist"],
+            hwid_blacklist=json["hwid_blacklist"],
+            compatible=json["compatible"],
+            signature_present=json["signature_present"],
+            signed_by=json["signed_by"],
+            signature_good=json["signature_good"],
+            certified_by=json["certified_by"],
+            certificate_good=json["certificate_good"],
+            model_list_present=json["model_list_present"],
+            model_supported=json["model_supported"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['valid'] = self.valid
-        json['version'] = self.version
-        json['min_required_version'] = self.min_required_version
-        json['min_downgrade_version'] = self.min_downgrade_version
-        json['product'] = self.product
-        json['platform'] = self.platform
-        json['oem'] = self.oem
-        json['hwid_whitelist'] = self.hwid_whitelist
-        json['hwid_blacklist'] = self.hwid_blacklist
-        json['compatible'] = self.compatible
-        json['signature_present'] = self.signature_present
-        json['signed_by'] = self.signed_by
-        json['signature_good'] = self.signature_good
-        json['certified_by'] = self.certified_by
-        json['certificate_good'] = self.certificate_good
-        json['model_list_present'] = self.model_list_present
-        json['model_supported'] = self.model_supported
+        json["valid"] = self.valid
+        json["version"] = self.version
+        json["min_required_version"] = self.min_required_version
+        json["min_downgrade_version"] = self.min_downgrade_version
+        json["product"] = self.product
+        json["platform"] = self.platform
+        json["oem"] = self.oem
+        json["hwid_whitelist"] = self.hwid_whitelist
+        json["hwid_blacklist"] = self.hwid_blacklist
+        json["compatible"] = self.compatible
+        json["signature_present"] = self.signature_present
+        json["signed_by"] = self.signed_by
+        json["signature_good"] = self.signature_good
+        json["certified_by"] = self.certified_by
+        json["certificate_good"] = self.certificate_good
+        json["model_list_present"] = self.model_list_present
+        json["model_supported"] = self.model_supported
         return json
+
 
 # enumeration
 class UpdateFlags(Enumeration):
     idlType = "firmware.UpdateFlags:1.0.0"
     values = ["CROSS_OEM", "CROSS_HW", "ALLOW_UNTRUSTED"]
+
 
 UpdateFlags.CROSS_OEM = UpdateFlags(0)
 UpdateFlags.CROSS_HW = UpdateFlags(1)
@@ -209,39 +268,44 @@ class Firmware(Interface):
     def reboot(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'reboot', args)
+        rsp = agent.json_rpc(self.target, "reboot", args)
 
     def factoryReset(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'factoryReset', args)
+        rsp = agent.json_rpc(self.target, "factoryReset", args)
 
     def getVersion(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getVersion', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "getVersion", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_string(_ret_, DecodeException)
         return _ret_
 
     def getUpdateHistory(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getUpdateHistory', args)
-        _ret_ = [raritan.rpc.firmware.UpdateHistoryEntry.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getUpdateHistory", args)
+        _ret_ = [
+            raritan.rpc.firmware.UpdateHistoryEntry.decode(x0, agent)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.firmware.UpdateHistoryEntry, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.firmware.UpdateHistoryEntry, DecodeException
+            )
         return _ret_
 
     def updateAvailable(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'updateAvailable', args)
-        _ret_ = rsp['_ret_']
-        failedCheck = rsp['failedCheck']
-        lastChecked = raritan.rpc.Time.decode(rsp['lastChecked'])
-        version = rsp['version']
-        url = rsp['url']
+        rsp = agent.json_rpc(self.target, "updateAvailable", args)
+        _ret_ = rsp["_ret_"]
+        failedCheck = rsp["failedCheck"]
+        lastChecked = raritan.rpc.Time.decode(rsp["lastChecked"])
+        version = rsp["version"]
+        url = rsp["url"]
         typecheck.is_bool(_ret_, DecodeException)
         typecheck.is_bool(failedCheck, DecodeException)
         typecheck.is_time(lastChecked, DecodeException)
@@ -253,56 +317,56 @@ class Firmware(Interface):
         agent = self.agent
         typecheck.is_bool(enable, AssertionError)
         args = {}
-        args['enable'] = enable
-        rsp = agent.json_rpc(self.target, 'enableOnlineCheck', args)
+        args["enable"] = enable
+        rsp = agent.json_rpc(self.target, "enableOnlineCheck", args)
 
     def onlineCheckEnabled(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'onlineCheckEnabled', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "onlineCheckEnabled", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_bool(_ret_, DecodeException)
         return _ret_
 
     def performOnlineCheck(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'performOnlineCheck', args)
+        rsp = agent.json_rpc(self.target, "performOnlineCheck", args)
 
     def downloadImage(self, url):
         agent = self.agent
         typecheck.is_string(url, AssertionError)
         args = {}
-        args['url'] = url
-        rsp = agent.json_rpc(self.target, 'downloadImage', args)
-        _ret_ = rsp['_ret_']
+        args["url"] = url
+        rsp = agent.json_rpc(self.target, "downloadImage", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_bool(_ret_, DecodeException)
         return _ret_
 
     def cancelDownload(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'cancelDownload', args)
+        rsp = agent.json_rpc(self.target, "cancelDownload", args)
 
     def getImageStatus(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getImageStatus', args)
-        _ret_ = raritan.rpc.firmware.ImageStatus.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getImageStatus", args)
+        _ret_ = raritan.rpc.firmware.ImageStatus.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.firmware.ImageStatus, DecodeException)
         return _ret_
 
     def discardImage(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'discardImage', args)
+        rsp = agent.json_rpc(self.target, "discardImage", args)
 
     def getImageInfo(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getImageInfo', args)
-        _ret_ = rsp['_ret_']
-        info = raritan.rpc.firmware.ImageInfo.decode(rsp['info'], agent)
+        rsp = agent.json_rpc(self.target, "getImageInfo", args)
+        _ret_ = rsp["_ret_"]
+        info = raritan.rpc.firmware.ImageInfo.decode(rsp["info"], agent)
         typecheck.is_bool(_ret_, DecodeException)
         typecheck.is_struct(info, raritan.rpc.firmware.ImageInfo, DecodeException)
         return (_ret_, info)
@@ -312,8 +376,10 @@ class Firmware(Interface):
         for x0 in flags:
             typecheck.is_enum(x0, raritan.rpc.firmware.UpdateFlags, AssertionError)
         args = {}
-        args['flags'] = [raritan.rpc.firmware.UpdateFlags.encode(x0) for x0 in flags]
-        rsp = agent.json_rpc(self.target, 'startUpdate', args)
+        args["flags"] = [raritan.rpc.firmware.UpdateFlags.encode(x0) for x0 in flags]
+        rsp = agent.json_rpc(self.target, "startUpdate", args)
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -322,7 +388,14 @@ class Firmware(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.firmware
 
 
@@ -345,20 +418,21 @@ class UpdateStatus(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            state = json['state'],
-            elapsed = json['elapsed'],
-            estimated = json['estimated'],
-            error_message = json['error_message'],
+            state=json["state"],
+            elapsed=json["elapsed"],
+            estimated=json["estimated"],
+            error_message=json["error_message"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['state'] = self.state
-        json['elapsed'] = self.elapsed
-        json['estimated'] = self.estimated
-        json['error_message'] = self.error_message
+        json["state"] = self.state
+        json["elapsed"] = self.elapsed
+        json["estimated"] = self.estimated
+        json["error_message"] = self.error_message
         return json
+
 
 # interface
 class FirmwareUpdateStatus(Interface):
@@ -367,7 +441,7 @@ class FirmwareUpdateStatus(Interface):
     def getStatus(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getStatus', args)
-        _ret_ = raritan.rpc.firmware.UpdateStatus.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getStatus", args)
+        _ret_ = raritan.rpc.firmware.UpdateStatus.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.firmware.UpdateStatus, DecodeException)
         return _ret_

@@ -7,12 +7,12 @@ import re
 # TODO: generate prefix from "base-package" in config
 prefix = "raritan.rpc"
 
-class TypeInfo(object):
 
+class TypeInfo(object):
     @staticmethod
     def typeBaseName(typeId):
-        b = typeId.split(":")[0] # remove version
-        b = re.sub(r'_[0-9]*_[0-9]*_[0-9]*', r'', b) # remove version
+        b = typeId.split(":")[0]  # remove version
+        b = re.sub(r"_[0-9]*_[0-9]*_[0-9]*", r"", b)  # remove version
         return b
 
     @classmethod
@@ -33,7 +33,7 @@ class TypeInfo(object):
                 comps.pop()
                 continue
             exec("cls = %s" % pyName, namespace)
-            return namespace['cls']
+            return namespace["cls"]
         raise ImportError("Unable to find package for %s." % typeId)
 
     @classmethod

@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.idl
 
 import raritan.rpc.serial
@@ -35,15 +42,15 @@ class AnalogModem(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                dialInEnabled = json['dialInEnabled'],
-                ringsUntilAnswer = json['ringsUntilAnswer'],
+                dialInEnabled=json["dialInEnabled"],
+                ringsUntilAnswer=json["ringsUntilAnswer"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['dialInEnabled'] = self.dialInEnabled
-            json['ringsUntilAnswer'] = self.ringsUntilAnswer
+            json["dialInEnabled"] = self.dialInEnabled
+            json["ringsUntilAnswer"] = self.ringsUntilAnswer
             return json
 
     # value object
@@ -58,21 +65,24 @@ class AnalogModem(Interface):
 
         def encode(self):
             json = super(raritan.rpc.serial.AnalogModem.DialInEvent, self).encode()
-            json['number'] = self.number
+            json["number"] = self.number
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                number = json['number'],
+                number=json["number"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["number"]
-            elements = elements + super(raritan.rpc.serial.AnalogModem.DialInEvent, self).listElements()
+            elements = (
+                elements
+                + super(raritan.rpc.serial.AnalogModem.DialInEvent, self).listElements()
+            )
             return elements
 
     # value object
@@ -80,25 +90,34 @@ class AnalogModem(Interface):
         idlType = "serial.AnalogModem.CallReceivedEvent:1.0.0"
 
         def __init__(self, number, source):
-            super(raritan.rpc.serial.AnalogModem.CallReceivedEvent, self).__init__(number, source)
+            super(raritan.rpc.serial.AnalogModem.CallReceivedEvent, self).__init__(
+                number, source
+            )
 
         def encode(self):
-            json = super(raritan.rpc.serial.AnalogModem.CallReceivedEvent, self).encode()
+            json = super(
+                raritan.rpc.serial.AnalogModem.CallReceivedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for serial.AnalogModem.DialInEvent
-                number = json['number'],
+                number=json["number"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.serial.AnalogModem.CallReceivedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.serial.AnalogModem.CallReceivedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -106,49 +125,62 @@ class AnalogModem(Interface):
         idlType = "serial.AnalogModem.CallEndedEvent:1.0.0"
 
         def __init__(self, disconnectedRemotely, number, source):
-            super(raritan.rpc.serial.AnalogModem.CallEndedEvent, self).__init__(number, source)
+            super(raritan.rpc.serial.AnalogModem.CallEndedEvent, self).__init__(
+                number, source
+            )
             typecheck.is_bool(disconnectedRemotely, AssertionError)
 
             self.disconnectedRemotely = disconnectedRemotely
 
         def encode(self):
             json = super(raritan.rpc.serial.AnalogModem.CallEndedEvent, self).encode()
-            json['disconnectedRemotely'] = self.disconnectedRemotely
+            json["disconnectedRemotely"] = self.disconnectedRemotely
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                disconnectedRemotely = json['disconnectedRemotely'],
+                disconnectedRemotely=json["disconnectedRemotely"],
                 # for serial.AnalogModem.DialInEvent
-                number = json['number'],
+                number=json["number"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["disconnectedRemotely"]
-            elements = elements + super(raritan.rpc.serial.AnalogModem.CallEndedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.serial.AnalogModem.CallEndedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSettings', args)
-        _ret_ = raritan.rpc.serial.AnalogModem.Settings.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.serial.AnalogModem.Settings, DecodeException)
+        rsp = agent.json_rpc(self.target, "getSettings", args)
+        _ret_ = raritan.rpc.serial.AnalogModem.Settings.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.serial.AnalogModem.Settings, DecodeException
+        )
         return _ret_
 
     def setSettings(self, settings):
         agent = self.agent
-        typecheck.is_struct(settings, raritan.rpc.serial.AnalogModem.Settings, AssertionError)
+        typecheck.is_struct(
+            settings, raritan.rpc.serial.AnalogModem.Settings, AssertionError
+        )
         args = {}
-        args['settings'] = raritan.rpc.serial.AnalogModem.Settings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.serial.AnalogModem.Settings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -157,7 +189,14 @@ class AnalogModem(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.idl
 
 import raritan.rpc.serial
@@ -208,23 +247,46 @@ class GsmModem(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                pin = json['pin'],
-                smsc = json['smsc'],
+                pin=json["pin"],
+                smsc=json["smsc"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['pin'] = self.pin
-            json['smsc'] = self.smsc
+            json["pin"] = self.pin
+            json["smsc"] = self.smsc
             return json
 
     # structure
     class Information(Structure):
         idlType = "serial.GsmModem.Information:1.0.0"
-        elements = ["imei", "imsi", "manufacturer", "model", "revision", "ownNumber", "simSmsc", "networkName", "serviceProviderName", "receptionLevel"]
+        elements = [
+            "imei",
+            "imsi",
+            "manufacturer",
+            "model",
+            "revision",
+            "ownNumber",
+            "simSmsc",
+            "networkName",
+            "serviceProviderName",
+            "receptionLevel",
+        ]
 
-        def __init__(self, imei, imsi, manufacturer, model, revision, ownNumber, simSmsc, networkName, serviceProviderName, receptionLevel):
+        def __init__(
+            self,
+            imei,
+            imsi,
+            manufacturer,
+            model,
+            revision,
+            ownNumber,
+            simSmsc,
+            networkName,
+            serviceProviderName,
+            receptionLevel,
+        ):
             typecheck.is_string(imei, AssertionError)
             typecheck.is_string(imsi, AssertionError)
             typecheck.is_string(manufacturer, AssertionError)
@@ -250,31 +312,31 @@ class GsmModem(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                imei = json['imei'],
-                imsi = json['imsi'],
-                manufacturer = json['manufacturer'],
-                model = json['model'],
-                revision = json['revision'],
-                ownNumber = json['ownNumber'],
-                simSmsc = json['simSmsc'],
-                networkName = json['networkName'],
-                serviceProviderName = json['serviceProviderName'],
-                receptionLevel = json['receptionLevel'],
+                imei=json["imei"],
+                imsi=json["imsi"],
+                manufacturer=json["manufacturer"],
+                model=json["model"],
+                revision=json["revision"],
+                ownNumber=json["ownNumber"],
+                simSmsc=json["simSmsc"],
+                networkName=json["networkName"],
+                serviceProviderName=json["serviceProviderName"],
+                receptionLevel=json["receptionLevel"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['imei'] = self.imei
-            json['imsi'] = self.imsi
-            json['manufacturer'] = self.manufacturer
-            json['model'] = self.model
-            json['revision'] = self.revision
-            json['ownNumber'] = self.ownNumber
-            json['simSmsc'] = self.simSmsc
-            json['networkName'] = self.networkName
-            json['serviceProviderName'] = self.serviceProviderName
-            json['receptionLevel'] = self.receptionLevel
+            json["imei"] = self.imei
+            json["imsi"] = self.imsi
+            json["manufacturer"] = self.manufacturer
+            json["model"] = self.model
+            json["revision"] = self.revision
+            json["ownNumber"] = self.ownNumber
+            json["simSmsc"] = self.simSmsc
+            json["networkName"] = self.networkName
+            json["serviceProviderName"] = self.serviceProviderName
+            json["receptionLevel"] = self.receptionLevel
             return json
 
     # value object
@@ -282,28 +344,45 @@ class GsmModem(Interface):
         idlType = "serial.GsmModem.SimSecurityStatusChangedEvent:1.0.0"
 
         def __init__(self, newSimStatus, source):
-            super(raritan.rpc.serial.GsmModem.SimSecurityStatusChangedEvent, self).__init__(source)
-            typecheck.is_enum(newSimStatus, raritan.rpc.serial.GsmModem.SimSecurityStatus, AssertionError)
+            super(
+                raritan.rpc.serial.GsmModem.SimSecurityStatusChangedEvent, self
+            ).__init__(source)
+            typecheck.is_enum(
+                newSimStatus,
+                raritan.rpc.serial.GsmModem.SimSecurityStatus,
+                AssertionError,
+            )
 
             self.newSimStatus = newSimStatus
 
         def encode(self):
-            json = super(raritan.rpc.serial.GsmModem.SimSecurityStatusChangedEvent, self).encode()
-            json['newSimStatus'] = raritan.rpc.serial.GsmModem.SimSecurityStatus.encode(self.newSimStatus)
+            json = super(
+                raritan.rpc.serial.GsmModem.SimSecurityStatusChangedEvent, self
+            ).encode()
+            json["newSimStatus"] = raritan.rpc.serial.GsmModem.SimSecurityStatus.encode(
+                self.newSimStatus
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                newSimStatus = raritan.rpc.serial.GsmModem.SimSecurityStatus.decode(json['newSimStatus']),
+                newSimStatus=raritan.rpc.serial.GsmModem.SimSecurityStatus.decode(
+                    json["newSimStatus"]
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["newSimStatus"]
-            elements = elements + super(raritan.rpc.serial.GsmModem.SimSecurityStatusChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.serial.GsmModem.SimSecurityStatusChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -318,38 +397,47 @@ class GsmModem(Interface):
 
         def encode(self):
             json = super(raritan.rpc.serial.GsmModem.SimPinUpdatedEvent, self).encode()
-            json['newPin'] = self.newPin
+            json["newPin"] = self.newPin
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                newPin = json['newPin'],
+                newPin=json["newPin"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["newPin"]
-            elements = elements + super(raritan.rpc.serial.GsmModem.SimPinUpdatedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.serial.GsmModem.SimPinUpdatedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSettings', args)
-        _ret_ = raritan.rpc.serial.GsmModem.Settings.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.serial.GsmModem.Settings, DecodeException)
+        rsp = agent.json_rpc(self.target, "getSettings", args)
+        _ret_ = raritan.rpc.serial.GsmModem.Settings.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.serial.GsmModem.Settings, DecodeException
+        )
         return _ret_
 
     def setSettings(self, settings):
         agent = self.agent
-        typecheck.is_struct(settings, raritan.rpc.serial.GsmModem.Settings, AssertionError)
+        typecheck.is_struct(
+            settings, raritan.rpc.serial.GsmModem.Settings, AssertionError
+        )
         args = {}
-        args['settings'] = raritan.rpc.serial.GsmModem.Settings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.serial.GsmModem.Settings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -358,55 +446,65 @@ class GsmModem(Interface):
         typecheck.is_string(recipient, AssertionError)
         typecheck.is_string(text, AssertionError)
         args = {}
-        args['recipient'] = recipient
-        args['text'] = text
-        rsp = agent.json_rpc(self.target, 'sendSms', args)
-        _ret_ = rsp['_ret_']
+        args["recipient"] = recipient
+        args["text"] = text
+        rsp = agent.json_rpc(self.target, "sendSms", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def sendTestSms(self, recipient, testSettings):
         agent = self.agent
         typecheck.is_string(recipient, AssertionError)
-        typecheck.is_struct(testSettings, raritan.rpc.serial.GsmModem.Settings, AssertionError)
+        typecheck.is_struct(
+            testSettings, raritan.rpc.serial.GsmModem.Settings, AssertionError
+        )
         args = {}
-        args['recipient'] = recipient
-        args['testSettings'] = raritan.rpc.serial.GsmModem.Settings.encode(testSettings)
-        rsp = agent.json_rpc(self.target, 'sendTestSms', args)
-        _ret_ = rsp['_ret_']
+        args["recipient"] = recipient
+        args["testSettings"] = raritan.rpc.serial.GsmModem.Settings.encode(testSettings)
+        rsp = agent.json_rpc(self.target, "sendTestSms", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getInformation(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getInformation', args)
-        _ret_ = rsp['_ret_']
-        info = raritan.rpc.serial.GsmModem.Information.decode(rsp['info'], agent)
+        rsp = agent.json_rpc(self.target, "getInformation", args)
+        _ret_ = rsp["_ret_"]
+        info = raritan.rpc.serial.GsmModem.Information.decode(rsp["info"], agent)
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_struct(info, raritan.rpc.serial.GsmModem.Information, DecodeException)
+        typecheck.is_struct(
+            info, raritan.rpc.serial.GsmModem.Information, DecodeException
+        )
         return (_ret_, info)
 
     def getInformationWithPin(self, pin):
         agent = self.agent
         typecheck.is_string(pin, AssertionError)
         args = {}
-        args['pin'] = pin
-        rsp = agent.json_rpc(self.target, 'getInformationWithPin', args)
-        _ret_ = rsp['_ret_']
-        info = raritan.rpc.serial.GsmModem.Information.decode(rsp['info'], agent)
+        args["pin"] = pin
+        rsp = agent.json_rpc(self.target, "getInformationWithPin", args)
+        _ret_ = rsp["_ret_"]
+        info = raritan.rpc.serial.GsmModem.Information.decode(rsp["info"], agent)
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_struct(info, raritan.rpc.serial.GsmModem.Information, DecodeException)
+        typecheck.is_struct(
+            info, raritan.rpc.serial.GsmModem.Information, DecodeException
+        )
         return (_ret_, info)
 
     def getSimSecurityStatus(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSimSecurityStatus', args)
-        _ret_ = rsp['_ret_']
-        simStatus = raritan.rpc.serial.GsmModem.SimSecurityStatus.decode(rsp['simStatus'])
+        rsp = agent.json_rpc(self.target, "getSimSecurityStatus", args)
+        _ret_ = rsp["_ret_"]
+        simStatus = raritan.rpc.serial.GsmModem.SimSecurityStatus.decode(
+            rsp["simStatus"]
+        )
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_enum(simStatus, raritan.rpc.serial.GsmModem.SimSecurityStatus, DecodeException)
+        typecheck.is_enum(
+            simStatus, raritan.rpc.serial.GsmModem.SimSecurityStatus, DecodeException
+        )
         return (_ret_, simStatus)
 
     def unlockSimCard(self, puk, newPin):
@@ -414,12 +512,14 @@ class GsmModem(Interface):
         typecheck.is_string(puk, AssertionError)
         typecheck.is_string(newPin, AssertionError)
         args = {}
-        args['puk'] = puk
-        args['newPin'] = newPin
-        rsp = agent.json_rpc(self.target, 'unlockSimCard', args)
-        _ret_ = rsp['_ret_']
+        args["puk"] = puk
+        args["newPin"] = newPin
+        rsp = agent.json_rpc(self.target, "unlockSimCard", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -428,7 +528,14 @@ class GsmModem(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.idl
 
 import raritan.rpc.serial
@@ -454,7 +561,16 @@ class SerialPort(Interface):
     # enumeration
     class BaudRate(Enumeration):
         idlType = "serial.SerialPort.BaudRate:1.0.0"
-        values = ["BR1200", "BR2400", "BR4800", "BR9600", "BR19200", "BR38400", "BR57600", "BR115200"]
+        values = [
+            "BR1200",
+            "BR2400",
+            "BR4800",
+            "BR9600",
+            "BR19200",
+            "BR38400",
+            "BR57600",
+            "BR115200",
+        ]
 
     BaudRate.BR1200 = BaudRate(0)
     BaudRate.BR2400 = BaudRate(1)
@@ -471,7 +587,9 @@ class SerialPort(Interface):
         elements = ["state", "deviceName"]
 
         def __init__(self, state, deviceName):
-            typecheck.is_enum(state, raritan.rpc.serial.SerialPort.PortState, AssertionError)
+            typecheck.is_enum(
+                state, raritan.rpc.serial.SerialPort.PortState, AssertionError
+            )
             typecheck.is_string(deviceName, AssertionError)
 
             self.state = state
@@ -480,15 +598,15 @@ class SerialPort(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                state = raritan.rpc.serial.SerialPort.PortState.decode(json['state']),
-                deviceName = json['deviceName'],
+                state=raritan.rpc.serial.SerialPort.PortState.decode(json["state"]),
+                deviceName=json["deviceName"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['state'] = raritan.rpc.serial.SerialPort.PortState.encode(self.state)
-            json['deviceName'] = self.deviceName
+            json["state"] = raritan.rpc.serial.SerialPort.PortState.encode(self.state)
+            json["deviceName"] = self.deviceName
             return json
 
     # structure
@@ -497,8 +615,12 @@ class SerialPort(Interface):
         elements = ["consoleBaudRate", "modemBaudRate"]
 
         def __init__(self, consoleBaudRate, modemBaudRate):
-            typecheck.is_enum(consoleBaudRate, raritan.rpc.serial.SerialPort.BaudRate, AssertionError)
-            typecheck.is_enum(modemBaudRate, raritan.rpc.serial.SerialPort.BaudRate, AssertionError)
+            typecheck.is_enum(
+                consoleBaudRate, raritan.rpc.serial.SerialPort.BaudRate, AssertionError
+            )
+            typecheck.is_enum(
+                modemBaudRate, raritan.rpc.serial.SerialPort.BaudRate, AssertionError
+            )
 
             self.consoleBaudRate = consoleBaudRate
             self.modemBaudRate = modemBaudRate
@@ -506,15 +628,23 @@ class SerialPort(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                consoleBaudRate = raritan.rpc.serial.SerialPort.BaudRate.decode(json['consoleBaudRate']),
-                modemBaudRate = raritan.rpc.serial.SerialPort.BaudRate.decode(json['modemBaudRate']),
+                consoleBaudRate=raritan.rpc.serial.SerialPort.BaudRate.decode(
+                    json["consoleBaudRate"]
+                ),
+                modemBaudRate=raritan.rpc.serial.SerialPort.BaudRate.decode(
+                    json["modemBaudRate"]
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['consoleBaudRate'] = raritan.rpc.serial.SerialPort.BaudRate.encode(self.consoleBaudRate)
-            json['modemBaudRate'] = raritan.rpc.serial.SerialPort.BaudRate.encode(self.modemBaudRate)
+            json["consoleBaudRate"] = raritan.rpc.serial.SerialPort.BaudRate.encode(
+                self.consoleBaudRate
+            )
+            json["modemBaudRate"] = raritan.rpc.serial.SerialPort.BaudRate.encode(
+                self.modemBaudRate
+            )
             return json
 
     # value object
@@ -529,21 +659,24 @@ class SerialPort(Interface):
 
         def encode(self):
             json = super(raritan.rpc.serial.SerialPort.ModemEvent, self).encode()
-            json['modem'] = Interface.encode(self.modem)
+            json["modem"] = Interface.encode(self.modem)
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                modem = Interface.decode(json['modem'], agent),
+                modem=Interface.decode(json["modem"], agent),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["modem"]
-            elements = elements + super(raritan.rpc.serial.SerialPort.ModemEvent, self).listElements()
+            elements = (
+                elements
+                + super(raritan.rpc.serial.SerialPort.ModemEvent, self).listElements()
+            )
             return elements
 
     # value object
@@ -551,7 +684,9 @@ class SerialPort(Interface):
         idlType = "serial.SerialPort.ModemAddedEvent:1.0.0"
 
         def __init__(self, modem, source):
-            super(raritan.rpc.serial.SerialPort.ModemAddedEvent, self).__init__(modem, source)
+            super(raritan.rpc.serial.SerialPort.ModemAddedEvent, self).__init__(
+                modem, source
+            )
 
         def encode(self):
             json = super(raritan.rpc.serial.SerialPort.ModemAddedEvent, self).encode()
@@ -561,15 +696,20 @@ class SerialPort(Interface):
         def decode(cls, json, agent):
             obj = cls(
                 # for serial.SerialPort_2_0_0.ModemEvent
-                modem = Interface.decode(json['modem'], agent),
+                modem=Interface.decode(json["modem"], agent),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.serial.SerialPort.ModemAddedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.serial.SerialPort.ModemAddedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -577,7 +717,9 @@ class SerialPort(Interface):
         idlType = "serial.SerialPort.ModemRemovedEvent:1.0.0"
 
         def __init__(self, modem, source):
-            super(raritan.rpc.serial.SerialPort.ModemRemovedEvent, self).__init__(modem, source)
+            super(raritan.rpc.serial.SerialPort.ModemRemovedEvent, self).__init__(
+                modem, source
+            )
 
         def encode(self):
             json = super(raritan.rpc.serial.SerialPort.ModemRemovedEvent, self).encode()
@@ -587,50 +729,61 @@ class SerialPort(Interface):
         def decode(cls, json, agent):
             obj = cls(
                 # for serial.SerialPort_2_0_0.ModemEvent
-                modem = Interface.decode(json['modem'], agent),
+                modem=Interface.decode(json["modem"], agent),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.serial.SerialPort.ModemRemovedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.serial.SerialPort.ModemRemovedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSettings', args)
-        _ret_ = raritan.rpc.serial.SerialPort.Settings.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.serial.SerialPort.Settings, DecodeException)
+        rsp = agent.json_rpc(self.target, "getSettings", args)
+        _ret_ = raritan.rpc.serial.SerialPort.Settings.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.serial.SerialPort.Settings, DecodeException
+        )
         return _ret_
 
     def setSettings(self, settings):
         agent = self.agent
-        typecheck.is_struct(settings, raritan.rpc.serial.SerialPort.Settings, AssertionError)
+        typecheck.is_struct(
+            settings, raritan.rpc.serial.SerialPort.Settings, AssertionError
+        )
         args = {}
-        args['settings'] = raritan.rpc.serial.SerialPort.Settings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.serial.SerialPort.Settings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getState(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getState', args)
-        _ret_ = raritan.rpc.serial.SerialPort.State.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getState", args)
+        _ret_ = raritan.rpc.serial.SerialPort.State.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.serial.SerialPort.State, DecodeException)
         return _ret_
 
     def getModem(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getModem', args)
-        _ret_ = Interface.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getModem", args)
+        _ret_ = Interface.decode(rsp["_ret_"], agent)
         typecheck.is_remote_obj(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -639,7 +792,14 @@ class SerialPort(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 
 # interface
 class PortDispatcher(Interface):
@@ -648,9 +808,11 @@ class PortDispatcher(Interface):
     def getPorts(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getPorts', args)
-        _ret_ = dict([(
-            elem['key'],
-            Interface.decode(elem['value'], agent))
-            for elem in rsp['_ret_']])
+        rsp = agent.json_rpc(self.target, "getPorts", args)
+        _ret_ = dict(
+            [
+                (elem["key"], Interface.decode(elem["value"], agent))
+                for elem in rsp["_ret_"]
+            ]
+        )
         return _ret_

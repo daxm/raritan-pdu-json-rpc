@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.test
 
 
@@ -25,16 +32,17 @@ class Result(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            code = json['code'],
-            errtext = json['errtext'],
+            code=json["code"],
+            errtext=json["errtext"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['code'] = self.code
-        json['errtext'] = self.errtext
+        json["code"] = self.code
+        json["errtext"] = self.errtext
         return json
+
 
 # interface
 class Control(Interface):
@@ -43,8 +51,8 @@ class Control(Interface):
     def isTestMode(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'isTestMode', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "isTestMode", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_bool(_ret_, DecodeException)
         return _ret_
 
@@ -52,8 +60,9 @@ class Control(Interface):
         agent = self.agent
         typecheck.is_bool(isTestModeOn, AssertionError)
         args = {}
-        args['isTestModeOn'] = isTestModeOn
-        rsp = agent.json_rpc(self.target, 'setTestMode', args)
+        args["isTestModeOn"] = isTestModeOn
+        rsp = agent.json_rpc(self.target, "setTestMode", args)
+
 
 # interface
 class RS232Serial(Interface):
@@ -62,8 +71,8 @@ class RS232Serial(Interface):
     def getDeviceFiles(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDeviceFiles', args)
-        _ret_ = [x0 for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getDeviceFiles", args)
+        _ret_ = [x0 for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_string(x0, DecodeException)
         return _ret_
@@ -72,9 +81,9 @@ class RS232Serial(Interface):
         agent = self.agent
         typecheck.is_string(devfile, AssertionError)
         args = {}
-        args['devfile'] = devfile
-        rsp = agent.json_rpc(self.target, 'testLoop1', args)
-        _ret_ = raritan.rpc.test.Result.decode(rsp['_ret_'], agent)
+        args["devfile"] = devfile
+        rsp = agent.json_rpc(self.target, "testLoop1", args)
+        _ret_ = raritan.rpc.test.Result.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.test.Result, DecodeException)
         return _ret_
 
@@ -82,11 +91,12 @@ class RS232Serial(Interface):
         agent = self.agent
         typecheck.is_string(devfile, AssertionError)
         args = {}
-        args['devfile'] = devfile
-        rsp = agent.json_rpc(self.target, 'testLoop2', args)
-        _ret_ = raritan.rpc.test.Result.decode(rsp['_ret_'], agent)
+        args["devfile"] = devfile
+        rsp = agent.json_rpc(self.target, "testLoop2", args)
+        _ret_ = raritan.rpc.test.Result.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.test.Result, DecodeException)
         return _ret_
+
 
 # interface
 class FeatSerial(Interface):
@@ -103,9 +113,9 @@ class FeatSerial(Interface):
     def getNumberOfPorts(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getNumberOfPorts', args)
-        _ret_ = rsp['_ret_']
-        numPorts = rsp['numPorts']
+        rsp = agent.json_rpc(self.target, "getNumberOfPorts", args)
+        _ret_ = rsp["_ret_"]
+        numPorts = rsp["numPorts"]
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_int(numPorts, DecodeException)
         return (_ret_, numPorts)
@@ -115,10 +125,10 @@ class FeatSerial(Interface):
         typecheck.is_int(portNum, AssertionError)
         typecheck.is_bool(hasPower, AssertionError)
         args = {}
-        args['portNum'] = portNum
-        args['hasPower'] = hasPower
-        rsp = agent.json_rpc(self.target, 'setPower', args)
-        _ret_ = rsp['_ret_']
+        args["portNum"] = portNum
+        args["hasPower"] = hasPower
+        rsp = agent.json_rpc(self.target, "setPower", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -126,10 +136,10 @@ class FeatSerial(Interface):
         agent = self.agent
         typecheck.is_int(portNum, AssertionError)
         args = {}
-        args['portNum'] = portNum
-        rsp = agent.json_rpc(self.target, 'testLoopTxRx', args)
-        _ret_ = rsp['_ret_']
-        errstr = rsp['errstr']
+        args["portNum"] = portNum
+        rsp = agent.json_rpc(self.target, "testLoopTxRx", args)
+        _ret_ = rsp["_ret_"]
+        errstr = rsp["errstr"]
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_string(errstr, DecodeException)
         return (_ret_, errstr)
@@ -138,13 +148,14 @@ class FeatSerial(Interface):
         agent = self.agent
         typecheck.is_int(portNum, AssertionError)
         args = {}
-        args['portNum'] = portNum
-        rsp = agent.json_rpc(self.target, 'testLoopDtrDcd', args)
-        _ret_ = rsp['_ret_']
-        errstr = rsp['errstr']
+        args["portNum"] = portNum
+        rsp = agent.json_rpc(self.target, "testLoopDtrDcd", args)
+        _ret_ = rsp["_ret_"]
+        errstr = rsp["errstr"]
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_string(errstr, DecodeException)
         return (_ret_, errstr)
+
 
 # interface
 class AuxSerial(Interface):
@@ -161,9 +172,9 @@ class AuxSerial(Interface):
     def getNumberOfPorts(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getNumberOfPorts', args)
-        _ret_ = rsp['_ret_']
-        numPorts = rsp['numPorts']
+        rsp = agent.json_rpc(self.target, "getNumberOfPorts", args)
+        _ret_ = rsp["_ret_"]
+        numPorts = rsp["numPorts"]
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_int(numPorts, DecodeException)
         return (_ret_, numPorts)
@@ -172,13 +183,14 @@ class AuxSerial(Interface):
         agent = self.agent
         typecheck.is_int(portNum, AssertionError)
         args = {}
-        args['portNum'] = portNum
-        rsp = agent.json_rpc(self.target, 'testLoop', args)
-        _ret_ = rsp['_ret_']
-        errstr = rsp['errstr']
+        args["portNum"] = portNum
+        rsp = agent.json_rpc(self.target, "testLoop", args)
+        _ret_ = rsp["_ret_"]
+        errstr = rsp["errstr"]
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_string(errstr, DecodeException)
         return (_ret_, errstr)
+
 
 # interface
 class Ethernet(Interface):
@@ -187,8 +199,8 @@ class Ethernet(Interface):
     def getDevices(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDevices', args)
-        _ret_ = [x0 for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getDevices", args)
+        _ret_ = [x0 for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_string(x0, DecodeException)
         return _ret_
@@ -217,14 +229,16 @@ class Ethernet(Interface):
         typecheck.is_enum(duplex, raritan.rpc.test.Ethernet.Duplex, AssertionError)
         typecheck.is_bool(isAutoNeg, AssertionError)
         args = {}
-        args['device'] = device
-        args['speed'] = raritan.rpc.test.Ethernet.Speed.encode(speed)
-        args['duplex'] = raritan.rpc.test.Ethernet.Duplex.encode(duplex)
-        args['isAutoNeg'] = isAutoNeg
-        rsp = agent.json_rpc(self.target, 'setParameters', args)
-        _ret_ = rsp['_ret_']
+        args["device"] = device
+        args["speed"] = raritan.rpc.test.Ethernet.Speed.encode(speed)
+        args["duplex"] = raritan.rpc.test.Ethernet.Duplex.encode(duplex)
+        args["isAutoNeg"] = isAutoNeg
+        rsp = agent.json_rpc(self.target, "setParameters", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -233,7 +247,14 @@ class Ethernet(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.test
 
 
@@ -259,7 +280,9 @@ class Display(Interface):
         def __init__(self, type, address, options, orientation):
             typecheck.is_string(type, AssertionError)
             typecheck.is_string(address, AssertionError)
-            typecheck.is_enum(orientation, raritan.rpc.test.Display.Orientation, AssertionError)
+            typecheck.is_enum(
+                orientation, raritan.rpc.test.Display.Orientation, AssertionError
+            )
 
             self.type = type
             self.address = address
@@ -269,32 +292,32 @@ class Display(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                type = json['type'],
-                address = json['address'],
-                options = dict([(
-                    elem['key'],
-                    elem['value'])
-                    for elem in json['options']]),
-                orientation = raritan.rpc.test.Display.Orientation.decode(json['orientation']),
+                type=json["type"],
+                address=json["address"],
+                options=dict(
+                    [(elem["key"], elem["value"]) for elem in json["options"]]
+                ),
+                orientation=raritan.rpc.test.Display.Orientation.decode(
+                    json["orientation"]
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['type'] = self.type
-            json['address'] = self.address
-            json['options'] = [dict(
-                key = k,
-                value = v)
-                for k, v in self.options.items()]
-            json['orientation'] = raritan.rpc.test.Display.Orientation.encode(self.orientation)
+            json["type"] = self.type
+            json["address"] = self.address
+            json["options"] = [dict(key=k, value=v) for k, v in self.options.items()]
+            json["orientation"] = raritan.rpc.test.Display.Orientation.encode(
+                self.orientation
+            )
             return json
 
     def getInfo(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getInfo', args)
-        _ret_ = raritan.rpc.test.Display.Info.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getInfo", args)
+        _ret_ = raritan.rpc.test.Display.Info.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.test.Display.Info, DecodeException)
         return _ret_
 
@@ -302,8 +325,8 @@ class Display(Interface):
         agent = self.agent
         typecheck.is_int(cycleTime_ms, AssertionError)
         args = {}
-        args['cycleTime_ms'] = cycleTime_ms
-        rsp = agent.json_rpc(self.target, 'testSequence', args)
+        args["cycleTime_ms"] = cycleTime_ms
+        rsp = agent.json_rpc(self.target, "testSequence", args)
 
     # enumeration
     class TestStatus(Enumeration):
@@ -318,15 +341,17 @@ class Display(Interface):
     def enterTestMode(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'enterTestMode', args)
+        rsp = agent.json_rpc(self.target, "enterTestMode", args)
 
     def getTestStatus(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getTestStatus', args)
-        _ret_ = raritan.rpc.test.Display.TestStatus.decode(rsp['_ret_'])
+        rsp = agent.json_rpc(self.target, "getTestStatus", args)
+        _ret_ = raritan.rpc.test.Display.TestStatus.decode(rsp["_ret_"])
         typecheck.is_enum(_ret_, raritan.rpc.test.Display.TestStatus, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -335,7 +360,14 @@ class Display(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.test
 
 
@@ -346,8 +378,8 @@ class Unit(Interface):
     def getDisplays(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDisplays', args)
-        _ret_ = [Interface.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getDisplays", args)
+        _ret_ = [Interface.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_interface(x0, raritan.rpc.test.Display, DecodeException)
         return _ret_
@@ -355,8 +387,8 @@ class Unit(Interface):
     def getButtonStates(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getButtonStates', args)
-        _ret_ = [x0 for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getButtonStates", args)
+        _ret_ = [x0 for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_bool(x0, DecodeException)
         return _ret_
@@ -365,17 +397,17 @@ class Unit(Interface):
         agent = self.agent
         typecheck.is_bool(isOn, AssertionError)
         args = {}
-        args['isOn'] = isOn
-        rsp = agent.json_rpc(self.target, 'setBuzzer', args)
+        args["isOn"] = isOn
+        rsp = agent.json_rpc(self.target, "setBuzzer", args)
 
     def resetAllSlaveControllers(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'resetAllSlaveControllers', args)
+        rsp = agent.json_rpc(self.target, "resetAllSlaveControllers", args)
 
     def triggerSlaveControllerWatchdog(self, rs485Addr):
         agent = self.agent
         typecheck.is_int(rs485Addr, AssertionError)
         args = {}
-        args['rs485Addr'] = rs485Addr
-        rsp = agent.json_rpc(self.target, 'triggerSlaveControllerWatchdog', args)
+        args["rs485Addr"] = rs485Addr
+        rsp = agent.json_rpc(self.target, "triggerSlaveControllerWatchdog", args)

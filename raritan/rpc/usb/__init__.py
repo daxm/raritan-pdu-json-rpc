@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.usb
 
 
@@ -29,20 +36,21 @@ class UsbDevice(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            bus = json['bus'],
-            device = json['device'],
-            vendorId = json['vendorId'],
-            productId = json['productId'],
+            bus=json["bus"],
+            device=json["device"],
+            vendorId=json["vendorId"],
+            productId=json["productId"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['bus'] = self.bus
-        json['device'] = self.device
-        json['vendorId'] = self.vendorId
-        json['productId'] = self.productId
+        json["bus"] = self.bus
+        json["device"] = self.device
+        json["vendorId"] = self.vendorId
+        json["productId"] = self.productId
         return json
+
 
 # interface
 class Usb(Interface):
@@ -51,8 +59,10 @@ class Usb(Interface):
     def getDevices(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDevices', args)
-        usbDevices = [raritan.rpc.usb.UsbDevice.decode(x0, agent) for x0 in rsp['usbDevices']]
+        rsp = agent.json_rpc(self.target, "getDevices", args)
+        usbDevices = [
+            raritan.rpc.usb.UsbDevice.decode(x0, agent) for x0 in rsp["usbDevices"]
+        ]
         for x0 in usbDevices:
             typecheck.is_struct(x0, raritan.rpc.usb.UsbDevice, DecodeException)
         return usbDevices

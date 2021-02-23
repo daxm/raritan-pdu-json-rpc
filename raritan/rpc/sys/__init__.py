@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 
 # interface
 class System(Interface):
@@ -16,9 +23,9 @@ class System(Interface):
         agent = self.agent
         typecheck.is_string(name, AssertionError)
         args = {}
-        args['name'] = name
-        rsp = agent.json_rpc(self.target, 'isDaemonRunning', args)
-        _ret_ = rsp['_ret_']
+        args["name"] = name
+        rsp = agent.json_rpc(self.target, "isDaemonRunning", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_bool(_ret_, DecodeException)
         return _ret_
 
@@ -26,5 +33,5 @@ class System(Interface):
         agent = self.agent
         typecheck.is_string(name, AssertionError)
         args = {}
-        args['name'] = name
-        rsp = agent.json_rpc(self.target, 'restartDaemon', args)
+        args["name"] = name
+        rsp = agent.json_rpc(self.target, "restartDaemon", args)

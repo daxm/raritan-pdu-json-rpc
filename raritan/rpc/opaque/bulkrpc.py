@@ -1,5 +1,4 @@
 class JsonObject:
-
     @staticmethod
     def decode(json, agent):
         return json

@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.cfg
 
 
@@ -25,16 +32,17 @@ class KeyValue(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            key = json['key'],
-            value = json['value'],
+            key=json["key"],
+            value=json["value"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['key'] = self.key
-        json['value'] = self.value
+        json["key"] = self.key
+        json["value"] = self.value
         return json
+
 
 # interface
 class Cfg(Interface):
@@ -51,10 +59,10 @@ class Cfg(Interface):
         for x0 in keys:
             typecheck.is_string(x0, AssertionError)
         args = {}
-        args['keys'] = [x0 for x0 in keys]
-        rsp = agent.json_rpc(self.target, 'getValues', args)
-        _ret_ = rsp['_ret_']
-        values = [x0 for x0 in rsp['values']]
+        args["keys"] = [x0 for x0 in keys]
+        rsp = agent.json_rpc(self.target, "getValues", args)
+        _ret_ = rsp["_ret_"]
+        values = [x0 for x0 in rsp["values"]]
         typecheck.is_int(_ret_, DecodeException)
         for x0 in values:
             typecheck.is_string(x0, DecodeException)
@@ -65,8 +73,10 @@ class Cfg(Interface):
         for x0 in keyvaluepairs:
             typecheck.is_struct(x0, raritan.rpc.cfg.KeyValue, AssertionError)
         args = {}
-        args['keyvaluepairs'] = [raritan.rpc.cfg.KeyValue.encode(x0) for x0 in keyvaluepairs]
-        rsp = agent.json_rpc(self.target, 'setValues', args)
-        _ret_ = rsp['_ret_']
+        args["keyvaluepairs"] = [
+            raritan.rpc.cfg.KeyValue.encode(x0) for x0 in keyvaluepairs
+        ]
+        rsp = agent.json_rpc(self.target, "setValues", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_

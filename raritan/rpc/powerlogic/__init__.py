@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.event
 
 import raritan.rpc.powerlogic
@@ -39,19 +46,19 @@ class Config(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                name = json['name'],
-                slaveAddr = json['slaveAddr'],
-                baud = json['baud'],
-                parity = json['parity'],
+                name=json["name"],
+                slaveAddr=json["slaveAddr"],
+                baud=json["baud"],
+                parity=json["parity"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['name'] = self.name
-            json['slaveAddr'] = self.slaveAddr
-            json['baud'] = self.baud
-            json['parity'] = self.parity
+            json["name"] = self.name
+            json["slaveAddr"] = self.slaveAddr
+            json["baud"] = self.baud
+            json["parity"] = self.parity
             return json
 
     # value object
@@ -59,54 +66,81 @@ class Config(Interface):
         idlType = "powerlogic.Config.SettingsChangedEvent:1.0.0"
 
         def __init__(self, oldSettings, newSettings, actUserName, actIpAddr, source):
-            super(raritan.rpc.powerlogic.Config.SettingsChangedEvent, self).__init__(actUserName, actIpAddr, source)
-            typecheck.is_struct(oldSettings, raritan.rpc.powerlogic.Config.Settings, AssertionError)
-            typecheck.is_struct(newSettings, raritan.rpc.powerlogic.Config.Settings, AssertionError)
+            super(raritan.rpc.powerlogic.Config.SettingsChangedEvent, self).__init__(
+                actUserName, actIpAddr, source
+            )
+            typecheck.is_struct(
+                oldSettings, raritan.rpc.powerlogic.Config.Settings, AssertionError
+            )
+            typecheck.is_struct(
+                newSettings, raritan.rpc.powerlogic.Config.Settings, AssertionError
+            )
 
             self.oldSettings = oldSettings
             self.newSettings = newSettings
 
         def encode(self):
-            json = super(raritan.rpc.powerlogic.Config.SettingsChangedEvent, self).encode()
-            json['oldSettings'] = raritan.rpc.powerlogic.Config.Settings.encode(self.oldSettings)
-            json['newSettings'] = raritan.rpc.powerlogic.Config.Settings.encode(self.newSettings)
+            json = super(
+                raritan.rpc.powerlogic.Config.SettingsChangedEvent, self
+            ).encode()
+            json["oldSettings"] = raritan.rpc.powerlogic.Config.Settings.encode(
+                self.oldSettings
+            )
+            json["newSettings"] = raritan.rpc.powerlogic.Config.Settings.encode(
+                self.newSettings
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldSettings = raritan.rpc.powerlogic.Config.Settings.decode(json['oldSettings'], agent),
-                newSettings = raritan.rpc.powerlogic.Config.Settings.decode(json['newSettings'], agent),
+                oldSettings=raritan.rpc.powerlogic.Config.Settings.decode(
+                    json["oldSettings"], agent
+                ),
+                newSettings=raritan.rpc.powerlogic.Config.Settings.decode(
+                    json["newSettings"], agent
+                ),
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldSettings", "newSettings"]
-            elements = elements + super(raritan.rpc.powerlogic.Config.SettingsChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.powerlogic.Config.SettingsChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSettings', args)
-        _ret_ = raritan.rpc.powerlogic.Config.Settings.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.powerlogic.Config.Settings, DecodeException)
+        rsp = agent.json_rpc(self.target, "getSettings", args)
+        _ret_ = raritan.rpc.powerlogic.Config.Settings.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.powerlogic.Config.Settings, DecodeException
+        )
         return _ret_
 
     def setSettings(self, settings):
         agent = self.agent
-        typecheck.is_struct(settings, raritan.rpc.powerlogic.Config.Settings, AssertionError)
+        typecheck.is_struct(
+            settings, raritan.rpc.powerlogic.Config.Settings, AssertionError
+        )
         args = {}
-        args['settings'] = raritan.rpc.powerlogic.Config.Settings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.powerlogic.Config.Settings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -115,7 +149,14 @@ class Config(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.idl
 
 import raritan.rpc.modbus
@@ -135,9 +176,15 @@ class PowerMeter(raritan.rpc.modbus.Device):
         elements = ["min", "max", "reading"]
 
         def __init__(self, min, max, reading):
-            typecheck.is_interface(min, raritan.rpc.sensors.NumericSensor, AssertionError)
-            typecheck.is_interface(max, raritan.rpc.sensors.NumericSensor, AssertionError)
-            typecheck.is_interface(reading, raritan.rpc.sensors.NumericSensor, AssertionError)
+            typecheck.is_interface(
+                min, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
+            typecheck.is_interface(
+                max, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
+            typecheck.is_interface(
+                reading, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
 
             self.min = min
             self.max = max
@@ -146,17 +193,17 @@ class PowerMeter(raritan.rpc.modbus.Device):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                min = Interface.decode(json['min'], agent),
-                max = Interface.decode(json['max'], agent),
-                reading = Interface.decode(json['reading'], agent),
+                min=Interface.decode(json["min"], agent),
+                max=Interface.decode(json["max"], agent),
+                reading=Interface.decode(json["reading"], agent),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['min'] = Interface.encode(self.min)
-            json['max'] = Interface.encode(self.max)
-            json['reading'] = Interface.encode(self.reading)
+            json["min"] = Interface.encode(self.min)
+            json["max"] = Interface.encode(self.max)
+            json["reading"] = Interface.encode(self.reading)
             return json
 
     # structure
@@ -165,11 +212,19 @@ class PowerMeter(raritan.rpc.modbus.Device):
         elements = ["l1", "l2", "l3", "n", "average"]
 
         def __init__(self, l1, l2, l3, n, average):
-            typecheck.is_struct(l1, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_struct(l2, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_struct(l3, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
+            typecheck.is_struct(
+                l1, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_struct(
+                l2, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_struct(
+                l3, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
             typecheck.is_interface(n, raritan.rpc.sensors.NumericSensor, AssertionError)
-            typecheck.is_interface(average, raritan.rpc.sensors.NumericSensor, AssertionError)
+            typecheck.is_interface(
+                average, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
 
             self.l1 = l1
             self.l2 = l2
@@ -180,21 +235,27 @@ class PowerMeter(raritan.rpc.modbus.Device):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                l1 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l1'], agent),
-                l2 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l2'], agent),
-                l3 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l3'], agent),
-                n = Interface.decode(json['n'], agent),
-                average = Interface.decode(json['average'], agent),
+                l1=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l1"], agent
+                ),
+                l2=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l2"], agent
+                ),
+                l3=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l3"], agent
+                ),
+                n=Interface.decode(json["n"], agent),
+                average=Interface.decode(json["average"], agent),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['l1'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l1)
-            json['l2'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l2)
-            json['l3'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l3)
-            json['n'] = Interface.encode(self.n)
-            json['average'] = Interface.encode(self.average)
+            json["l1"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l1)
+            json["l2"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l2)
+            json["l3"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l3)
+            json["n"] = Interface.encode(self.n)
+            json["average"] = Interface.encode(self.average)
             return json
 
     # structure
@@ -203,10 +264,18 @@ class PowerMeter(raritan.rpc.modbus.Device):
         elements = ["l1l2", "l2l3", "l3l1", "average"]
 
         def __init__(self, l1l2, l2l3, l3l1, average):
-            typecheck.is_struct(l1l2, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_struct(l2l3, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_struct(l3l1, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_interface(average, raritan.rpc.sensors.NumericSensor, AssertionError)
+            typecheck.is_struct(
+                l1l2, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_struct(
+                l2l3, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_struct(
+                l3l1, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_interface(
+                average, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
 
             self.l1l2 = l1l2
             self.l2l3 = l2l3
@@ -216,19 +285,31 @@ class PowerMeter(raritan.rpc.modbus.Device):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                l1l2 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l1l2'], agent),
-                l2l3 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l2l3'], agent),
-                l3l1 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l3l1'], agent),
-                average = Interface.decode(json['average'], agent),
+                l1l2=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l1l2"], agent
+                ),
+                l2l3=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l2l3"], agent
+                ),
+                l3l1=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l3l1"], agent
+                ),
+                average=Interface.decode(json["average"], agent),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['l1l2'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l1l2)
-            json['l2l3'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l2l3)
-            json['l3l1'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l3l1)
-            json['average'] = Interface.encode(self.average)
+            json["l1l2"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(
+                self.l1l2
+            )
+            json["l2l3"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(
+                self.l2l3
+            )
+            json["l3l1"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(
+                self.l3l1
+            )
+            json["average"] = Interface.encode(self.average)
             return json
 
     # structure
@@ -237,10 +318,18 @@ class PowerMeter(raritan.rpc.modbus.Device):
         elements = ["l1", "l2", "l3", "average"]
 
         def __init__(self, l1, l2, l3, average):
-            typecheck.is_struct(l1, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_struct(l2, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_struct(l3, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_interface(average, raritan.rpc.sensors.NumericSensor, AssertionError)
+            typecheck.is_struct(
+                l1, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_struct(
+                l2, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_struct(
+                l3, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_interface(
+                average, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
 
             self.l1 = l1
             self.l2 = l2
@@ -250,19 +339,25 @@ class PowerMeter(raritan.rpc.modbus.Device):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                l1 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l1'], agent),
-                l2 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l2'], agent),
-                l3 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l3'], agent),
-                average = Interface.decode(json['average'], agent),
+                l1=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l1"], agent
+                ),
+                l2=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l2"], agent
+                ),
+                l3=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l3"], agent
+                ),
+                average=Interface.decode(json["average"], agent),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['l1'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l1)
-            json['l2'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l2)
-            json['l3'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l3)
-            json['average'] = Interface.encode(self.average)
+            json["l1"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l1)
+            json["l2"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l2)
+            json["l3"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l3)
+            json["average"] = Interface.encode(self.average)
             return json
 
     # structure
@@ -271,9 +366,15 @@ class PowerMeter(raritan.rpc.modbus.Device):
         elements = ["l1", "l2", "l3"]
 
         def __init__(self, l1, l2, l3):
-            typecheck.is_struct(l1, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_struct(l2, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_struct(l3, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
+            typecheck.is_struct(
+                l1, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_struct(
+                l2, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_struct(
+                l3, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
 
             self.l1 = l1
             self.l2 = l2
@@ -282,17 +383,23 @@ class PowerMeter(raritan.rpc.modbus.Device):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                l1 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l1'], agent),
-                l2 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l2'], agent),
-                l3 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l3'], agent),
+                l1=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l1"], agent
+                ),
+                l2=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l2"], agent
+                ),
+                l3=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l3"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['l1'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l1)
-            json['l2'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l2)
-            json['l3'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l3)
+            json["l1"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l1)
+            json["l2"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l2)
+            json["l3"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l3)
             return json
 
     # structure
@@ -301,9 +408,15 @@ class PowerMeter(raritan.rpc.modbus.Device):
         elements = ["l1l2", "l2l3", "l3l1"]
 
         def __init__(self, l1l2, l2l3, l3l1):
-            typecheck.is_struct(l1l2, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_struct(l2l3, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_struct(l3l1, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
+            typecheck.is_struct(
+                l1l2, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_struct(
+                l2l3, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
+            typecheck.is_struct(
+                l3l1, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
 
             self.l1l2 = l1l2
             self.l2l3 = l2l3
@@ -312,17 +425,29 @@ class PowerMeter(raritan.rpc.modbus.Device):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                l1l2 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l1l2'], agent),
-                l2l3 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l2l3'], agent),
-                l3l1 = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['l3l1'], agent),
+                l1l2=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l1l2"], agent
+                ),
+                l2l3=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l2l3"], agent
+                ),
+                l3l1=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["l3l1"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['l1l2'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l1l2)
-            json['l2l3'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l2l3)
-            json['l3l1'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.l3l1)
+            json["l1l2"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(
+                self.l1l2
+            )
+            json["l2l3"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(
+                self.l2l3
+            )
+            json["l3l1"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(
+                self.l3l1
+            )
             return json
 
     # structure
@@ -331,10 +456,18 @@ class PowerMeter(raritan.rpc.modbus.Device):
         elements = ["l1", "l2", "l3", "total"]
 
         def __init__(self, l1, l2, l3, total):
-            typecheck.is_interface(l1, raritan.rpc.sensors.NumericSensor, AssertionError)
-            typecheck.is_interface(l2, raritan.rpc.sensors.NumericSensor, AssertionError)
-            typecheck.is_interface(l3, raritan.rpc.sensors.NumericSensor, AssertionError)
-            typecheck.is_struct(total, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
+            typecheck.is_interface(
+                l1, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
+            typecheck.is_interface(
+                l2, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
+            typecheck.is_interface(
+                l3, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
+            typecheck.is_struct(
+                total, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError
+            )
 
             self.l1 = l1
             self.l2 = l2
@@ -344,41 +477,112 @@ class PowerMeter(raritan.rpc.modbus.Device):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                l1 = Interface.decode(json['l1'], agent),
-                l2 = Interface.decode(json['l2'], agent),
-                l3 = Interface.decode(json['l3'], agent),
-                total = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['total'], agent),
+                l1=Interface.decode(json["l1"], agent),
+                l2=Interface.decode(json["l2"], agent),
+                l3=Interface.decode(json["l3"], agent),
+                total=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["total"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['l1'] = Interface.encode(self.l1)
-            json['l2'] = Interface.encode(self.l2)
-            json['l3'] = Interface.encode(self.l3)
-            json['total'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.total)
+            json["l1"] = Interface.encode(self.l1)
+            json["l2"] = Interface.encode(self.l2)
+            json["l3"] = Interface.encode(self.l3)
+            json["total"] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(
+                self.total
+            )
             return json
 
     # structure
     class Sensors(Structure):
         idlType = "powerlogic.PowerMeter.Sensors:1.0.0"
-        elements = ["current", "voltageL2L", "voltageL2N", "frequency", "activePower", "reactivePower", "apparentPower", "powerFactor", "activeEnergy", "reactiveEnergy", "apparentEnergy", "thdCurrent", "thdVoltageL2L", "thdVoltageL2N"]
+        elements = [
+            "current",
+            "voltageL2L",
+            "voltageL2N",
+            "frequency",
+            "activePower",
+            "reactivePower",
+            "apparentPower",
+            "powerFactor",
+            "activeEnergy",
+            "reactiveEnergy",
+            "apparentEnergy",
+            "thdCurrent",
+            "thdVoltageL2L",
+            "thdVoltageL2N",
+        ]
 
-        def __init__(self, current, voltageL2L, voltageL2N, frequency, activePower, reactivePower, apparentPower, powerFactor, activeEnergy, reactiveEnergy, apparentEnergy, thdCurrent, thdVoltageL2L, thdVoltageL2N):
-            typecheck.is_struct(current, raritan.rpc.powerlogic.PowerMeter.L2N_N_Avg, AssertionError)
-            typecheck.is_struct(voltageL2L, raritan.rpc.powerlogic.PowerMeter.L2L_Avg, AssertionError)
-            typecheck.is_struct(voltageL2N, raritan.rpc.powerlogic.PowerMeter.L2N_Avg, AssertionError)
-            typecheck.is_interface(frequency, raritan.rpc.sensors.NumericSensor, AssertionError)
-            typecheck.is_struct(activePower, raritan.rpc.powerlogic.PowerMeter.L2N_plain_total, AssertionError)
-            typecheck.is_struct(reactivePower, raritan.rpc.powerlogic.PowerMeter.L2N_plain_total, AssertionError)
-            typecheck.is_struct(apparentPower, raritan.rpc.powerlogic.PowerMeter.L2N_plain_total, AssertionError)
-            typecheck.is_struct(powerFactor, raritan.rpc.powerlogic.PowerMeter.MinMaxReading, AssertionError)
-            typecheck.is_interface(activeEnergy, raritan.rpc.sensors.NumericSensor, AssertionError)
-            typecheck.is_interface(reactiveEnergy, raritan.rpc.sensors.NumericSensor, AssertionError)
-            typecheck.is_interface(apparentEnergy, raritan.rpc.sensors.NumericSensor, AssertionError)
-            typecheck.is_struct(thdCurrent, raritan.rpc.powerlogic.PowerMeter.L2N, AssertionError)
-            typecheck.is_struct(thdVoltageL2L, raritan.rpc.powerlogic.PowerMeter.L2L, AssertionError)
-            typecheck.is_struct(thdVoltageL2N, raritan.rpc.powerlogic.PowerMeter.L2N, AssertionError)
+        def __init__(
+            self,
+            current,
+            voltageL2L,
+            voltageL2N,
+            frequency,
+            activePower,
+            reactivePower,
+            apparentPower,
+            powerFactor,
+            activeEnergy,
+            reactiveEnergy,
+            apparentEnergy,
+            thdCurrent,
+            thdVoltageL2L,
+            thdVoltageL2N,
+        ):
+            typecheck.is_struct(
+                current, raritan.rpc.powerlogic.PowerMeter.L2N_N_Avg, AssertionError
+            )
+            typecheck.is_struct(
+                voltageL2L, raritan.rpc.powerlogic.PowerMeter.L2L_Avg, AssertionError
+            )
+            typecheck.is_struct(
+                voltageL2N, raritan.rpc.powerlogic.PowerMeter.L2N_Avg, AssertionError
+            )
+            typecheck.is_interface(
+                frequency, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
+            typecheck.is_struct(
+                activePower,
+                raritan.rpc.powerlogic.PowerMeter.L2N_plain_total,
+                AssertionError,
+            )
+            typecheck.is_struct(
+                reactivePower,
+                raritan.rpc.powerlogic.PowerMeter.L2N_plain_total,
+                AssertionError,
+            )
+            typecheck.is_struct(
+                apparentPower,
+                raritan.rpc.powerlogic.PowerMeter.L2N_plain_total,
+                AssertionError,
+            )
+            typecheck.is_struct(
+                powerFactor,
+                raritan.rpc.powerlogic.PowerMeter.MinMaxReading,
+                AssertionError,
+            )
+            typecheck.is_interface(
+                activeEnergy, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
+            typecheck.is_interface(
+                reactiveEnergy, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
+            typecheck.is_interface(
+                apparentEnergy, raritan.rpc.sensors.NumericSensor, AssertionError
+            )
+            typecheck.is_struct(
+                thdCurrent, raritan.rpc.powerlogic.PowerMeter.L2N, AssertionError
+            )
+            typecheck.is_struct(
+                thdVoltageL2L, raritan.rpc.powerlogic.PowerMeter.L2L, AssertionError
+            )
+            typecheck.is_struct(
+                thdVoltageL2N, raritan.rpc.powerlogic.PowerMeter.L2N, AssertionError
+            )
 
             self.current = current
             self.voltageL2L = voltageL2L
@@ -398,39 +602,85 @@ class PowerMeter(raritan.rpc.modbus.Device):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                current = raritan.rpc.powerlogic.PowerMeter.L2N_N_Avg.decode(json['current'], agent),
-                voltageL2L = raritan.rpc.powerlogic.PowerMeter.L2L_Avg.decode(json['voltageL2L'], agent),
-                voltageL2N = raritan.rpc.powerlogic.PowerMeter.L2N_Avg.decode(json['voltageL2N'], agent),
-                frequency = Interface.decode(json['frequency'], agent),
-                activePower = raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.decode(json['activePower'], agent),
-                reactivePower = raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.decode(json['reactivePower'], agent),
-                apparentPower = raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.decode(json['apparentPower'], agent),
-                powerFactor = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(json['powerFactor'], agent),
-                activeEnergy = Interface.decode(json['activeEnergy'], agent),
-                reactiveEnergy = Interface.decode(json['reactiveEnergy'], agent),
-                apparentEnergy = Interface.decode(json['apparentEnergy'], agent),
-                thdCurrent = raritan.rpc.powerlogic.PowerMeter.L2N.decode(json['thdCurrent'], agent),
-                thdVoltageL2L = raritan.rpc.powerlogic.PowerMeter.L2L.decode(json['thdVoltageL2L'], agent),
-                thdVoltageL2N = raritan.rpc.powerlogic.PowerMeter.L2N.decode(json['thdVoltageL2N'], agent),
+                current=raritan.rpc.powerlogic.PowerMeter.L2N_N_Avg.decode(
+                    json["current"], agent
+                ),
+                voltageL2L=raritan.rpc.powerlogic.PowerMeter.L2L_Avg.decode(
+                    json["voltageL2L"], agent
+                ),
+                voltageL2N=raritan.rpc.powerlogic.PowerMeter.L2N_Avg.decode(
+                    json["voltageL2N"], agent
+                ),
+                frequency=Interface.decode(json["frequency"], agent),
+                activePower=raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.decode(
+                    json["activePower"], agent
+                ),
+                reactivePower=raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.decode(
+                    json["reactivePower"], agent
+                ),
+                apparentPower=raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.decode(
+                    json["apparentPower"], agent
+                ),
+                powerFactor=raritan.rpc.powerlogic.PowerMeter.MinMaxReading.decode(
+                    json["powerFactor"], agent
+                ),
+                activeEnergy=Interface.decode(json["activeEnergy"], agent),
+                reactiveEnergy=Interface.decode(json["reactiveEnergy"], agent),
+                apparentEnergy=Interface.decode(json["apparentEnergy"], agent),
+                thdCurrent=raritan.rpc.powerlogic.PowerMeter.L2N.decode(
+                    json["thdCurrent"], agent
+                ),
+                thdVoltageL2L=raritan.rpc.powerlogic.PowerMeter.L2L.decode(
+                    json["thdVoltageL2L"], agent
+                ),
+                thdVoltageL2N=raritan.rpc.powerlogic.PowerMeter.L2N.decode(
+                    json["thdVoltageL2N"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['current'] = raritan.rpc.powerlogic.PowerMeter.L2N_N_Avg.encode(self.current)
-            json['voltageL2L'] = raritan.rpc.powerlogic.PowerMeter.L2L_Avg.encode(self.voltageL2L)
-            json['voltageL2N'] = raritan.rpc.powerlogic.PowerMeter.L2N_Avg.encode(self.voltageL2N)
-            json['frequency'] = Interface.encode(self.frequency)
-            json['activePower'] = raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.encode(self.activePower)
-            json['reactivePower'] = raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.encode(self.reactivePower)
-            json['apparentPower'] = raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.encode(self.apparentPower)
-            json['powerFactor'] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.powerFactor)
-            json['activeEnergy'] = Interface.encode(self.activeEnergy)
-            json['reactiveEnergy'] = Interface.encode(self.reactiveEnergy)
-            json['apparentEnergy'] = Interface.encode(self.apparentEnergy)
-            json['thdCurrent'] = raritan.rpc.powerlogic.PowerMeter.L2N.encode(self.thdCurrent)
-            json['thdVoltageL2L'] = raritan.rpc.powerlogic.PowerMeter.L2L.encode(self.thdVoltageL2L)
-            json['thdVoltageL2N'] = raritan.rpc.powerlogic.PowerMeter.L2N.encode(self.thdVoltageL2N)
+            json["current"] = raritan.rpc.powerlogic.PowerMeter.L2N_N_Avg.encode(
+                self.current
+            )
+            json["voltageL2L"] = raritan.rpc.powerlogic.PowerMeter.L2L_Avg.encode(
+                self.voltageL2L
+            )
+            json["voltageL2N"] = raritan.rpc.powerlogic.PowerMeter.L2N_Avg.encode(
+                self.voltageL2N
+            )
+            json["frequency"] = Interface.encode(self.frequency)
+            json[
+                "activePower"
+            ] = raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.encode(
+                self.activePower
+            )
+            json[
+                "reactivePower"
+            ] = raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.encode(
+                self.reactivePower
+            )
+            json[
+                "apparentPower"
+            ] = raritan.rpc.powerlogic.PowerMeter.L2N_plain_total.encode(
+                self.apparentPower
+            )
+            json[
+                "powerFactor"
+            ] = raritan.rpc.powerlogic.PowerMeter.MinMaxReading.encode(self.powerFactor)
+            json["activeEnergy"] = Interface.encode(self.activeEnergy)
+            json["reactiveEnergy"] = Interface.encode(self.reactiveEnergy)
+            json["apparentEnergy"] = Interface.encode(self.apparentEnergy)
+            json["thdCurrent"] = raritan.rpc.powerlogic.PowerMeter.L2N.encode(
+                self.thdCurrent
+            )
+            json["thdVoltageL2L"] = raritan.rpc.powerlogic.PowerMeter.L2L.encode(
+                self.thdVoltageL2L
+            )
+            json["thdVoltageL2N"] = raritan.rpc.powerlogic.PowerMeter.L2N.encode(
+                self.thdVoltageL2N
+            )
             return json
 
     # structure
@@ -448,23 +698,40 @@ class PowerMeter(raritan.rpc.modbus.Device):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                systemType = json['systemType'],
-                displayMode = json['displayMode'],
+                systemType=json["systemType"],
+                displayMode=json["displayMode"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['systemType'] = self.systemType
-            json['displayMode'] = self.displayMode
+            json["systemType"] = self.systemType
+            json["displayMode"] = self.displayMode
             return json
 
     # structure
     class ErrorStatus(Structure):
         idlType = "powerlogic.PowerMeter.ErrorStatus:1.0.0"
-        elements = ["vL1saturation", "vL2saturation", "vL3saturation", "cL1saturation", "cL2saturation", "cL3saturation", "freqInvalid"]
+        elements = [
+            "vL1saturation",
+            "vL2saturation",
+            "vL3saturation",
+            "cL1saturation",
+            "cL2saturation",
+            "cL3saturation",
+            "freqInvalid",
+        ]
 
-        def __init__(self, vL1saturation, vL2saturation, vL3saturation, cL1saturation, cL2saturation, cL3saturation, freqInvalid):
+        def __init__(
+            self,
+            vL1saturation,
+            vL2saturation,
+            vL3saturation,
+            cL1saturation,
+            cL2saturation,
+            cL3saturation,
+            freqInvalid,
+        ):
             typecheck.is_bool(vL1saturation, AssertionError)
             typecheck.is_bool(vL2saturation, AssertionError)
             typecheck.is_bool(vL3saturation, AssertionError)
@@ -484,25 +751,25 @@ class PowerMeter(raritan.rpc.modbus.Device):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                vL1saturation = json['vL1saturation'],
-                vL2saturation = json['vL2saturation'],
-                vL3saturation = json['vL3saturation'],
-                cL1saturation = json['cL1saturation'],
-                cL2saturation = json['cL2saturation'],
-                cL3saturation = json['cL3saturation'],
-                freqInvalid = json['freqInvalid'],
+                vL1saturation=json["vL1saturation"],
+                vL2saturation=json["vL2saturation"],
+                vL3saturation=json["vL3saturation"],
+                cL1saturation=json["cL1saturation"],
+                cL2saturation=json["cL2saturation"],
+                cL3saturation=json["cL3saturation"],
+                freqInvalid=json["freqInvalid"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['vL1saturation'] = self.vL1saturation
-            json['vL2saturation'] = self.vL2saturation
-            json['vL3saturation'] = self.vL3saturation
-            json['cL1saturation'] = self.cL1saturation
-            json['cL2saturation'] = self.cL2saturation
-            json['cL3saturation'] = self.cL3saturation
-            json['freqInvalid'] = self.freqInvalid
+            json["vL1saturation"] = self.vL1saturation
+            json["vL2saturation"] = self.vL2saturation
+            json["vL3saturation"] = self.vL3saturation
+            json["cL1saturation"] = self.cL1saturation
+            json["cL2saturation"] = self.cL2saturation
+            json["cL3saturation"] = self.cL3saturation
+            json["freqInvalid"] = self.freqInvalid
             return json
 
     # value object
@@ -510,32 +777,53 @@ class PowerMeter(raritan.rpc.modbus.Device):
         idlType = "powerlogic.PowerMeter.SetupChangedEvent:1.0.0"
 
         def __init__(self, oldSetup, newSetup, source):
-            super(raritan.rpc.powerlogic.PowerMeter.SetupChangedEvent, self).__init__(source)
-            typecheck.is_struct(oldSetup, raritan.rpc.powerlogic.PowerMeter.Setup, AssertionError)
-            typecheck.is_struct(newSetup, raritan.rpc.powerlogic.PowerMeter.Setup, AssertionError)
+            super(raritan.rpc.powerlogic.PowerMeter.SetupChangedEvent, self).__init__(
+                source
+            )
+            typecheck.is_struct(
+                oldSetup, raritan.rpc.powerlogic.PowerMeter.Setup, AssertionError
+            )
+            typecheck.is_struct(
+                newSetup, raritan.rpc.powerlogic.PowerMeter.Setup, AssertionError
+            )
 
             self.oldSetup = oldSetup
             self.newSetup = newSetup
 
         def encode(self):
-            json = super(raritan.rpc.powerlogic.PowerMeter.SetupChangedEvent, self).encode()
-            json['oldSetup'] = raritan.rpc.powerlogic.PowerMeter.Setup.encode(self.oldSetup)
-            json['newSetup'] = raritan.rpc.powerlogic.PowerMeter.Setup.encode(self.newSetup)
+            json = super(
+                raritan.rpc.powerlogic.PowerMeter.SetupChangedEvent, self
+            ).encode()
+            json["oldSetup"] = raritan.rpc.powerlogic.PowerMeter.Setup.encode(
+                self.oldSetup
+            )
+            json["newSetup"] = raritan.rpc.powerlogic.PowerMeter.Setup.encode(
+                self.newSetup
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldSetup = raritan.rpc.powerlogic.PowerMeter.Setup.decode(json['oldSetup'], agent),
-                newSetup = raritan.rpc.powerlogic.PowerMeter.Setup.decode(json['newSetup'], agent),
+                oldSetup=raritan.rpc.powerlogic.PowerMeter.Setup.decode(
+                    json["oldSetup"], agent
+                ),
+                newSetup=raritan.rpc.powerlogic.PowerMeter.Setup.decode(
+                    json["newSetup"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldSetup", "newSetup"]
-            elements = elements + super(raritan.rpc.powerlogic.PowerMeter.SetupChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.powerlogic.PowerMeter.SetupChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -543,64 +831,93 @@ class PowerMeter(raritan.rpc.modbus.Device):
         idlType = "powerlogic.PowerMeter.ErrorStatusChangedEvent:1.0.0"
 
         def __init__(self, oldStatus, newStatus, source):
-            super(raritan.rpc.powerlogic.PowerMeter.ErrorStatusChangedEvent, self).__init__(source)
-            typecheck.is_struct(oldStatus, raritan.rpc.powerlogic.PowerMeter.ErrorStatus, AssertionError)
-            typecheck.is_struct(newStatus, raritan.rpc.powerlogic.PowerMeter.ErrorStatus, AssertionError)
+            super(
+                raritan.rpc.powerlogic.PowerMeter.ErrorStatusChangedEvent, self
+            ).__init__(source)
+            typecheck.is_struct(
+                oldStatus, raritan.rpc.powerlogic.PowerMeter.ErrorStatus, AssertionError
+            )
+            typecheck.is_struct(
+                newStatus, raritan.rpc.powerlogic.PowerMeter.ErrorStatus, AssertionError
+            )
 
             self.oldStatus = oldStatus
             self.newStatus = newStatus
 
         def encode(self):
-            json = super(raritan.rpc.powerlogic.PowerMeter.ErrorStatusChangedEvent, self).encode()
-            json['oldStatus'] = raritan.rpc.powerlogic.PowerMeter.ErrorStatus.encode(self.oldStatus)
-            json['newStatus'] = raritan.rpc.powerlogic.PowerMeter.ErrorStatus.encode(self.newStatus)
+            json = super(
+                raritan.rpc.powerlogic.PowerMeter.ErrorStatusChangedEvent, self
+            ).encode()
+            json["oldStatus"] = raritan.rpc.powerlogic.PowerMeter.ErrorStatus.encode(
+                self.oldStatus
+            )
+            json["newStatus"] = raritan.rpc.powerlogic.PowerMeter.ErrorStatus.encode(
+                self.newStatus
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldStatus = raritan.rpc.powerlogic.PowerMeter.ErrorStatus.decode(json['oldStatus'], agent),
-                newStatus = raritan.rpc.powerlogic.PowerMeter.ErrorStatus.decode(json['newStatus'], agent),
+                oldStatus=raritan.rpc.powerlogic.PowerMeter.ErrorStatus.decode(
+                    json["oldStatus"], agent
+                ),
+                newStatus=raritan.rpc.powerlogic.PowerMeter.ErrorStatus.decode(
+                    json["newStatus"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldStatus", "newStatus"]
-            elements = elements + super(raritan.rpc.powerlogic.PowerMeter.ErrorStatusChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.powerlogic.PowerMeter.ErrorStatusChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getSensors(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSensors', args)
-        _ret_ = raritan.rpc.powerlogic.PowerMeter.Sensors.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.powerlogic.PowerMeter.Sensors, DecodeException)
+        rsp = agent.json_rpc(self.target, "getSensors", args)
+        _ret_ = raritan.rpc.powerlogic.PowerMeter.Sensors.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.powerlogic.PowerMeter.Sensors, DecodeException
+        )
         return _ret_
 
     def getSetup(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSetup', args)
-        _ret_ = raritan.rpc.powerlogic.PowerMeter.Setup.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.powerlogic.PowerMeter.Setup, DecodeException)
+        rsp = agent.json_rpc(self.target, "getSetup", args)
+        _ret_ = raritan.rpc.powerlogic.PowerMeter.Setup.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.powerlogic.PowerMeter.Setup, DecodeException
+        )
         return _ret_
 
     def getErrorStatus(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getErrorStatus', args)
-        _ret_ = raritan.rpc.powerlogic.PowerMeter.ErrorStatus.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.powerlogic.PowerMeter.ErrorStatus, DecodeException)
+        rsp = agent.json_rpc(self.target, "getErrorStatus", args)
+        _ret_ = raritan.rpc.powerlogic.PowerMeter.ErrorStatus.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_, raritan.rpc.powerlogic.PowerMeter.ErrorStatus, DecodeException
+        )
         return _ret_
 
     def resetAllMinMaxValues(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'resetAllMinMaxValues', args)
+        rsp = agent.json_rpc(self.target, "resetAllMinMaxValues", args)
 
     def clearAllEnergyAccumulators(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'clearAllEnergyAccumulators', args)
+        rsp = agent.json_rpc(self.target, "clearAllEnergyAccumulators", args)

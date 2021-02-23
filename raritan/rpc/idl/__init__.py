@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 
 # value object
 class Event(ValueObject):
@@ -19,13 +26,13 @@ class Event(ValueObject):
 
     def encode(self):
         json = {}
-        json['source'] = Interface.encode(self.source)
+        json["source"] = Interface.encode(self.source)
         return json
 
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            source = Interface.decode(json['source'], agent),
+            source=Interface.decode(json["source"], agent),
         )
         return obj
 

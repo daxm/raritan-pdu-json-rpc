@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 from raritan.rpc.opaque.bulkrpc import JsonObject
 
 import raritan.rpc.bulkrpc
@@ -27,16 +34,17 @@ class Request(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            rid = json['rid'],
-            json = json['json'],
+            rid=json["rid"],
+            json=json["json"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['rid'] = self.rid
-        json['json'] = self.json
+        json["rid"] = self.rid
+        json["json"] = self.json
         return json
+
 
 # structure
 class Response(Structure):
@@ -53,16 +61,17 @@ class Response(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            json = json['json'],
-            statcode = json['statcode'],
+            json=json["json"],
+            statcode=json["statcode"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['json'] = self.json
-        json['statcode'] = self.statcode
+        json["json"] = self.json
+        json["statcode"] = self.statcode
         return json
+
 
 # interface
 class BulkRequest(Interface):
@@ -82,15 +91,15 @@ class BulkRequest(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                rid = json['rid'],
-                json = raritan.rpc.bulkrpc.JsonObject.decode(json['json'], agent),
+                rid=json["rid"],
+                json=raritan.rpc.bulkrpc.JsonObject.decode(json["json"], agent),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['rid'] = self.rid
-            json['json'] = raritan.rpc.bulkrpc.JsonObject.encode(self.json)
+            json["rid"] = self.rid
+            json["json"] = raritan.rpc.bulkrpc.JsonObject.encode(self.json)
             return json
 
     # structure
@@ -107,15 +116,15 @@ class BulkRequest(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                json = raritan.rpc.bulkrpc.JsonObject.decode(json['json'], agent),
-                statcode = json['statcode'],
+                json=raritan.rpc.bulkrpc.JsonObject.decode(json["json"], agent),
+                statcode=json["statcode"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['json'] = raritan.rpc.bulkrpc.JsonObject.encode(self.json)
-            json['statcode'] = self.statcode
+            json["json"] = raritan.rpc.bulkrpc.JsonObject.encode(self.json)
+            json["statcode"] = self.statcode
             return json
 
     def performRequest(self, requests):
@@ -123,9 +132,11 @@ class BulkRequest(Interface):
         for x0 in requests:
             typecheck.is_struct(x0, raritan.rpc.bulkrpc.Request, AssertionError)
         args = {}
-        args['requests'] = [raritan.rpc.bulkrpc.Request.encode(x0) for x0 in requests]
-        rsp = agent.json_rpc(self.target, 'performRequest', args)
-        responses = [raritan.rpc.bulkrpc.Response.decode(x0, agent) for x0 in rsp['responses']]
+        args["requests"] = [raritan.rpc.bulkrpc.Request.encode(x0) for x0 in requests]
+        rsp = agent.json_rpc(self.target, "performRequest", args)
+        responses = [
+            raritan.rpc.bulkrpc.Response.decode(x0, agent) for x0 in rsp["responses"]
+        ]
         for x0 in responses:
             typecheck.is_struct(x0, raritan.rpc.bulkrpc.Response, DecodeException)
         return responses
@@ -133,11 +144,20 @@ class BulkRequest(Interface):
     def performBulk(self, requests):
         agent = self.agent
         for x0 in requests:
-            typecheck.is_struct(x0, raritan.rpc.bulkrpc.BulkRequest.Request, AssertionError)
+            typecheck.is_struct(
+                x0, raritan.rpc.bulkrpc.BulkRequest.Request, AssertionError
+            )
         args = {}
-        args['requests'] = [raritan.rpc.bulkrpc.BulkRequest.Request.encode(x0) for x0 in requests]
-        rsp = agent.json_rpc(self.target, 'performBulk', args)
-        responses = [raritan.rpc.bulkrpc.BulkRequest.Response.decode(x0, agent) for x0 in rsp['responses']]
+        args["requests"] = [
+            raritan.rpc.bulkrpc.BulkRequest.Request.encode(x0) for x0 in requests
+        ]
+        rsp = agent.json_rpc(self.target, "performBulk", args)
+        responses = [
+            raritan.rpc.bulkrpc.BulkRequest.Response.decode(x0, agent)
+            for x0 in rsp["responses"]
+        ]
         for x0 in responses:
-            typecheck.is_struct(x0, raritan.rpc.bulkrpc.BulkRequest.Response, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.bulkrpc.BulkRequest.Response, DecodeException
+            )
         return responses

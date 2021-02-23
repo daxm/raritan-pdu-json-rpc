@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.res_mon
 
 
@@ -27,23 +34,34 @@ class Entry(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            type = raritan.rpc.res_mon.Entry.Type.decode(json['type']),
-            name = json['name'],
-            value = int(json['value']),
+            type=raritan.rpc.res_mon.Entry.Type.decode(json["type"]),
+            name=json["name"],
+            value=int(json["value"]),
         )
         return obj
 
     def encode(self):
         json = {}
-        json['type'] = raritan.rpc.res_mon.Entry.Type.encode(self.type)
-        json['name'] = self.name
-        json['value'] = self.value
+        json["type"] = raritan.rpc.res_mon.Entry.Type.encode(self.type)
+        json["name"] = self.name
+        json["value"] = self.value
         return json
 
     # enumeration
     class Type(Enumeration):
         idlType = "res_mon.Entry.Type:1.0.0"
-        values = ["GLOBAL_CPU_USAGE", "GLOBAL_FREE_MEM", "GLOBAL_PROC_COUNT", "FS_FREE_SPACE", "FS_FREE_INODES", "PROC_CPU_USAGE", "PROC_VM_SIZE", "PROC_FREE_FILE_DESC", "PROC_LIFE_TIME", "PROC_COUNT"]
+        values = [
+            "GLOBAL_CPU_USAGE",
+            "GLOBAL_FREE_MEM",
+            "GLOBAL_PROC_COUNT",
+            "FS_FREE_SPACE",
+            "FS_FREE_INODES",
+            "PROC_CPU_USAGE",
+            "PROC_VM_SIZE",
+            "PROC_FREE_FILE_DESC",
+            "PROC_LIFE_TIME",
+            "PROC_COUNT",
+        ]
 
     Type.GLOBAL_CPU_USAGE = Type(0)
     Type.GLOBAL_FREE_MEM = Type(1)
@@ -56,6 +74,7 @@ class Entry(Structure):
     Type.PROC_LIFE_TIME = Type(8)
     Type.PROC_COUNT = Type(9)
 
+
 # interface
 class ResMon(Interface):
     idlType = "res_mon.ResMon:1.0.0"
@@ -63,8 +82,8 @@ class ResMon(Interface):
     def getDataEntries(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDataEntries', args)
-        entries = [raritan.rpc.res_mon.Entry.decode(x0, agent) for x0 in rsp['entries']]
+        rsp = agent.json_rpc(self.target, "getDataEntries", args)
+        entries = [raritan.rpc.res_mon.Entry.decode(x0, agent) for x0 in rsp["entries"]]
         for x0 in entries:
             typecheck.is_struct(x0, raritan.rpc.res_mon.Entry, DecodeException)
         return entries

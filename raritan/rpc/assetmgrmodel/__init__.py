@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.assetmgrmodel
 
 import raritan.rpc.event
@@ -51,7 +58,12 @@ class AssetStripConfig(Interface):
     # enumeration
     class LEDMode(Enumeration):
         idlType = "assetmgrmodel.AssetStripConfig.LEDMode:1.0.0"
-        values = ["LED_MODE_ON", "LED_MODE_OFF", "LED_MODE_BLINK_FAST", "LED_MODE_BLINK_SLOW"]
+        values = [
+            "LED_MODE_ON",
+            "LED_MODE_OFF",
+            "LED_MODE_BLINK_FAST",
+            "LED_MODE_BLINK_SLOW",
+        ]
 
     LEDMode.LED_MODE_ON = LEDMode(0)
     LEDMode.LED_MODE_OFF = LEDMode(1)
@@ -75,33 +87,72 @@ class AssetStripConfig(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                r = json['r'],
-                g = json['g'],
-                b = json['b'],
+                r=json["r"],
+                g=json["g"],
+                b=json["b"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['r'] = self.r
-            json['g'] = self.g
-            json['b'] = self.b
+            json["r"] = self.r
+            json["g"] = self.g
+            json["b"] = self.b
             return json
 
     # structure
     class StripSettings(Structure):
         idlType = "assetmgrmodel.AssetStripConfig.StripSettings:1.0.0"
-        elements = ["rackUnitCount", "name", "scanMode", "defaultColorConnected", "defaultColorDisconnected", "numberingMode", "numberingOffset", "orientation"]
+        elements = [
+            "rackUnitCount",
+            "name",
+            "scanMode",
+            "defaultColorConnected",
+            "defaultColorDisconnected",
+            "numberingMode",
+            "numberingOffset",
+            "orientation",
+        ]
 
-        def __init__(self, rackUnitCount, name, scanMode, defaultColorConnected, defaultColorDisconnected, numberingMode, numberingOffset, orientation):
+        def __init__(
+            self,
+            rackUnitCount,
+            name,
+            scanMode,
+            defaultColorConnected,
+            defaultColorDisconnected,
+            numberingMode,
+            numberingOffset,
+            orientation,
+        ):
             typecheck.is_int(rackUnitCount, AssertionError)
             typecheck.is_string(name, AssertionError)
-            typecheck.is_enum(scanMode, raritan.rpc.assetmgrmodel.AssetStripConfig.ScanMode, AssertionError)
-            typecheck.is_struct(defaultColorConnected, raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor, AssertionError)
-            typecheck.is_struct(defaultColorDisconnected, raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor, AssertionError)
-            typecheck.is_enum(numberingMode, raritan.rpc.assetmgrmodel.AssetStripConfig.NumberingMode, AssertionError)
+            typecheck.is_enum(
+                scanMode,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.ScanMode,
+                AssertionError,
+            )
+            typecheck.is_struct(
+                defaultColorConnected,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor,
+                AssertionError,
+            )
+            typecheck.is_struct(
+                defaultColorDisconnected,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor,
+                AssertionError,
+            )
+            typecheck.is_enum(
+                numberingMode,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.NumberingMode,
+                AssertionError,
+            )
             typecheck.is_int(numberingOffset, AssertionError)
-            typecheck.is_enum(orientation, raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation, AssertionError)
+            typecheck.is_enum(
+                orientation,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation,
+                AssertionError,
+            )
 
             self.rackUnitCount = rackUnitCount
             self.name = name
@@ -115,27 +166,57 @@ class AssetStripConfig(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                rackUnitCount = json['rackUnitCount'],
-                name = json['name'],
-                scanMode = raritan.rpc.assetmgrmodel.AssetStripConfig.ScanMode.decode(json['scanMode']),
-                defaultColorConnected = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.decode(json['defaultColorConnected'], agent),
-                defaultColorDisconnected = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.decode(json['defaultColorDisconnected'], agent),
-                numberingMode = raritan.rpc.assetmgrmodel.AssetStripConfig.NumberingMode.decode(json['numberingMode']),
-                numberingOffset = json['numberingOffset'],
-                orientation = raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.decode(json['orientation']),
+                rackUnitCount=json["rackUnitCount"],
+                name=json["name"],
+                scanMode=raritan.rpc.assetmgrmodel.AssetStripConfig.ScanMode.decode(
+                    json["scanMode"]
+                ),
+                defaultColorConnected=raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.decode(
+                    json["defaultColorConnected"], agent
+                ),
+                defaultColorDisconnected=raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.decode(
+                    json["defaultColorDisconnected"], agent
+                ),
+                numberingMode=raritan.rpc.assetmgrmodel.AssetStripConfig.NumberingMode.decode(
+                    json["numberingMode"]
+                ),
+                numberingOffset=json["numberingOffset"],
+                orientation=raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.decode(
+                    json["orientation"]
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['rackUnitCount'] = self.rackUnitCount
-            json['name'] = self.name
-            json['scanMode'] = raritan.rpc.assetmgrmodel.AssetStripConfig.ScanMode.encode(self.scanMode)
-            json['defaultColorConnected'] = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.encode(self.defaultColorConnected)
-            json['defaultColorDisconnected'] = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.encode(self.defaultColorDisconnected)
-            json['numberingMode'] = raritan.rpc.assetmgrmodel.AssetStripConfig.NumberingMode.encode(self.numberingMode)
-            json['numberingOffset'] = self.numberingOffset
-            json['orientation'] = raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.encode(self.orientation)
+            json["rackUnitCount"] = self.rackUnitCount
+            json["name"] = self.name
+            json[
+                "scanMode"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.ScanMode.encode(
+                self.scanMode
+            )
+            json[
+                "defaultColorConnected"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.encode(
+                self.defaultColorConnected
+            )
+            json[
+                "defaultColorDisconnected"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.encode(
+                self.defaultColorDisconnected
+            )
+            json[
+                "numberingMode"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.NumberingMode.encode(
+                self.numberingMode
+            )
+            json["numberingOffset"] = self.numberingOffset
+            json[
+                "orientation"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.encode(
+                self.orientation
+            )
             return json
 
     # structure
@@ -144,9 +225,19 @@ class AssetStripConfig(Interface):
         elements = ["opmode", "mode", "color", "name"]
 
         def __init__(self, opmode, mode, color, name):
-            typecheck.is_enum(opmode, raritan.rpc.assetmgrmodel.AssetStripConfig.LEDOperationMode, AssertionError)
-            typecheck.is_enum(mode, raritan.rpc.assetmgrmodel.AssetStripConfig.LEDMode, AssertionError)
-            typecheck.is_struct(color, raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor, AssertionError)
+            typecheck.is_enum(
+                opmode,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.LEDOperationMode,
+                AssertionError,
+            )
+            typecheck.is_enum(
+                mode, raritan.rpc.assetmgrmodel.AssetStripConfig.LEDMode, AssertionError
+            )
+            typecheck.is_struct(
+                color,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor,
+                AssertionError,
+            )
             typecheck.is_string(name, AssertionError)
 
             self.opmode = opmode
@@ -157,19 +248,33 @@ class AssetStripConfig(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                opmode = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDOperationMode.decode(json['opmode']),
-                mode = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDMode.decode(json['mode']),
-                color = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.decode(json['color'], agent),
-                name = json['name'],
+                opmode=raritan.rpc.assetmgrmodel.AssetStripConfig.LEDOperationMode.decode(
+                    json["opmode"]
+                ),
+                mode=raritan.rpc.assetmgrmodel.AssetStripConfig.LEDMode.decode(
+                    json["mode"]
+                ),
+                color=raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.decode(
+                    json["color"], agent
+                ),
+                name=json["name"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['opmode'] = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDOperationMode.encode(self.opmode)
-            json['mode'] = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDMode.encode(self.mode)
-            json['color'] = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.encode(self.color)
-            json['name'] = self.name
+            json[
+                "opmode"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDOperationMode.encode(
+                self.opmode
+            )
+            json["mode"] = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDMode.encode(
+                self.mode
+            )
+            json["color"] = raritan.rpc.assetmgrmodel.AssetStripConfig.LEDColor.encode(
+                self.color
+            )
+            json["name"] = self.name
             return json
 
     # value object
@@ -177,92 +282,176 @@ class AssetStripConfig(Interface):
         idlType = "assetmgrmodel.AssetStripConfig.StripSettingsChangedEvent:1.0.0"
 
         def __init__(self, oldSettings, newSettings, actUserName, actIpAddr, source):
-            super(raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettingsChangedEvent, self).__init__(actUserName, actIpAddr, source)
-            typecheck.is_struct(oldSettings, raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings, AssertionError)
-            typecheck.is_struct(newSettings, raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings, AssertionError)
+            super(
+                raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettingsChangedEvent,
+                self,
+            ).__init__(actUserName, actIpAddr, source)
+            typecheck.is_struct(
+                oldSettings,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings,
+                AssertionError,
+            )
+            typecheck.is_struct(
+                newSettings,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings,
+                AssertionError,
+            )
 
             self.oldSettings = oldSettings
             self.newSettings = newSettings
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettingsChangedEvent, self).encode()
-            json['oldSettings'] = raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.encode(self.oldSettings)
-            json['newSettings'] = raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.encode(self.newSettings)
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettingsChangedEvent,
+                self,
+            ).encode()
+            json[
+                "oldSettings"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.encode(
+                self.oldSettings
+            )
+            json[
+                "newSettings"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.encode(
+                self.newSettings
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldSettings = raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.decode(json['oldSettings'], agent),
-                newSettings = raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.decode(json['newSettings'], agent),
+                oldSettings=raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.decode(
+                    json["oldSettings"], agent
+                ),
+                newSettings=raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.decode(
+                    json["newSettings"], agent
+                ),
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldSettings", "newSettings"]
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettingsChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettingsChangedEvent,
+                    self,
+                ).listElements()
+            )
             return elements
 
     # value object
     class RackUnitSettingsChangedEvent(raritan.rpc.event.UserEvent):
         idlType = "assetmgrmodel.AssetStripConfig.RackUnitSettingsChangedEvent:1.0.0"
 
-        def __init__(self, rackUnitNumber, oldSettings, newSettings, actUserName, actIpAddr, source):
-            super(raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettingsChangedEvent, self).__init__(actUserName, actIpAddr, source)
+        def __init__(
+            self,
+            rackUnitNumber,
+            oldSettings,
+            newSettings,
+            actUserName,
+            actIpAddr,
+            source,
+        ):
+            super(
+                raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettingsChangedEvent,
+                self,
+            ).__init__(actUserName, actIpAddr, source)
             typecheck.is_int(rackUnitNumber, AssertionError)
-            typecheck.is_struct(oldSettings, raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings, AssertionError)
-            typecheck.is_struct(newSettings, raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings, AssertionError)
+            typecheck.is_struct(
+                oldSettings,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings,
+                AssertionError,
+            )
+            typecheck.is_struct(
+                newSettings,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings,
+                AssertionError,
+            )
 
             self.rackUnitNumber = rackUnitNumber
             self.oldSettings = oldSettings
             self.newSettings = newSettings
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettingsChangedEvent, self).encode()
-            json['rackUnitNumber'] = self.rackUnitNumber
-            json['oldSettings'] = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.encode(self.oldSettings)
-            json['newSettings'] = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.encode(self.newSettings)
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettingsChangedEvent,
+                self,
+            ).encode()
+            json["rackUnitNumber"] = self.rackUnitNumber
+            json[
+                "oldSettings"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.encode(
+                self.oldSettings
+            )
+            json[
+                "newSettings"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.encode(
+                self.newSettings
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                rackUnitNumber = json['rackUnitNumber'],
-                oldSettings = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.decode(json['oldSettings'], agent),
-                newSettings = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.decode(json['newSettings'], agent),
+                rackUnitNumber=json["rackUnitNumber"],
+                oldSettings=raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.decode(
+                    json["oldSettings"], agent
+                ),
+                newSettings=raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.decode(
+                    json["newSettings"], agent
+                ),
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["rackUnitNumber", "oldSettings", "newSettings"]
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettingsChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettingsChangedEvent,
+                    self,
+                ).listElements()
+            )
             return elements
 
     def getStripSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getStripSettings', args)
-        _ret_ = raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings, DecodeException)
+        rsp = agent.json_rpc(self.target, "getStripSettings", args)
+        _ret_ = raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_,
+            raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings,
+            DecodeException,
+        )
         return _ret_
 
     def setStripSettings(self, settings):
         agent = self.agent
-        typecheck.is_struct(settings, raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings, AssertionError)
+        typecheck.is_struct(
+            settings,
+            raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings,
+            AssertionError,
+        )
         args = {}
-        args['settings'] = raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setStripSettings', args)
-        _ret_ = rsp['_ret_']
+        args[
+            "settings"
+        ] = raritan.rpc.assetmgrmodel.AssetStripConfig.StripSettings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setStripSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -270,46 +459,74 @@ class AssetStripConfig(Interface):
         agent = self.agent
         typecheck.is_int(rackUnitNumber, AssertionError)
         args = {}
-        args['rackUnitNumber'] = rackUnitNumber
-        rsp = agent.json_rpc(self.target, 'getRackUnitSettings', args)
-        _ret_ = rsp['_ret_']
-        settings = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.decode(rsp['settings'], agent)
+        args["rackUnitNumber"] = rackUnitNumber
+        rsp = agent.json_rpc(self.target, "getRackUnitSettings", args)
+        _ret_ = rsp["_ret_"]
+        settings = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.decode(
+            rsp["settings"], agent
+        )
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_struct(settings, raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings, DecodeException)
+        typecheck.is_struct(
+            settings,
+            raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings,
+            DecodeException,
+        )
         return (_ret_, settings)
 
     def getAllRackUnitSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getAllRackUnitSettings', args)
-        _ret_ = [raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getAllRackUnitSettings", args)
+        _ret_ = [
+            raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.decode(
+                x0, agent
+            )
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings, DecodeException)
+            typecheck.is_struct(
+                x0,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings,
+                DecodeException,
+            )
         return _ret_
 
     def setRackUnitSettings(self, rackUnitNumber, settings):
         agent = self.agent
         typecheck.is_int(rackUnitNumber, AssertionError)
-        typecheck.is_struct(settings, raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings, AssertionError)
+        typecheck.is_struct(
+            settings,
+            raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings,
+            AssertionError,
+        )
         args = {}
-        args['rackUnitNumber'] = rackUnitNumber
-        args['settings'] = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setRackUnitSettings', args)
-        _ret_ = rsp['_ret_']
+        args["rackUnitNumber"] = rackUnitNumber
+        args[
+            "settings"
+        ] = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setRackUnitSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def setMultipleRackUnitSettings(self, settings):
         agent = self.agent
         args = {}
-        args['settings'] = [dict(
-            key = k,
-            value = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.encode(v))
-            for k, v in settings.items()]
-        rsp = agent.json_rpc(self.target, 'setMultipleRackUnitSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = [
+            dict(
+                key=k,
+                value=raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.encode(
+                    v
+                ),
+            )
+            for k, v in settings.items()
+        ]
+        rsp = agent.json_rpc(self.target, "setMultipleRackUnitSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -318,7 +535,14 @@ class AssetStripConfig(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.assetmgrmodel
 
 import raritan.rpc.event
@@ -376,9 +600,28 @@ class AssetStrip(Interface):
     # structure
     class DeviceInfo(Structure):
         idlType = "assetmgrmodel.AssetStrip.DeviceInfo:1.0.0"
-        elements = ["deviceId", "hardwareId", "protocolVersion", "bootVersion", "appVersion", "orientationSensAvailable", "isCascadable", "rackUnitCountConfigurable"]
+        elements = [
+            "deviceId",
+            "hardwareId",
+            "protocolVersion",
+            "bootVersion",
+            "appVersion",
+            "orientationSensAvailable",
+            "isCascadable",
+            "rackUnitCountConfigurable",
+        ]
 
-        def __init__(self, deviceId, hardwareId, protocolVersion, bootVersion, appVersion, orientationSensAvailable, isCascadable, rackUnitCountConfigurable):
+        def __init__(
+            self,
+            deviceId,
+            hardwareId,
+            protocolVersion,
+            bootVersion,
+            appVersion,
+            orientationSensAvailable,
+            isCascadable,
+            rackUnitCountConfigurable,
+        ):
             typecheck.is_int(deviceId, AssertionError)
             typecheck.is_int(hardwareId, AssertionError)
             typecheck.is_int(protocolVersion, AssertionError)
@@ -400,35 +643,54 @@ class AssetStrip(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                deviceId = json['deviceId'],
-                hardwareId = json['hardwareId'],
-                protocolVersion = json['protocolVersion'],
-                bootVersion = json['bootVersion'],
-                appVersion = json['appVersion'],
-                orientationSensAvailable = json['orientationSensAvailable'],
-                isCascadable = json['isCascadable'],
-                rackUnitCountConfigurable = json['rackUnitCountConfigurable'],
+                deviceId=json["deviceId"],
+                hardwareId=json["hardwareId"],
+                protocolVersion=json["protocolVersion"],
+                bootVersion=json["bootVersion"],
+                appVersion=json["appVersion"],
+                orientationSensAvailable=json["orientationSensAvailable"],
+                isCascadable=json["isCascadable"],
+                rackUnitCountConfigurable=json["rackUnitCountConfigurable"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['deviceId'] = self.deviceId
-            json['hardwareId'] = self.hardwareId
-            json['protocolVersion'] = self.protocolVersion
-            json['bootVersion'] = self.bootVersion
-            json['appVersion'] = self.appVersion
-            json['orientationSensAvailable'] = self.orientationSensAvailable
-            json['isCascadable'] = self.isCascadable
-            json['rackUnitCountConfigurable'] = self.rackUnitCountConfigurable
+            json["deviceId"] = self.deviceId
+            json["hardwareId"] = self.hardwareId
+            json["protocolVersion"] = self.protocolVersion
+            json["bootVersion"] = self.bootVersion
+            json["appVersion"] = self.appVersion
+            json["orientationSensAvailable"] = self.orientationSensAvailable
+            json["isCascadable"] = self.isCascadable
+            json["rackUnitCountConfigurable"] = self.rackUnitCountConfigurable
             return json
 
     # structure
     class StripInfo(Structure):
         idlType = "assetmgrmodel.AssetStrip.StripInfo:1.0.0"
-        elements = ["maxMainTagCount", "maxBladeTagCount", "mainTagCount", "bladeTagCount", "bladeOverflow", "rackUnitCount", "componentCount", "cascadeState"]
+        elements = [
+            "maxMainTagCount",
+            "maxBladeTagCount",
+            "mainTagCount",
+            "bladeTagCount",
+            "bladeOverflow",
+            "rackUnitCount",
+            "componentCount",
+            "cascadeState",
+        ]
 
-        def __init__(self, maxMainTagCount, maxBladeTagCount, mainTagCount, bladeTagCount, bladeOverflow, rackUnitCount, componentCount, cascadeState):
+        def __init__(
+            self,
+            maxMainTagCount,
+            maxBladeTagCount,
+            mainTagCount,
+            bladeTagCount,
+            bladeOverflow,
+            rackUnitCount,
+            componentCount,
+            cascadeState,
+        ):
             typecheck.is_int(maxMainTagCount, AssertionError)
             typecheck.is_int(maxBladeTagCount, AssertionError)
             typecheck.is_int(mainTagCount, AssertionError)
@@ -436,7 +698,11 @@ class AssetStrip(Interface):
             typecheck.is_bool(bladeOverflow, AssertionError)
             typecheck.is_int(rackUnitCount, AssertionError)
             typecheck.is_int(componentCount, AssertionError)
-            typecheck.is_enum(cascadeState, raritan.rpc.assetmgrmodel.AssetStrip.CascadeState, AssertionError)
+            typecheck.is_enum(
+                cascadeState,
+                raritan.rpc.assetmgrmodel.AssetStrip.CascadeState,
+                AssertionError,
+            )
 
             self.maxMainTagCount = maxMainTagCount
             self.maxBladeTagCount = maxBladeTagCount
@@ -450,27 +716,33 @@ class AssetStrip(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                maxMainTagCount = json['maxMainTagCount'],
-                maxBladeTagCount = json['maxBladeTagCount'],
-                mainTagCount = json['mainTagCount'],
-                bladeTagCount = json['bladeTagCount'],
-                bladeOverflow = json['bladeOverflow'],
-                rackUnitCount = json['rackUnitCount'],
-                componentCount = json['componentCount'],
-                cascadeState = raritan.rpc.assetmgrmodel.AssetStrip.CascadeState.decode(json['cascadeState']),
+                maxMainTagCount=json["maxMainTagCount"],
+                maxBladeTagCount=json["maxBladeTagCount"],
+                mainTagCount=json["mainTagCount"],
+                bladeTagCount=json["bladeTagCount"],
+                bladeOverflow=json["bladeOverflow"],
+                rackUnitCount=json["rackUnitCount"],
+                componentCount=json["componentCount"],
+                cascadeState=raritan.rpc.assetmgrmodel.AssetStrip.CascadeState.decode(
+                    json["cascadeState"]
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['maxMainTagCount'] = self.maxMainTagCount
-            json['maxBladeTagCount'] = self.maxBladeTagCount
-            json['mainTagCount'] = self.mainTagCount
-            json['bladeTagCount'] = self.bladeTagCount
-            json['bladeOverflow'] = self.bladeOverflow
-            json['rackUnitCount'] = self.rackUnitCount
-            json['componentCount'] = self.componentCount
-            json['cascadeState'] = raritan.rpc.assetmgrmodel.AssetStrip.CascadeState.encode(self.cascadeState)
+            json["maxMainTagCount"] = self.maxMainTagCount
+            json["maxBladeTagCount"] = self.maxBladeTagCount
+            json["mainTagCount"] = self.mainTagCount
+            json["bladeTagCount"] = self.bladeTagCount
+            json["bladeOverflow"] = self.bladeOverflow
+            json["rackUnitCount"] = self.rackUnitCount
+            json["componentCount"] = self.componentCount
+            json[
+                "cascadeState"
+            ] = raritan.rpc.assetmgrmodel.AssetStrip.CascadeState.encode(
+                self.cascadeState
+            )
             return json
 
     # structure
@@ -492,19 +764,19 @@ class AssetStrip(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                rackUnitNumber = json['rackUnitNumber'],
-                slotNumber = json['slotNumber'],
-                familyDesc = json['familyDesc'],
-                rawId = json['rawId'],
+                rackUnitNumber=json["rackUnitNumber"],
+                slotNumber=json["slotNumber"],
+                familyDesc=json["familyDesc"],
+                rawId=json["rawId"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['rackUnitNumber'] = self.rackUnitNumber
-            json['slotNumber'] = self.slotNumber
-            json['familyDesc'] = self.familyDesc
-            json['rawId'] = self.rawId
+            json["rackUnitNumber"] = self.rackUnitNumber
+            json["slotNumber"] = self.slotNumber
+            json["familyDesc"] = self.familyDesc
+            json["rawId"] = self.rawId
             return json
 
     # structure
@@ -515,9 +787,15 @@ class AssetStrip(Interface):
         def __init__(self, rackUnitNumber, rackUnitPosition, type, size, settings):
             typecheck.is_int(rackUnitNumber, AssertionError)
             typecheck.is_int(rackUnitPosition, AssertionError)
-            typecheck.is_enum(type, raritan.rpc.assetmgrmodel.AssetStrip.TagType, AssertionError)
+            typecheck.is_enum(
+                type, raritan.rpc.assetmgrmodel.AssetStrip.TagType, AssertionError
+            )
             typecheck.is_int(size, AssertionError)
-            typecheck.is_struct(settings, raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings, AssertionError)
+            typecheck.is_struct(
+                settings,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings,
+                AssertionError,
+            )
 
             self.rackUnitNumber = rackUnitNumber
             self.rackUnitPosition = rackUnitPosition
@@ -528,21 +806,29 @@ class AssetStrip(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                rackUnitNumber = json['rackUnitNumber'],
-                rackUnitPosition = json['rackUnitPosition'],
-                type = raritan.rpc.assetmgrmodel.AssetStrip.TagType.decode(json['type']),
-                size = json['size'],
-                settings = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.decode(json['settings'], agent),
+                rackUnitNumber=json["rackUnitNumber"],
+                rackUnitPosition=json["rackUnitPosition"],
+                type=raritan.rpc.assetmgrmodel.AssetStrip.TagType.decode(json["type"]),
+                size=json["size"],
+                settings=raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.decode(
+                    json["settings"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['rackUnitNumber'] = self.rackUnitNumber
-            json['rackUnitPosition'] = self.rackUnitPosition
-            json['type'] = raritan.rpc.assetmgrmodel.AssetStrip.TagType.encode(self.type)
-            json['size'] = self.size
-            json['settings'] = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.encode(self.settings)
+            json["rackUnitNumber"] = self.rackUnitNumber
+            json["rackUnitPosition"] = self.rackUnitPosition
+            json["type"] = raritan.rpc.assetmgrmodel.AssetStrip.TagType.encode(
+                self.type
+            )
+            json["size"] = self.size
+            json[
+                "settings"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.RackUnitSettings.encode(
+                self.settings
+            )
             return json
 
     # value object
@@ -550,32 +836,53 @@ class AssetStrip(Interface):
         idlType = "assetmgrmodel.AssetStrip.StripInfoChangedEvent:1.0.0"
 
         def __init__(self, oldInfo, newInfo, source):
-            super(raritan.rpc.assetmgrmodel.AssetStrip.StripInfoChangedEvent, self).__init__(source)
-            typecheck.is_struct(oldInfo, raritan.rpc.assetmgrmodel.AssetStrip.StripInfo, AssertionError)
-            typecheck.is_struct(newInfo, raritan.rpc.assetmgrmodel.AssetStrip.StripInfo, AssertionError)
+            super(
+                raritan.rpc.assetmgrmodel.AssetStrip.StripInfoChangedEvent, self
+            ).__init__(source)
+            typecheck.is_struct(
+                oldInfo, raritan.rpc.assetmgrmodel.AssetStrip.StripInfo, AssertionError
+            )
+            typecheck.is_struct(
+                newInfo, raritan.rpc.assetmgrmodel.AssetStrip.StripInfo, AssertionError
+            )
 
             self.oldInfo = oldInfo
             self.newInfo = newInfo
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStrip.StripInfoChangedEvent, self).encode()
-            json['oldInfo'] = raritan.rpc.assetmgrmodel.AssetStrip.StripInfo.encode(self.oldInfo)
-            json['newInfo'] = raritan.rpc.assetmgrmodel.AssetStrip.StripInfo.encode(self.newInfo)
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStrip.StripInfoChangedEvent, self
+            ).encode()
+            json["oldInfo"] = raritan.rpc.assetmgrmodel.AssetStrip.StripInfo.encode(
+                self.oldInfo
+            )
+            json["newInfo"] = raritan.rpc.assetmgrmodel.AssetStrip.StripInfo.encode(
+                self.newInfo
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldInfo = raritan.rpc.assetmgrmodel.AssetStrip.StripInfo.decode(json['oldInfo'], agent),
-                newInfo = raritan.rpc.assetmgrmodel.AssetStrip.StripInfo.decode(json['newInfo'], agent),
+                oldInfo=raritan.rpc.assetmgrmodel.AssetStrip.StripInfo.decode(
+                    json["oldInfo"], agent
+                ),
+                newInfo=raritan.rpc.assetmgrmodel.AssetStrip.StripInfo.decode(
+                    json["newInfo"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldInfo", "newInfo"]
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStrip.StripInfoChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStrip.StripInfoChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -583,36 +890,65 @@ class AssetStrip(Interface):
         idlType = "assetmgrmodel.AssetStrip.StateChangedEvent:1.0.0"
 
         def __init__(self, oldState, newState, deviceInfo, source):
-            super(raritan.rpc.assetmgrmodel.AssetStrip.StateChangedEvent, self).__init__(source)
-            typecheck.is_enum(oldState, raritan.rpc.assetmgrmodel.AssetStrip.State, AssertionError)
-            typecheck.is_enum(newState, raritan.rpc.assetmgrmodel.AssetStrip.State, AssertionError)
-            typecheck.is_struct(deviceInfo, raritan.rpc.assetmgrmodel.AssetStrip.DeviceInfo, AssertionError)
+            super(
+                raritan.rpc.assetmgrmodel.AssetStrip.StateChangedEvent, self
+            ).__init__(source)
+            typecheck.is_enum(
+                oldState, raritan.rpc.assetmgrmodel.AssetStrip.State, AssertionError
+            )
+            typecheck.is_enum(
+                newState, raritan.rpc.assetmgrmodel.AssetStrip.State, AssertionError
+            )
+            typecheck.is_struct(
+                deviceInfo,
+                raritan.rpc.assetmgrmodel.AssetStrip.DeviceInfo,
+                AssertionError,
+            )
 
             self.oldState = oldState
             self.newState = newState
             self.deviceInfo = deviceInfo
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStrip.StateChangedEvent, self).encode()
-            json['oldState'] = raritan.rpc.assetmgrmodel.AssetStrip.State.encode(self.oldState)
-            json['newState'] = raritan.rpc.assetmgrmodel.AssetStrip.State.encode(self.newState)
-            json['deviceInfo'] = raritan.rpc.assetmgrmodel.AssetStrip.DeviceInfo.encode(self.deviceInfo)
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStrip.StateChangedEvent, self
+            ).encode()
+            json["oldState"] = raritan.rpc.assetmgrmodel.AssetStrip.State.encode(
+                self.oldState
+            )
+            json["newState"] = raritan.rpc.assetmgrmodel.AssetStrip.State.encode(
+                self.newState
+            )
+            json["deviceInfo"] = raritan.rpc.assetmgrmodel.AssetStrip.DeviceInfo.encode(
+                self.deviceInfo
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldState = raritan.rpc.assetmgrmodel.AssetStrip.State.decode(json['oldState']),
-                newState = raritan.rpc.assetmgrmodel.AssetStrip.State.decode(json['newState']),
-                deviceInfo = raritan.rpc.assetmgrmodel.AssetStrip.DeviceInfo.decode(json['deviceInfo'], agent),
+                oldState=raritan.rpc.assetmgrmodel.AssetStrip.State.decode(
+                    json["oldState"]
+                ),
+                newState=raritan.rpc.assetmgrmodel.AssetStrip.State.decode(
+                    json["newState"]
+                ),
+                deviceInfo=raritan.rpc.assetmgrmodel.AssetStrip.DeviceInfo.decode(
+                    json["deviceInfo"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldState", "newState", "deviceInfo"]
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStrip.StateChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStrip.StateChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -620,35 +956,52 @@ class AssetStrip(Interface):
         idlType = "assetmgrmodel.AssetStrip.RackUnitChangedEvent:1.0.0"
 
         def __init__(self, rackUnitNumber, rackUnit, actUserName, actIpAddr, source):
-            super(raritan.rpc.assetmgrmodel.AssetStrip.RackUnitChangedEvent, self).__init__(actUserName, actIpAddr, source)
+            super(
+                raritan.rpc.assetmgrmodel.AssetStrip.RackUnitChangedEvent, self
+            ).__init__(actUserName, actIpAddr, source)
             typecheck.is_int(rackUnitNumber, AssertionError)
-            typecheck.is_struct(rackUnit, raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo, AssertionError)
+            typecheck.is_struct(
+                rackUnit,
+                raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo,
+                AssertionError,
+            )
 
             self.rackUnitNumber = rackUnitNumber
             self.rackUnit = rackUnit
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStrip.RackUnitChangedEvent, self).encode()
-            json['rackUnitNumber'] = self.rackUnitNumber
-            json['rackUnit'] = raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.encode(self.rackUnit)
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStrip.RackUnitChangedEvent, self
+            ).encode()
+            json["rackUnitNumber"] = self.rackUnitNumber
+            json["rackUnit"] = raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.encode(
+                self.rackUnit
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                rackUnitNumber = json['rackUnitNumber'],
-                rackUnit = raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.decode(json['rackUnit'], agent),
+                rackUnitNumber=json["rackUnitNumber"],
+                rackUnit=raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.decode(
+                    json["rackUnit"], agent
+                ),
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["rackUnitNumber", "rackUnit"]
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStrip.RackUnitChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStrip.RackUnitChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # structure
@@ -657,8 +1010,12 @@ class AssetStrip(Interface):
         elements = ["tag", "info", "parentBladeTagId", "slotPosition"]
 
         def __init__(self, tag, info, parentBladeTagId, slotPosition):
-            typecheck.is_struct(tag, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, AssertionError)
-            typecheck.is_struct(info, raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo, AssertionError)
+            typecheck.is_struct(
+                tag, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, AssertionError
+            )
+            typecheck.is_struct(
+                info, raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo, AssertionError
+            )
             typecheck.is_string(parentBladeTagId, AssertionError)
             typecheck.is_int(slotPosition, AssertionError)
 
@@ -670,19 +1027,25 @@ class AssetStrip(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                tag = raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(json['tag'], agent),
-                info = raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.decode(json['info'], agent),
-                parentBladeTagId = json['parentBladeTagId'],
-                slotPosition = json['slotPosition'],
+                tag=raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(
+                    json["tag"], agent
+                ),
+                info=raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.decode(
+                    json["info"], agent
+                ),
+                parentBladeTagId=json["parentBladeTagId"],
+                slotPosition=json["slotPosition"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['tag'] = raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.encode(self.tag)
-            json['info'] = raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.encode(self.info)
-            json['parentBladeTagId'] = self.parentBladeTagId
-            json['slotPosition'] = self.slotPosition
+            json["tag"] = raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.encode(self.tag)
+            json["info"] = raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.encode(
+                self.info
+            )
+            json["parentBladeTagId"] = self.parentBladeTagId
+            json["slotPosition"] = self.slotPosition
             return json
 
     # value object
@@ -692,32 +1055,55 @@ class AssetStrip(Interface):
         def __init__(self, tags, allTags, source):
             super(raritan.rpc.assetmgrmodel.AssetStrip.TagEvent, self).__init__(source)
             for x0 in tags:
-                typecheck.is_struct(x0, raritan.rpc.assetmgrmodel.AssetStrip.TagChangeInfo, AssertionError)
+                typecheck.is_struct(
+                    x0,
+                    raritan.rpc.assetmgrmodel.AssetStrip.TagChangeInfo,
+                    AssertionError,
+                )
             for x0 in allTags:
-                typecheck.is_struct(x0, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, AssertionError)
+                typecheck.is_struct(
+                    x0, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, AssertionError
+                )
 
             self.tags = tags
             self.allTags = allTags
 
         def encode(self):
             json = super(raritan.rpc.assetmgrmodel.AssetStrip.TagEvent, self).encode()
-            json['tags'] = [raritan.rpc.assetmgrmodel.AssetStrip.TagChangeInfo.encode(x0) for x0 in self.tags]
-            json['allTags'] = [raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.encode(x0) for x0 in self.allTags]
+            json["tags"] = [
+                raritan.rpc.assetmgrmodel.AssetStrip.TagChangeInfo.encode(x0)
+                for x0 in self.tags
+            ]
+            json["allTags"] = [
+                raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.encode(x0)
+                for x0 in self.allTags
+            ]
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                tags = [raritan.rpc.assetmgrmodel.AssetStrip.TagChangeInfo.decode(x0, agent) for x0 in json['tags']],
-                allTags = [raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent) for x0 in json['allTags']],
+                tags=[
+                    raritan.rpc.assetmgrmodel.AssetStrip.TagChangeInfo.decode(x0, agent)
+                    for x0 in json["tags"]
+                ],
+                allTags=[
+                    raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent)
+                    for x0 in json["allTags"]
+                ],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["tags", "allTags"]
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStrip.TagEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStrip.TagEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -725,26 +1111,41 @@ class AssetStrip(Interface):
         idlType = "assetmgrmodel.AssetStrip.TagAddedEvent:1.0.0"
 
         def __init__(self, tags, allTags, source):
-            super(raritan.rpc.assetmgrmodel.AssetStrip.TagAddedEvent, self).__init__(tags, allTags, source)
+            super(raritan.rpc.assetmgrmodel.AssetStrip.TagAddedEvent, self).__init__(
+                tags, allTags, source
+            )
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStrip.TagAddedEvent, self).encode()
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStrip.TagAddedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for assetmgrmodel.AssetStrip_2_0_1.TagEvent
-                tags = [raritan.rpc.assetmgrmodel.AssetStrip.TagChangeInfo.decode(x0, agent) for x0 in json['tags']],
-                allTags = [raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent) for x0 in json['allTags']],
+                tags=[
+                    raritan.rpc.assetmgrmodel.AssetStrip.TagChangeInfo.decode(x0, agent)
+                    for x0 in json["tags"]
+                ],
+                allTags=[
+                    raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent)
+                    for x0 in json["allTags"]
+                ],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStrip.TagAddedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStrip.TagAddedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -752,26 +1153,41 @@ class AssetStrip(Interface):
         idlType = "assetmgrmodel.AssetStrip.TagRemovedEvent:1.0.0"
 
         def __init__(self, tags, allTags, source):
-            super(raritan.rpc.assetmgrmodel.AssetStrip.TagRemovedEvent, self).__init__(tags, allTags, source)
+            super(raritan.rpc.assetmgrmodel.AssetStrip.TagRemovedEvent, self).__init__(
+                tags, allTags, source
+            )
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStrip.TagRemovedEvent, self).encode()
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStrip.TagRemovedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for assetmgrmodel.AssetStrip_2_0_1.TagEvent
-                tags = [raritan.rpc.assetmgrmodel.AssetStrip.TagChangeInfo.decode(x0, agent) for x0 in json['tags']],
-                allTags = [raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent) for x0 in json['allTags']],
+                tags=[
+                    raritan.rpc.assetmgrmodel.AssetStrip.TagChangeInfo.decode(x0, agent)
+                    for x0 in json["tags"]
+                ],
+                allTags=[
+                    raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent)
+                    for x0 in json["allTags"]
+                ],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStrip.TagRemovedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStrip.TagRemovedEvent, self
+                ).listElements()
+            )
             return elements
 
     # enumeration
@@ -788,28 +1204,50 @@ class AssetStrip(Interface):
         idlType = "assetmgrmodel.AssetStrip.FirmwareUpdateStateChangedEvent:1.0.0"
 
         def __init__(self, state, source):
-            super(raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateStateChangedEvent, self).__init__(source)
-            typecheck.is_enum(state, raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateState, AssertionError)
+            super(
+                raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateStateChangedEvent,
+                self,
+            ).__init__(source)
+            typecheck.is_enum(
+                state,
+                raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateState,
+                AssertionError,
+            )
 
             self.state = state
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateStateChangedEvent, self).encode()
-            json['state'] = raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateState.encode(self.state)
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateStateChangedEvent,
+                self,
+            ).encode()
+            json[
+                "state"
+            ] = raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateState.encode(
+                self.state
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                state = raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateState.decode(json['state']),
+                state=raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateState.decode(
+                    json["state"]
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["state"]
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateStateChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStrip.FirmwareUpdateStateChangedEvent,
+                    self,
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -817,28 +1255,37 @@ class AssetStrip(Interface):
         idlType = "assetmgrmodel.AssetStrip.BladeOverflowChangedEvent:1.0.0"
 
         def __init__(self, overflow, source):
-            super(raritan.rpc.assetmgrmodel.AssetStrip.BladeOverflowChangedEvent, self).__init__(source)
+            super(
+                raritan.rpc.assetmgrmodel.AssetStrip.BladeOverflowChangedEvent, self
+            ).__init__(source)
             typecheck.is_bool(overflow, AssertionError)
 
             self.overflow = overflow
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStrip.BladeOverflowChangedEvent, self).encode()
-            json['overflow'] = self.overflow
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStrip.BladeOverflowChangedEvent, self
+            ).encode()
+            json["overflow"] = self.overflow
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                overflow = json['overflow'],
+                overflow=json["overflow"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["overflow"]
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStrip.BladeOverflowChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStrip.BladeOverflowChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -846,32 +1293,61 @@ class AssetStrip(Interface):
         idlType = "assetmgrmodel.AssetStrip.OrientationChangedEvent:1.0.0"
 
         def __init__(self, oldOrientation, newOrientation, source):
-            super(raritan.rpc.assetmgrmodel.AssetStrip.OrientationChangedEvent, self).__init__(source)
-            typecheck.is_enum(oldOrientation, raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation, AssertionError)
-            typecheck.is_enum(newOrientation, raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation, AssertionError)
+            super(
+                raritan.rpc.assetmgrmodel.AssetStrip.OrientationChangedEvent, self
+            ).__init__(source)
+            typecheck.is_enum(
+                oldOrientation,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation,
+                AssertionError,
+            )
+            typecheck.is_enum(
+                newOrientation,
+                raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation,
+                AssertionError,
+            )
 
             self.oldOrientation = oldOrientation
             self.newOrientation = newOrientation
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStrip.OrientationChangedEvent, self).encode()
-            json['oldOrientation'] = raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.encode(self.oldOrientation)
-            json['newOrientation'] = raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.encode(self.newOrientation)
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStrip.OrientationChangedEvent, self
+            ).encode()
+            json[
+                "oldOrientation"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.encode(
+                self.oldOrientation
+            )
+            json[
+                "newOrientation"
+            ] = raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.encode(
+                self.newOrientation
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldOrientation = raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.decode(json['oldOrientation']),
-                newOrientation = raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.decode(json['newOrientation']),
+                oldOrientation=raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.decode(
+                    json["oldOrientation"]
+                ),
+                newOrientation=raritan.rpc.assetmgrmodel.AssetStripConfig.Orientation.decode(
+                    json["newOrientation"]
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldOrientation", "newOrientation"]
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStrip.OrientationChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStrip.OrientationChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -879,7 +1355,9 @@ class AssetStrip(Interface):
         idlType = "assetmgrmodel.AssetStrip.CompositionChangedEvent:1.0.0"
 
         def __init__(self, oldComponentCount, newComponentCount, source):
-            super(raritan.rpc.assetmgrmodel.AssetStrip.CompositionChangedEvent, self).__init__(source)
+            super(
+                raritan.rpc.assetmgrmodel.AssetStrip.CompositionChangedEvent, self
+            ).__init__(source)
             typecheck.is_int(oldComponentCount, AssertionError)
             typecheck.is_int(newComponentCount, AssertionError)
 
@@ -887,69 +1365,95 @@ class AssetStrip(Interface):
             self.newComponentCount = newComponentCount
 
         def encode(self):
-            json = super(raritan.rpc.assetmgrmodel.AssetStrip.CompositionChangedEvent, self).encode()
-            json['oldComponentCount'] = self.oldComponentCount
-            json['newComponentCount'] = self.newComponentCount
+            json = super(
+                raritan.rpc.assetmgrmodel.AssetStrip.CompositionChangedEvent, self
+            ).encode()
+            json["oldComponentCount"] = self.oldComponentCount
+            json["newComponentCount"] = self.newComponentCount
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldComponentCount = json['oldComponentCount'],
-                newComponentCount = json['newComponentCount'],
+                oldComponentCount=json["oldComponentCount"],
+                newComponentCount=json["newComponentCount"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldComponentCount", "newComponentCount"]
-            elements = elements + super(raritan.rpc.assetmgrmodel.AssetStrip.CompositionChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.assetmgrmodel.AssetStrip.CompositionChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getState(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getState', args)
-        _ret_ = raritan.rpc.assetmgrmodel.AssetStrip.State.decode(rsp['_ret_'])
-        typecheck.is_enum(_ret_, raritan.rpc.assetmgrmodel.AssetStrip.State, DecodeException)
+        rsp = agent.json_rpc(self.target, "getState", args)
+        _ret_ = raritan.rpc.assetmgrmodel.AssetStrip.State.decode(rsp["_ret_"])
+        typecheck.is_enum(
+            _ret_, raritan.rpc.assetmgrmodel.AssetStrip.State, DecodeException
+        )
         return _ret_
 
     def getDeviceInfo(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDeviceInfo', args)
-        _ret_ = raritan.rpc.assetmgrmodel.AssetStrip.DeviceInfo.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.assetmgrmodel.AssetStrip.DeviceInfo, DecodeException)
+        rsp = agent.json_rpc(self.target, "getDeviceInfo", args)
+        _ret_ = raritan.rpc.assetmgrmodel.AssetStrip.DeviceInfo.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_, raritan.rpc.assetmgrmodel.AssetStrip.DeviceInfo, DecodeException
+        )
         return _ret_
 
     def getStripInfo(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getStripInfo', args)
-        _ret_ = raritan.rpc.assetmgrmodel.AssetStrip.StripInfo.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.assetmgrmodel.AssetStrip.StripInfo, DecodeException)
+        rsp = agent.json_rpc(self.target, "getStripInfo", args)
+        _ret_ = raritan.rpc.assetmgrmodel.AssetStrip.StripInfo.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_, raritan.rpc.assetmgrmodel.AssetStrip.StripInfo, DecodeException
+        )
         return _ret_
 
     def getRackUnitInfo(self, rackUnitNumber):
         agent = self.agent
         typecheck.is_int(rackUnitNumber, AssertionError)
         args = {}
-        args['rackUnitNumber'] = rackUnitNumber
-        rsp = agent.json_rpc(self.target, 'getRackUnitInfo', args)
-        _ret_ = rsp['_ret_']
-        info = raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.decode(rsp['info'], agent)
+        args["rackUnitNumber"] = rackUnitNumber
+        rsp = agent.json_rpc(self.target, "getRackUnitInfo", args)
+        _ret_ = rsp["_ret_"]
+        info = raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.decode(
+            rsp["info"], agent
+        )
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_struct(info, raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo, DecodeException)
+        typecheck.is_struct(
+            info, raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo, DecodeException
+        )
         return (_ret_, info)
 
     def getAllRackUnitInfos(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getAllRackUnitInfos', args)
-        _ret_ = [raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getAllRackUnitInfos", args)
+        _ret_ = [
+            raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo.decode(x0, agent)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.assetmgrmodel.AssetStrip.RackUnitInfo, DecodeException
+            )
         return _ret_
 
     def getTag(self, rackUnitNumber, slotNumber):
@@ -957,52 +1461,73 @@ class AssetStrip(Interface):
         typecheck.is_int(rackUnitNumber, AssertionError)
         typecheck.is_int(slotNumber, AssertionError)
         args = {}
-        args['rackUnitNumber'] = rackUnitNumber
-        args['slotNumber'] = slotNumber
-        rsp = agent.json_rpc(self.target, 'getTag', args)
-        _ret_ = rsp['_ret_']
-        tagInfo = raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(rsp['tagInfo'], agent)
+        args["rackUnitNumber"] = rackUnitNumber
+        args["slotNumber"] = slotNumber
+        rsp = agent.json_rpc(self.target, "getTag", args)
+        _ret_ = rsp["_ret_"]
+        tagInfo = raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(
+            rsp["tagInfo"], agent
+        )
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_struct(tagInfo, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, DecodeException)
+        typecheck.is_struct(
+            tagInfo, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, DecodeException
+        )
         return (_ret_, tagInfo)
 
     def getAllTags(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getAllTags', args)
-        _ret_ = [raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getAllTags", args)
+        _ret_ = [
+            raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, DecodeException
+            )
         return _ret_
 
     def getMainTags(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getMainTags', args)
-        _ret_ = [raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getMainTags", args)
+        _ret_ = [
+            raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, DecodeException
+            )
         return _ret_
 
     def getExtensionTags(self, rackUnitNumber):
         agent = self.agent
         typecheck.is_int(rackUnitNumber, AssertionError)
         args = {}
-        args['rackUnitNumber'] = rackUnitNumber
-        rsp = agent.json_rpc(self.target, 'getExtensionTags', args)
-        _ret_ = rsp['_ret_']
-        tags = [raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent) for x0 in rsp['tags']]
+        args["rackUnitNumber"] = rackUnitNumber
+        rsp = agent.json_rpc(self.target, "getExtensionTags", args)
+        _ret_ = rsp["_ret_"]
+        tags = [
+            raritan.rpc.assetmgrmodel.AssetStrip.TagInfo.decode(x0, agent)
+            for x0 in rsp["tags"]
+        ]
         typecheck.is_int(_ret_, DecodeException)
         for x0 in tags:
-            typecheck.is_struct(x0, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.assetmgrmodel.AssetStrip.TagInfo, DecodeException
+            )
         return (_ret_, tags)
 
     def triggerPowercycle(self, hard):
         agent = self.agent
         typecheck.is_bool(hard, AssertionError)
         args = {}
-        args['hard'] = hard
-        rsp = agent.json_rpc(self.target, 'triggerPowercycle', args)
+        args["hard"] = hard
+        rsp = agent.json_rpc(self.target, "triggerPowercycle", args)
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -1011,7 +1536,14 @@ class AssetStrip(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.assetmgrmodel
 
 
@@ -1042,25 +1574,30 @@ class AssetStripLogger(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                capacity = json['capacity'],
-                oldestRecord = json['oldestRecord'],
-                newestRecord = json['newestRecord'],
-                totalEventCount = json['totalEventCount'],
+                capacity=json["capacity"],
+                oldestRecord=json["oldestRecord"],
+                newestRecord=json["newestRecord"],
+                totalEventCount=json["totalEventCount"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['capacity'] = self.capacity
-            json['oldestRecord'] = self.oldestRecord
-            json['newestRecord'] = self.newestRecord
-            json['totalEventCount'] = self.totalEventCount
+            json["capacity"] = self.capacity
+            json["oldestRecord"] = self.oldestRecord
+            json["newestRecord"] = self.newestRecord
+            json["totalEventCount"] = self.totalEventCount
             return json
 
     # enumeration
     class RecordType(Enumeration):
         idlType = "assetmgrmodel.AssetStripLogger.RecordType:1.0.0"
-        values = ["EMPTY", "ASSET_TAG_CONNECTED", "ASSET_TAG_DISCONNECTED", "ASSET_STRIP_STATE_CHANGED"]
+        values = [
+            "EMPTY",
+            "ASSET_TAG_CONNECTED",
+            "ASSET_TAG_DISCONNECTED",
+            "ASSET_STRIP_STATE_CHANGED",
+        ]
 
     RecordType.EMPTY = RecordType(0)
     RecordType.ASSET_TAG_CONNECTED = RecordType(1)
@@ -1070,18 +1607,45 @@ class AssetStripLogger(Interface):
     # structure
     class Record(Structure):
         idlType = "assetmgrmodel.AssetStripLogger.Record:1.0.0"
-        elements = ["timestamp", "type", "assetStripNumber", "rackUnitNumber", "rackUnitPosition", "slotNumber", "tagId", "parentBladeId", "state"]
+        elements = [
+            "timestamp",
+            "type",
+            "assetStripNumber",
+            "rackUnitNumber",
+            "rackUnitPosition",
+            "slotNumber",
+            "tagId",
+            "parentBladeId",
+            "state",
+        ]
 
-        def __init__(self, timestamp, type, assetStripNumber, rackUnitNumber, rackUnitPosition, slotNumber, tagId, parentBladeId, state):
+        def __init__(
+            self,
+            timestamp,
+            type,
+            assetStripNumber,
+            rackUnitNumber,
+            rackUnitPosition,
+            slotNumber,
+            tagId,
+            parentBladeId,
+            state,
+        ):
             typecheck.is_time(timestamp, AssertionError)
-            typecheck.is_enum(type, raritan.rpc.assetmgrmodel.AssetStripLogger.RecordType, AssertionError)
+            typecheck.is_enum(
+                type,
+                raritan.rpc.assetmgrmodel.AssetStripLogger.RecordType,
+                AssertionError,
+            )
             typecheck.is_int(assetStripNumber, AssertionError)
             typecheck.is_int(rackUnitNumber, AssertionError)
             typecheck.is_int(rackUnitPosition, AssertionError)
             typecheck.is_int(slotNumber, AssertionError)
             typecheck.is_string(tagId, AssertionError)
             typecheck.is_string(parentBladeId, AssertionError)
-            typecheck.is_enum(state, raritan.rpc.assetmgrmodel.AssetStrip.State, AssertionError)
+            typecheck.is_enum(
+                state, raritan.rpc.assetmgrmodel.AssetStrip.State, AssertionError
+            )
 
             self.timestamp = timestamp
             self.type = type
@@ -1096,37 +1660,47 @@ class AssetStripLogger(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                timestamp = raritan.rpc.Time.decode(json['timestamp']),
-                type = raritan.rpc.assetmgrmodel.AssetStripLogger.RecordType.decode(json['type']),
-                assetStripNumber = json['assetStripNumber'],
-                rackUnitNumber = json['rackUnitNumber'],
-                rackUnitPosition = json['rackUnitPosition'],
-                slotNumber = json['slotNumber'],
-                tagId = json['tagId'],
-                parentBladeId = json['parentBladeId'],
-                state = raritan.rpc.assetmgrmodel.AssetStrip.State.decode(json['state']),
+                timestamp=raritan.rpc.Time.decode(json["timestamp"]),
+                type=raritan.rpc.assetmgrmodel.AssetStripLogger.RecordType.decode(
+                    json["type"]
+                ),
+                assetStripNumber=json["assetStripNumber"],
+                rackUnitNumber=json["rackUnitNumber"],
+                rackUnitPosition=json["rackUnitPosition"],
+                slotNumber=json["slotNumber"],
+                tagId=json["tagId"],
+                parentBladeId=json["parentBladeId"],
+                state=raritan.rpc.assetmgrmodel.AssetStrip.State.decode(json["state"]),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['timestamp'] = raritan.rpc.Time.encode(self.timestamp)
-            json['type'] = raritan.rpc.assetmgrmodel.AssetStripLogger.RecordType.encode(self.type)
-            json['assetStripNumber'] = self.assetStripNumber
-            json['rackUnitNumber'] = self.rackUnitNumber
-            json['rackUnitPosition'] = self.rackUnitPosition
-            json['slotNumber'] = self.slotNumber
-            json['tagId'] = self.tagId
-            json['parentBladeId'] = self.parentBladeId
-            json['state'] = raritan.rpc.assetmgrmodel.AssetStrip.State.encode(self.state)
+            json["timestamp"] = raritan.rpc.Time.encode(self.timestamp)
+            json["type"] = raritan.rpc.assetmgrmodel.AssetStripLogger.RecordType.encode(
+                self.type
+            )
+            json["assetStripNumber"] = self.assetStripNumber
+            json["rackUnitNumber"] = self.rackUnitNumber
+            json["rackUnitPosition"] = self.rackUnitPosition
+            json["slotNumber"] = self.slotNumber
+            json["tagId"] = self.tagId
+            json["parentBladeId"] = self.parentBladeId
+            json["state"] = raritan.rpc.assetmgrmodel.AssetStrip.State.encode(
+                self.state
+            )
             return json
 
     def getInfo(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getInfo', args)
-        _ret_ = raritan.rpc.assetmgrmodel.AssetStripLogger.Info.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.assetmgrmodel.AssetStripLogger.Info, DecodeException)
+        rsp = agent.json_rpc(self.target, "getInfo", args)
+        _ret_ = raritan.rpc.assetmgrmodel.AssetStripLogger.Info.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_, raritan.rpc.assetmgrmodel.AssetStripLogger.Info, DecodeException
+        )
         return _ret_
 
     def getRecords(self, id, count):
@@ -1134,12 +1708,17 @@ class AssetStripLogger(Interface):
         typecheck.is_int(id, AssertionError)
         typecheck.is_int(count, AssertionError)
         args = {}
-        args['id'] = id
-        args['count'] = count
-        rsp = agent.json_rpc(self.target, 'getRecords', args)
-        _ret_ = rsp['_ret_']
-        records = [raritan.rpc.assetmgrmodel.AssetStripLogger.Record.decode(x0, agent) for x0 in rsp['records']]
+        args["id"] = id
+        args["count"] = count
+        rsp = agent.json_rpc(self.target, "getRecords", args)
+        _ret_ = rsp["_ret_"]
+        records = [
+            raritan.rpc.assetmgrmodel.AssetStripLogger.Record.decode(x0, agent)
+            for x0 in rsp["records"]
+        ]
         typecheck.is_int(_ret_, DecodeException)
         for x0 in records:
-            typecheck.is_struct(x0, raritan.rpc.assetmgrmodel.AssetStripLogger.Record, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.assetmgrmodel.AssetStripLogger.Record, DecodeException
+            )
         return (_ret_, records)

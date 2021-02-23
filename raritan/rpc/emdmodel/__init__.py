@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.emdmodel
 
 import raritan.rpc.event
@@ -29,10 +36,20 @@ class Emd(Interface):
     # structure
     class MetaData(Structure):
         idlType = "emdmodel.Emd.MetaData:1.0.0"
-        elements = ["nameplate", "ctrlBoardSerial", "hwRevision", "fwRevision", "macAddress"]
+        elements = [
+            "nameplate",
+            "ctrlBoardSerial",
+            "hwRevision",
+            "fwRevision",
+            "macAddress",
+        ]
 
-        def __init__(self, nameplate, ctrlBoardSerial, hwRevision, fwRevision, macAddress):
-            typecheck.is_struct(nameplate, raritan.rpc.pdumodel.Nameplate, AssertionError)
+        def __init__(
+            self, nameplate, ctrlBoardSerial, hwRevision, fwRevision, macAddress
+        ):
+            typecheck.is_struct(
+                nameplate, raritan.rpc.pdumodel.Nameplate, AssertionError
+            )
             typecheck.is_string(ctrlBoardSerial, AssertionError)
             typecheck.is_string(hwRevision, AssertionError)
             typecheck.is_string(fwRevision, AssertionError)
@@ -47,21 +64,23 @@ class Emd(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                nameplate = raritan.rpc.pdumodel.Nameplate.decode(json['nameplate'], agent),
-                ctrlBoardSerial = json['ctrlBoardSerial'],
-                hwRevision = json['hwRevision'],
-                fwRevision = json['fwRevision'],
-                macAddress = json['macAddress'],
+                nameplate=raritan.rpc.pdumodel.Nameplate.decode(
+                    json["nameplate"], agent
+                ),
+                ctrlBoardSerial=json["ctrlBoardSerial"],
+                hwRevision=json["hwRevision"],
+                fwRevision=json["fwRevision"],
+                macAddress=json["macAddress"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['nameplate'] = raritan.rpc.pdumodel.Nameplate.encode(self.nameplate)
-            json['ctrlBoardSerial'] = self.ctrlBoardSerial
-            json['hwRevision'] = self.hwRevision
-            json['fwRevision'] = self.fwRevision
-            json['macAddress'] = self.macAddress
+            json["nameplate"] = raritan.rpc.pdumodel.Nameplate.encode(self.nameplate)
+            json["ctrlBoardSerial"] = self.ctrlBoardSerial
+            json["hwRevision"] = self.hwRevision
+            json["fwRevision"] = self.fwRevision
+            json["macAddress"] = self.macAddress
             return json
 
     # structure
@@ -77,13 +96,13 @@ class Emd(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                name = json['name'],
+                name=json["name"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['name'] = self.name
+            json["name"] = self.name
             return json
 
     # value object
@@ -91,58 +110,79 @@ class Emd(Interface):
         idlType = "emdmodel.Emd.SettingsChangedEvent:1.0.0"
 
         def __init__(self, oldSettings, newSettings, actUserName, actIpAddr, source):
-            super(raritan.rpc.emdmodel.Emd.SettingsChangedEvent, self).__init__(actUserName, actIpAddr, source)
-            typecheck.is_struct(oldSettings, raritan.rpc.emdmodel.Emd.Settings, AssertionError)
-            typecheck.is_struct(newSettings, raritan.rpc.emdmodel.Emd.Settings, AssertionError)
+            super(raritan.rpc.emdmodel.Emd.SettingsChangedEvent, self).__init__(
+                actUserName, actIpAddr, source
+            )
+            typecheck.is_struct(
+                oldSettings, raritan.rpc.emdmodel.Emd.Settings, AssertionError
+            )
+            typecheck.is_struct(
+                newSettings, raritan.rpc.emdmodel.Emd.Settings, AssertionError
+            )
 
             self.oldSettings = oldSettings
             self.newSettings = newSettings
 
         def encode(self):
             json = super(raritan.rpc.emdmodel.Emd.SettingsChangedEvent, self).encode()
-            json['oldSettings'] = raritan.rpc.emdmodel.Emd.Settings.encode(self.oldSettings)
-            json['newSettings'] = raritan.rpc.emdmodel.Emd.Settings.encode(self.newSettings)
+            json["oldSettings"] = raritan.rpc.emdmodel.Emd.Settings.encode(
+                self.oldSettings
+            )
+            json["newSettings"] = raritan.rpc.emdmodel.Emd.Settings.encode(
+                self.newSettings
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldSettings = raritan.rpc.emdmodel.Emd.Settings.decode(json['oldSettings'], agent),
-                newSettings = raritan.rpc.emdmodel.Emd.Settings.decode(json['newSettings'], agent),
+                oldSettings=raritan.rpc.emdmodel.Emd.Settings.decode(
+                    json["oldSettings"], agent
+                ),
+                newSettings=raritan.rpc.emdmodel.Emd.Settings.decode(
+                    json["newSettings"], agent
+                ),
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldSettings", "newSettings"]
-            elements = elements + super(raritan.rpc.emdmodel.Emd.SettingsChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.emdmodel.Emd.SettingsChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getMetaData(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getMetaData', args)
-        _ret_ = raritan.rpc.emdmodel.Emd.MetaData.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getMetaData", args)
+        _ret_ = raritan.rpc.emdmodel.Emd.MetaData.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.emdmodel.Emd.MetaData, DecodeException)
         return _ret_
 
     def getPeripheralDeviceManager(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getPeripheralDeviceManager', args)
-        _ret_ = Interface.decode(rsp['_ret_'], agent)
-        typecheck.is_interface(_ret_, raritan.rpc.peripheral.DeviceManager, DecodeException)
+        rsp = agent.json_rpc(self.target, "getPeripheralDeviceManager", args)
+        _ret_ = Interface.decode(rsp["_ret_"], agent)
+        typecheck.is_interface(
+            _ret_, raritan.rpc.peripheral.DeviceManager, DecodeException
+        )
         return _ret_
 
     def getSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSettings', args)
-        _ret_ = raritan.rpc.emdmodel.Emd.Settings.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getSettings", args)
+        _ret_ = raritan.rpc.emdmodel.Emd.Settings.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.emdmodel.Emd.Settings, DecodeException)
         return _ret_
 
@@ -150,17 +190,17 @@ class Emd(Interface):
         agent = self.agent
         typecheck.is_struct(settings, raritan.rpc.emdmodel.Emd.Settings, AssertionError)
         args = {}
-        args['settings'] = raritan.rpc.emdmodel.Emd.Settings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.emdmodel.Emd.Settings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getFeaturePorts(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getFeaturePorts', args)
-        _ret_ = [Interface.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getFeaturePorts", args)
+        _ret_ = [Interface.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_interface(x0, raritan.rpc.portsmodel.Port, DecodeException)
         return _ret_
@@ -168,8 +208,8 @@ class Emd(Interface):
     def getAuxiliaryPorts(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getAuxiliaryPorts', args)
-        _ret_ = [Interface.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getAuxiliaryPorts", args)
+        _ret_ = [Interface.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_interface(x0, raritan.rpc.portsmodel.Port, DecodeException)
         return _ret_
@@ -177,7 +217,7 @@ class Emd(Interface):
     def getSensorLogger(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSensorLogger', args)
-        _ret_ = Interface.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getSensorLogger", args)
+        _ret_ = Interface.decode(rsp["_ret_"], agent)
         typecheck.is_interface(_ret_, raritan.rpc.sensors.Logger, DecodeException)
         return _ret_

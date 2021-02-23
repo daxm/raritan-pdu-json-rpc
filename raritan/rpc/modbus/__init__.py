@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.modbus
 
 
@@ -39,31 +46,31 @@ class Device(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                vendor = json['vendor'],
-                code = json['code'],
-                version = json['version'],
-                url = json['url'],
-                name = json['name'],
-                model = json['model'],
-                app = json['app'],
+                vendor=json["vendor"],
+                code=json["code"],
+                version=json["version"],
+                url=json["url"],
+                name=json["name"],
+                model=json["model"],
+                app=json["app"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['vendor'] = self.vendor
-            json['code'] = self.code
-            json['version'] = self.version
-            json['url'] = self.url
-            json['name'] = self.name
-            json['model'] = self.model
-            json['app'] = self.app
+            json["vendor"] = self.vendor
+            json["code"] = self.code
+            json["version"] = self.version
+            json["url"] = self.url
+            json["name"] = self.name
+            json["model"] = self.model
+            json["app"] = self.app
             return json
 
     def readDeviceIdentification(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'readDeviceIdentification', args)
-        _ret_ = raritan.rpc.modbus.Device.DeviceID.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "readDeviceIdentification", args)
+        _ret_ = raritan.rpc.modbus.Device.DeviceID.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.modbus.Device.DeviceID, DecodeException)
         return _ret_

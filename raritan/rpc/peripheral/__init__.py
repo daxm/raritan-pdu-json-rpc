@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.event
 
 import raritan.rpc.idl
@@ -19,7 +26,13 @@ import raritan.rpc.sensors
 # enumeration
 class PortType(Enumeration):
     idlType = "peripheral.PortType:1.0.0"
-    values = ["ONEWIRE_ONBOARD", "ONEWIRE_DEV_PORT", "ONEWIRE_HUB_PORT", "ONEWIRE_CHAIN_POS"]
+    values = [
+        "ONEWIRE_ONBOARD",
+        "ONEWIRE_DEV_PORT",
+        "ONEWIRE_HUB_PORT",
+        "ONEWIRE_CHAIN_POS",
+    ]
+
 
 PortType.ONEWIRE_ONBOARD = PortType(0)
 PortType.ONEWIRE_DEV_PORT = PortType(1)
@@ -41,16 +54,17 @@ class PosElement(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            portType = raritan.rpc.peripheral.PortType.decode(json['portType']),
-            port = json['port'],
+            portType=raritan.rpc.peripheral.PortType.decode(json["portType"]),
+            port=json["port"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['portType'] = raritan.rpc.peripheral.PortType.encode(self.portType)
-        json['port'] = self.port
+        json["portType"] = raritan.rpc.peripheral.PortType.encode(self.portType)
+        json["port"] = self.port
         return json
+
 
 # structure
 class DeviceID(Structure):
@@ -71,20 +85,21 @@ class DeviceID(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            serial = json['serial'],
-            type = raritan.rpc.sensors.Sensor.TypeSpec.decode(json['type'], agent),
-            isActuator = json['isActuator'],
-            channel = json['channel'],
+            serial=json["serial"],
+            type=raritan.rpc.sensors.Sensor.TypeSpec.decode(json["type"], agent),
+            isActuator=json["isActuator"],
+            channel=json["channel"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['serial'] = self.serial
-        json['type'] = raritan.rpc.sensors.Sensor.TypeSpec.encode(self.type)
-        json['isActuator'] = self.isActuator
-        json['channel'] = self.channel
+        json["serial"] = self.serial
+        json["type"] = raritan.rpc.sensors.Sensor.TypeSpec.encode(self.type)
+        json["isActuator"] = self.isActuator
+        json["channel"] = self.channel
         return json
+
 
 # structure
 class Address(Structure):
@@ -106,20 +121,26 @@ class Address(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            position = [raritan.rpc.peripheral.PosElement.decode(x0, agent) for x0 in json['position']],
-            type = raritan.rpc.sensors.Sensor.TypeSpec.decode(json['type'], agent),
-            isActuator = json['isActuator'],
-            channel = json['channel'],
+            position=[
+                raritan.rpc.peripheral.PosElement.decode(x0, agent)
+                for x0 in json["position"]
+            ],
+            type=raritan.rpc.sensors.Sensor.TypeSpec.decode(json["type"], agent),
+            isActuator=json["isActuator"],
+            channel=json["channel"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in self.position]
-        json['type'] = raritan.rpc.sensors.Sensor.TypeSpec.encode(self.type)
-        json['isActuator'] = self.isActuator
-        json['channel'] = self.channel
+        json["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in self.position
+        ]
+        json["type"] = raritan.rpc.sensors.Sensor.TypeSpec.encode(self.type)
+        json["isActuator"] = self.isActuator
+        json["channel"] = self.channel
         return json
+
 
 # value object
 class Device(ValueObject):
@@ -139,25 +160,31 @@ class Device(ValueObject):
 
     def encode(self):
         json = {}
-        json['deviceID'] = raritan.rpc.peripheral.DeviceID.encode(self.deviceID)
-        json['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in self.position]
-        json['packageClass'] = self.packageClass
-        json['device'] = Interface.encode(self.device)
+        json["deviceID"] = raritan.rpc.peripheral.DeviceID.encode(self.deviceID)
+        json["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in self.position
+        ]
+        json["packageClass"] = self.packageClass
+        json["device"] = Interface.encode(self.device)
         return json
 
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            deviceID = raritan.rpc.peripheral.DeviceID.decode(json['deviceID'], agent),
-            position = [raritan.rpc.peripheral.PosElement.decode(x0, agent) for x0 in json['position']],
-            packageClass = json['packageClass'],
-            device = Interface.decode(json['device'], agent),
+            deviceID=raritan.rpc.peripheral.DeviceID.decode(json["deviceID"], agent),
+            position=[
+                raritan.rpc.peripheral.PosElement.decode(x0, agent)
+                for x0 in json["position"]
+            ],
+            packageClass=json["packageClass"],
+            device=Interface.decode(json["device"], agent),
         )
         return obj
 
     def listElements(self):
         elements = ["deviceID", "position", "packageClass", "device"]
         return elements
+
 
 # interface
 class DeviceSlot(Interface):
@@ -186,28 +213,38 @@ class DeviceSlot(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                x = json['x'],
-                y = json['y'],
-                z = json['z'],
+                x=json["x"],
+                y=json["y"],
+                z=json["z"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['x'] = self.x
-            json['y'] = self.y
-            json['z'] = self.z
+            json["x"] = self.x
+            json["y"] = self.y
+            json["z"] = self.z
             return json
 
     # structure
     class Settings(Structure):
         idlType = "peripheral.DeviceSlot.Settings:1.0.0"
-        elements = ["name", "description", "location", "useDefaultThresholds", "properties"]
+        elements = [
+            "name",
+            "description",
+            "location",
+            "useDefaultThresholds",
+            "properties",
+        ]
 
-        def __init__(self, name, description, location, useDefaultThresholds, properties):
+        def __init__(
+            self, name, description, location, useDefaultThresholds, properties
+        ):
             typecheck.is_string(name, AssertionError)
             typecheck.is_string(description, AssertionError)
-            typecheck.is_struct(location, raritan.rpc.peripheral.DeviceSlot.Location, AssertionError)
+            typecheck.is_struct(
+                location, raritan.rpc.peripheral.DeviceSlot.Location, AssertionError
+            )
             typecheck.is_bool(useDefaultThresholds, AssertionError)
 
             self.name = name
@@ -219,27 +256,29 @@ class DeviceSlot(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                name = json['name'],
-                description = json['description'],
-                location = raritan.rpc.peripheral.DeviceSlot.Location.decode(json['location'], agent),
-                useDefaultThresholds = json['useDefaultThresholds'],
-                properties = dict([(
-                    elem['key'],
-                    elem['value'])
-                    for elem in json['properties']]),
+                name=json["name"],
+                description=json["description"],
+                location=raritan.rpc.peripheral.DeviceSlot.Location.decode(
+                    json["location"], agent
+                ),
+                useDefaultThresholds=json["useDefaultThresholds"],
+                properties=dict(
+                    [(elem["key"], elem["value"]) for elem in json["properties"]]
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['name'] = self.name
-            json['description'] = self.description
-            json['location'] = raritan.rpc.peripheral.DeviceSlot.Location.encode(self.location)
-            json['useDefaultThresholds'] = self.useDefaultThresholds
-            json['properties'] = [dict(
-                key = k,
-                value = v)
-                for k, v in self.properties.items()]
+            json["name"] = self.name
+            json["description"] = self.description
+            json["location"] = raritan.rpc.peripheral.DeviceSlot.Location.encode(
+                self.location
+            )
+            json["useDefaultThresholds"] = self.useDefaultThresholds
+            json["properties"] = [
+                dict(key=k, value=v) for k, v in self.properties.items()
+            ]
             return json
 
     # value object
@@ -247,32 +286,45 @@ class DeviceSlot(Interface):
         idlType = "peripheral.DeviceSlot.DeviceChangedEvent:1.0.0"
 
         def __init__(self, oldDevice, newDevice, source):
-            super(raritan.rpc.peripheral.DeviceSlot.DeviceChangedEvent, self).__init__(source)
-            typecheck.is_valobj(oldDevice, raritan.rpc.peripheral.Device, AssertionError)
-            typecheck.is_valobj(newDevice, raritan.rpc.peripheral.Device, AssertionError)
+            super(raritan.rpc.peripheral.DeviceSlot.DeviceChangedEvent, self).__init__(
+                source
+            )
+            typecheck.is_valobj(
+                oldDevice, raritan.rpc.peripheral.Device, AssertionError
+            )
+            typecheck.is_valobj(
+                newDevice, raritan.rpc.peripheral.Device, AssertionError
+            )
 
             self.oldDevice = oldDevice
             self.newDevice = newDevice
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceSlot.DeviceChangedEvent, self).encode()
-            json['oldDevice'] = ValueObject.encode(self.oldDevice)
-            json['newDevice'] = ValueObject.encode(self.newDevice)
+            json = super(
+                raritan.rpc.peripheral.DeviceSlot.DeviceChangedEvent, self
+            ).encode()
+            json["oldDevice"] = ValueObject.encode(self.oldDevice)
+            json["newDevice"] = ValueObject.encode(self.newDevice)
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldDevice = ValueObject.decode(json['oldDevice'], agent),
-                newDevice = ValueObject.decode(json['newDevice'], agent),
+                oldDevice=ValueObject.decode(json["oldDevice"], agent),
+                newDevice=ValueObject.decode(json["newDevice"], agent),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldDevice", "newDevice"]
-            elements = elements + super(raritan.rpc.peripheral.DeviceSlot.DeviceChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceSlot.DeviceChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -280,42 +332,63 @@ class DeviceSlot(Interface):
         idlType = "peripheral.DeviceSlot.SettingsChangedEvent:1.0.0"
 
         def __init__(self, oldSettings, newSettings, actUserName, actIpAddr, source):
-            super(raritan.rpc.peripheral.DeviceSlot.SettingsChangedEvent, self).__init__(actUserName, actIpAddr, source)
-            typecheck.is_struct(oldSettings, raritan.rpc.peripheral.DeviceSlot.Settings, AssertionError)
-            typecheck.is_struct(newSettings, raritan.rpc.peripheral.DeviceSlot.Settings, AssertionError)
+            super(
+                raritan.rpc.peripheral.DeviceSlot.SettingsChangedEvent, self
+            ).__init__(actUserName, actIpAddr, source)
+            typecheck.is_struct(
+                oldSettings, raritan.rpc.peripheral.DeviceSlot.Settings, AssertionError
+            )
+            typecheck.is_struct(
+                newSettings, raritan.rpc.peripheral.DeviceSlot.Settings, AssertionError
+            )
 
             self.oldSettings = oldSettings
             self.newSettings = newSettings
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceSlot.SettingsChangedEvent, self).encode()
-            json['oldSettings'] = raritan.rpc.peripheral.DeviceSlot.Settings.encode(self.oldSettings)
-            json['newSettings'] = raritan.rpc.peripheral.DeviceSlot.Settings.encode(self.newSettings)
+            json = super(
+                raritan.rpc.peripheral.DeviceSlot.SettingsChangedEvent, self
+            ).encode()
+            json["oldSettings"] = raritan.rpc.peripheral.DeviceSlot.Settings.encode(
+                self.oldSettings
+            )
+            json["newSettings"] = raritan.rpc.peripheral.DeviceSlot.Settings.encode(
+                self.newSettings
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldSettings = raritan.rpc.peripheral.DeviceSlot.Settings.decode(json['oldSettings'], agent),
-                newSettings = raritan.rpc.peripheral.DeviceSlot.Settings.decode(json['newSettings'], agent),
+                oldSettings=raritan.rpc.peripheral.DeviceSlot.Settings.decode(
+                    json["oldSettings"], agent
+                ),
+                newSettings=raritan.rpc.peripheral.DeviceSlot.Settings.decode(
+                    json["newSettings"], agent
+                ),
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldSettings", "newSettings"]
-            elements = elements + super(raritan.rpc.peripheral.DeviceSlot.SettingsChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceSlot.SettingsChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getDevice(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDevice', args)
-        _ret_ = ValueObject.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getDevice", args)
+        _ret_ = ValueObject.decode(rsp["_ret_"], agent)
         typecheck.is_valobj(_ret_, raritan.rpc.peripheral.Device, DecodeException)
         return _ret_
 
@@ -323,9 +396,9 @@ class DeviceSlot(Interface):
         agent = self.agent
         typecheck.is_struct(devid, raritan.rpc.peripheral.DeviceID, AssertionError)
         args = {}
-        args['devid'] = raritan.rpc.peripheral.DeviceID.encode(devid)
-        rsp = agent.json_rpc(self.target, 'assign', args)
-        _ret_ = rsp['_ret_']
+        args["devid"] = raritan.rpc.peripheral.DeviceID.encode(devid)
+        rsp = agent.json_rpc(self.target, "assign", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -334,38 +407,44 @@ class DeviceSlot(Interface):
         typecheck.is_string(packageClass, AssertionError)
         typecheck.is_struct(address, raritan.rpc.peripheral.Address, AssertionError)
         args = {}
-        args['packageClass'] = packageClass
-        args['address'] = raritan.rpc.peripheral.Address.encode(address)
-        rsp = agent.json_rpc(self.target, 'assignAddress', args)
-        _ret_ = rsp['_ret_']
+        args["packageClass"] = packageClass
+        args["address"] = raritan.rpc.peripheral.Address.encode(address)
+        rsp = agent.json_rpc(self.target, "assignAddress", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def unassign(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'unassign', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "unassign", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSettings', args)
-        _ret_ = raritan.rpc.peripheral.DeviceSlot.Settings.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.peripheral.DeviceSlot.Settings, DecodeException)
+        rsp = agent.json_rpc(self.target, "getSettings", args)
+        _ret_ = raritan.rpc.peripheral.DeviceSlot.Settings.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.peripheral.DeviceSlot.Settings, DecodeException
+        )
         return _ret_
 
     def setSettings(self, settings):
         agent = self.agent
-        typecheck.is_struct(settings, raritan.rpc.peripheral.DeviceSlot.Settings, AssertionError)
+        typecheck.is_struct(
+            settings, raritan.rpc.peripheral.DeviceSlot.Settings, AssertionError
+        )
         args = {}
-        args['settings'] = raritan.rpc.peripheral.DeviceSlot.Settings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.peripheral.DeviceSlot.Settings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -374,7 +453,14 @@ class DeviceSlot(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.peripheral
 
 
@@ -384,11 +470,17 @@ class PackageInfo(Structure):
     elements = ["state", "position", "hwInfo", "fwInfo"]
 
     def __init__(self, state, position, hwInfo, fwInfo):
-        typecheck.is_enum(state, raritan.rpc.peripheral.PackageInfo.State, AssertionError)
+        typecheck.is_enum(
+            state, raritan.rpc.peripheral.PackageInfo.State, AssertionError
+        )
         for x0 in position:
             typecheck.is_struct(x0, raritan.rpc.peripheral.PosElement, AssertionError)
-        typecheck.is_struct(hwInfo, raritan.rpc.peripheral.PackageInfo.HardwareInfo, AssertionError)
-        typecheck.is_struct(fwInfo, raritan.rpc.peripheral.PackageInfo.FirmwareInfo, AssertionError)
+        typecheck.is_struct(
+            hwInfo, raritan.rpc.peripheral.PackageInfo.HardwareInfo, AssertionError
+        )
+        typecheck.is_struct(
+            fwInfo, raritan.rpc.peripheral.PackageInfo.FirmwareInfo, AssertionError
+        )
 
         self.state = state
         self.position = position
@@ -398,19 +490,32 @@ class PackageInfo(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            state = raritan.rpc.peripheral.PackageInfo.State.decode(json['state']),
-            position = [raritan.rpc.peripheral.PosElement.decode(x0, agent) for x0 in json['position']],
-            hwInfo = raritan.rpc.peripheral.PackageInfo.HardwareInfo.decode(json['hwInfo'], agent),
-            fwInfo = raritan.rpc.peripheral.PackageInfo.FirmwareInfo.decode(json['fwInfo'], agent),
+            state=raritan.rpc.peripheral.PackageInfo.State.decode(json["state"]),
+            position=[
+                raritan.rpc.peripheral.PosElement.decode(x0, agent)
+                for x0 in json["position"]
+            ],
+            hwInfo=raritan.rpc.peripheral.PackageInfo.HardwareInfo.decode(
+                json["hwInfo"], agent
+            ),
+            fwInfo=raritan.rpc.peripheral.PackageInfo.FirmwareInfo.decode(
+                json["fwInfo"], agent
+            ),
         )
         return obj
 
     def encode(self):
         json = {}
-        json['state'] = raritan.rpc.peripheral.PackageInfo.State.encode(self.state)
-        json['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in self.position]
-        json['hwInfo'] = raritan.rpc.peripheral.PackageInfo.HardwareInfo.encode(self.hwInfo)
-        json['fwInfo'] = raritan.rpc.peripheral.PackageInfo.FirmwareInfo.encode(self.fwInfo)
+        json["state"] = raritan.rpc.peripheral.PackageInfo.State.encode(self.state)
+        json["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in self.position
+        ]
+        json["hwInfo"] = raritan.rpc.peripheral.PackageInfo.HardwareInfo.encode(
+            self.hwInfo
+        )
+        json["fwInfo"] = raritan.rpc.peripheral.PackageInfo.FirmwareInfo.encode(
+            self.fwInfo
+        )
         return json
 
     # enumeration
@@ -426,7 +531,13 @@ class PackageInfo(Structure):
     # structure
     class HardwareInfo(Structure):
         idlType = "peripheral.PackageInfo.HardwareInfo:1.0.0"
-        elements = ["serial", "packageClass", "model", "minDowngradeVersion", "revision"]
+        elements = [
+            "serial",
+            "packageClass",
+            "model",
+            "minDowngradeVersion",
+            "revision",
+        ]
 
         def __init__(self, serial, packageClass, model, minDowngradeVersion, revision):
             typecheck.is_string(serial, AssertionError)
@@ -444,21 +555,21 @@ class PackageInfo(Structure):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                serial = json['serial'],
-                packageClass = json['packageClass'],
-                model = json['model'],
-                minDowngradeVersion = json['minDowngradeVersion'],
-                revision = json['revision'],
+                serial=json["serial"],
+                packageClass=json["packageClass"],
+                model=json["model"],
+                minDowngradeVersion=json["minDowngradeVersion"],
+                revision=json["revision"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['serial'] = self.serial
-            json['packageClass'] = self.packageClass
-            json['model'] = self.model
-            json['minDowngradeVersion'] = self.minDowngradeVersion
-            json['revision'] = self.revision
+            json["serial"] = self.serial
+            json["packageClass"] = self.packageClass
+            json["model"] = self.model
+            json["minDowngradeVersion"] = self.minDowngradeVersion
+            json["revision"] = self.revision
             return json
 
     # structure
@@ -468,7 +579,11 @@ class PackageInfo(Structure):
 
         def __init__(self, compileDate, version, updateDate):
             typecheck.is_time(compileDate, AssertionError)
-            typecheck.is_struct(version, raritan.rpc.peripheral.PackageInfo.FirmwareInfo.Version, AssertionError)
+            typecheck.is_struct(
+                version,
+                raritan.rpc.peripheral.PackageInfo.FirmwareInfo.Version,
+                AssertionError,
+            )
             typecheck.is_time(updateDate, AssertionError)
 
             self.compileDate = compileDate
@@ -478,17 +593,23 @@ class PackageInfo(Structure):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                compileDate = raritan.rpc.Time.decode(json['compileDate']),
-                version = raritan.rpc.peripheral.PackageInfo.FirmwareInfo.Version.decode(json['version'], agent),
-                updateDate = raritan.rpc.Time.decode(json['updateDate']),
+                compileDate=raritan.rpc.Time.decode(json["compileDate"]),
+                version=raritan.rpc.peripheral.PackageInfo.FirmwareInfo.Version.decode(
+                    json["version"], agent
+                ),
+                updateDate=raritan.rpc.Time.decode(json["updateDate"]),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['compileDate'] = raritan.rpc.Time.encode(self.compileDate)
-            json['version'] = raritan.rpc.peripheral.PackageInfo.FirmwareInfo.Version.encode(self.version)
-            json['updateDate'] = raritan.rpc.Time.encode(self.updateDate)
+            json["compileDate"] = raritan.rpc.Time.encode(self.compileDate)
+            json[
+                "version"
+            ] = raritan.rpc.peripheral.PackageInfo.FirmwareInfo.Version.encode(
+                self.version
+            )
+            json["updateDate"] = raritan.rpc.Time.encode(self.updateDate)
             return json
 
         # structure
@@ -506,16 +627,18 @@ class PackageInfo(Structure):
             @classmethod
             def decode(cls, json, agent):
                 obj = cls(
-                    majorNumber = json['majorNumber'],
-                    minorNumber = json['minorNumber'],
+                    majorNumber=json["majorNumber"],
+                    minorNumber=json["minorNumber"],
                 )
                 return obj
 
             def encode(self):
                 json = {}
-                json['majorNumber'] = self.majorNumber
-                json['minorNumber'] = self.minorNumber
+                json["majorNumber"] = self.majorNumber
+                json["minorNumber"] = self.minorNumber
                 return json
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -524,7 +647,14 @@ class PackageInfo(Structure):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.event
 
 import raritan.rpc.idl
@@ -551,10 +681,27 @@ class DeviceManager(Interface):
     # structure
     class Settings(Structure):
         idlType = "peripheral.DeviceManager.Settings:1.0.0"
-        elements = ["zCoordMode", "autoManageNewDevices", "deviceAltitude", "presenceDetectionTimeout", "defaultThresholdsMap"]
+        elements = [
+            "zCoordMode",
+            "autoManageNewDevices",
+            "deviceAltitude",
+            "presenceDetectionTimeout",
+            "defaultThresholdsMap",
+        ]
 
-        def __init__(self, zCoordMode, autoManageNewDevices, deviceAltitude, presenceDetectionTimeout, defaultThresholdsMap):
-            typecheck.is_enum(zCoordMode, raritan.rpc.peripheral.DeviceManager.ZCoordMode, AssertionError)
+        def __init__(
+            self,
+            zCoordMode,
+            autoManageNewDevices,
+            deviceAltitude,
+            presenceDetectionTimeout,
+            defaultThresholdsMap,
+        ):
+            typecheck.is_enum(
+                zCoordMode,
+                raritan.rpc.peripheral.DeviceManager.ZCoordMode,
+                AssertionError,
+            )
             typecheck.is_bool(autoManageNewDevices, AssertionError)
             typecheck.is_float(deviceAltitude, AssertionError)
             typecheck.is_int(presenceDetectionTimeout, AssertionError)
@@ -568,27 +715,40 @@ class DeviceManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                zCoordMode = raritan.rpc.peripheral.DeviceManager.ZCoordMode.decode(json['zCoordMode']),
-                autoManageNewDevices = json['autoManageNewDevices'],
-                deviceAltitude = json['deviceAltitude'],
-                presenceDetectionTimeout = json['presenceDetectionTimeout'],
-                defaultThresholdsMap = dict([(
-                    elem['key'],
-                    raritan.rpc.sensors.NumericSensor.Thresholds.decode(elem['value'], agent))
-                    for elem in json['defaultThresholdsMap']]),
+                zCoordMode=raritan.rpc.peripheral.DeviceManager.ZCoordMode.decode(
+                    json["zCoordMode"]
+                ),
+                autoManageNewDevices=json["autoManageNewDevices"],
+                deviceAltitude=json["deviceAltitude"],
+                presenceDetectionTimeout=json["presenceDetectionTimeout"],
+                defaultThresholdsMap=dict(
+                    [
+                        (
+                            elem["key"],
+                            raritan.rpc.sensors.NumericSensor.Thresholds.decode(
+                                elem["value"], agent
+                            ),
+                        )
+                        for elem in json["defaultThresholdsMap"]
+                    ]
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['zCoordMode'] = raritan.rpc.peripheral.DeviceManager.ZCoordMode.encode(self.zCoordMode)
-            json['autoManageNewDevices'] = self.autoManageNewDevices
-            json['deviceAltitude'] = self.deviceAltitude
-            json['presenceDetectionTimeout'] = self.presenceDetectionTimeout
-            json['defaultThresholdsMap'] = [dict(
-                key = k,
-                value = raritan.rpc.sensors.NumericSensor.Thresholds.encode(v))
-                for k, v in self.defaultThresholdsMap.items()]
+            json["zCoordMode"] = raritan.rpc.peripheral.DeviceManager.ZCoordMode.encode(
+                self.zCoordMode
+            )
+            json["autoManageNewDevices"] = self.autoManageNewDevices
+            json["deviceAltitude"] = self.deviceAltitude
+            json["presenceDetectionTimeout"] = self.presenceDetectionTimeout
+            json["defaultThresholdsMap"] = [
+                dict(
+                    key=k, value=raritan.rpc.sensors.NumericSensor.Thresholds.encode(v)
+                )
+                for k, v in self.defaultThresholdsMap.items()
+            ]
             return json
 
     # structure
@@ -606,28 +766,41 @@ class DeviceManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oneWirePortCount = json['oneWirePortCount'],
-                onboardDeviceCount = json['onboardDeviceCount'],
+                oneWirePortCount=json["oneWirePortCount"],
+                onboardDeviceCount=json["onboardDeviceCount"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['oneWirePortCount'] = self.oneWirePortCount
-            json['onboardDeviceCount'] = self.onboardDeviceCount
+            json["oneWirePortCount"] = self.oneWirePortCount
+            json["onboardDeviceCount"] = self.onboardDeviceCount
             return json
 
     # structure
     class DeviceTypeInfo(Structure):
         idlType = "peripheral.DeviceManager.DeviceTypeInfo:1.0.0"
-        elements = ["type", "isActuator", "identifier", "name", "defaultRange", "defaultDecDigits"]
+        elements = [
+            "type",
+            "isActuator",
+            "identifier",
+            "name",
+            "defaultRange",
+            "defaultDecDigits",
+        ]
 
-        def __init__(self, type, isActuator, identifier, name, defaultRange, defaultDecDigits):
-            typecheck.is_struct(type, raritan.rpc.sensors.Sensor.TypeSpec, AssertionError)
+        def __init__(
+            self, type, isActuator, identifier, name, defaultRange, defaultDecDigits
+        ):
+            typecheck.is_struct(
+                type, raritan.rpc.sensors.Sensor.TypeSpec, AssertionError
+            )
             typecheck.is_bool(isActuator, AssertionError)
             typecheck.is_string(identifier, AssertionError)
             typecheck.is_string(name, AssertionError)
-            typecheck.is_struct(defaultRange, raritan.rpc.sensors.NumericSensor.Range, AssertionError)
+            typecheck.is_struct(
+                defaultRange, raritan.rpc.sensors.NumericSensor.Range, AssertionError
+            )
             typecheck.is_int(defaultDecDigits, AssertionError)
 
             self.type = type
@@ -640,23 +813,27 @@ class DeviceManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                type = raritan.rpc.sensors.Sensor.TypeSpec.decode(json['type'], agent),
-                isActuator = json['isActuator'],
-                identifier = json['identifier'],
-                name = json['name'],
-                defaultRange = raritan.rpc.sensors.NumericSensor.Range.decode(json['defaultRange'], agent),
-                defaultDecDigits = json['defaultDecDigits'],
+                type=raritan.rpc.sensors.Sensor.TypeSpec.decode(json["type"], agent),
+                isActuator=json["isActuator"],
+                identifier=json["identifier"],
+                name=json["name"],
+                defaultRange=raritan.rpc.sensors.NumericSensor.Range.decode(
+                    json["defaultRange"], agent
+                ),
+                defaultDecDigits=json["defaultDecDigits"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['type'] = raritan.rpc.sensors.Sensor.TypeSpec.encode(self.type)
-            json['isActuator'] = self.isActuator
-            json['identifier'] = self.identifier
-            json['name'] = self.name
-            json['defaultRange'] = raritan.rpc.sensors.NumericSensor.Range.encode(self.defaultRange)
-            json['defaultDecDigits'] = self.defaultDecDigits
+            json["type"] = raritan.rpc.sensors.Sensor.TypeSpec.encode(self.type)
+            json["isActuator"] = self.isActuator
+            json["identifier"] = self.identifier
+            json["name"] = self.name
+            json["defaultRange"] = raritan.rpc.sensors.NumericSensor.Range.encode(
+                self.defaultRange
+            )
+            json["defaultDecDigits"] = self.defaultDecDigits
             return json
 
     # value object
@@ -664,35 +841,60 @@ class DeviceManager(Interface):
         idlType = "peripheral.DeviceManager.SettingsChangedEvent:1.0.0"
 
         def __init__(self, oldSettings, newSettings, actUserName, actIpAddr, source):
-            super(raritan.rpc.peripheral.DeviceManager.SettingsChangedEvent, self).__init__(actUserName, actIpAddr, source)
-            typecheck.is_struct(oldSettings, raritan.rpc.peripheral.DeviceManager.Settings, AssertionError)
-            typecheck.is_struct(newSettings, raritan.rpc.peripheral.DeviceManager.Settings, AssertionError)
+            super(
+                raritan.rpc.peripheral.DeviceManager.SettingsChangedEvent, self
+            ).__init__(actUserName, actIpAddr, source)
+            typecheck.is_struct(
+                oldSettings,
+                raritan.rpc.peripheral.DeviceManager.Settings,
+                AssertionError,
+            )
+            typecheck.is_struct(
+                newSettings,
+                raritan.rpc.peripheral.DeviceManager.Settings,
+                AssertionError,
+            )
 
             self.oldSettings = oldSettings
             self.newSettings = newSettings
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceManager.SettingsChangedEvent, self).encode()
-            json['oldSettings'] = raritan.rpc.peripheral.DeviceManager.Settings.encode(self.oldSettings)
-            json['newSettings'] = raritan.rpc.peripheral.DeviceManager.Settings.encode(self.newSettings)
+            json = super(
+                raritan.rpc.peripheral.DeviceManager.SettingsChangedEvent, self
+            ).encode()
+            json["oldSettings"] = raritan.rpc.peripheral.DeviceManager.Settings.encode(
+                self.oldSettings
+            )
+            json["newSettings"] = raritan.rpc.peripheral.DeviceManager.Settings.encode(
+                self.newSettings
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldSettings = raritan.rpc.peripheral.DeviceManager.Settings.decode(json['oldSettings'], agent),
-                newSettings = raritan.rpc.peripheral.DeviceManager.Settings.decode(json['newSettings'], agent),
+                oldSettings=raritan.rpc.peripheral.DeviceManager.Settings.decode(
+                    json["oldSettings"], agent
+                ),
+                newSettings=raritan.rpc.peripheral.DeviceManager.Settings.decode(
+                    json["newSettings"], agent
+                ),
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldSettings", "newSettings"]
-            elements = elements + super(raritan.rpc.peripheral.DeviceManager.SettingsChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceManager.SettingsChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -700,7 +902,9 @@ class DeviceManager(Interface):
         idlType = "peripheral.DeviceManager.DeviceEvent:1.0.0"
 
         def __init__(self, device, allDevices, source):
-            super(raritan.rpc.peripheral.DeviceManager.DeviceEvent, self).__init__(source)
+            super(raritan.rpc.peripheral.DeviceManager.DeviceEvent, self).__init__(
+                source
+            )
             typecheck.is_valobj(device, raritan.rpc.peripheral.Device, AssertionError)
             for x0 in allDevices:
                 typecheck.is_valobj(x0, raritan.rpc.peripheral.Device, AssertionError)
@@ -709,24 +913,31 @@ class DeviceManager(Interface):
             self.allDevices = allDevices
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceManager.DeviceEvent, self).encode()
-            json['device'] = ValueObject.encode(self.device)
-            json['allDevices'] = [ValueObject.encode(x0) for x0 in self.allDevices]
+            json = super(
+                raritan.rpc.peripheral.DeviceManager.DeviceEvent, self
+            ).encode()
+            json["device"] = ValueObject.encode(self.device)
+            json["allDevices"] = [ValueObject.encode(x0) for x0 in self.allDevices]
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                device = ValueObject.decode(json['device'], agent),
-                allDevices = [ValueObject.decode(x0, agent) for x0 in json['allDevices']],
+                device=ValueObject.decode(json["device"], agent),
+                allDevices=[ValueObject.decode(x0, agent) for x0 in json["allDevices"]],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["device", "allDevices"]
-            elements = elements + super(raritan.rpc.peripheral.DeviceManager.DeviceEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceManager.DeviceEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -734,26 +945,35 @@ class DeviceManager(Interface):
         idlType = "peripheral.DeviceManager.DeviceAddedEvent:1.0.0"
 
         def __init__(self, device, allDevices, source):
-            super(raritan.rpc.peripheral.DeviceManager.DeviceAddedEvent, self).__init__(device, allDevices, source)
+            super(raritan.rpc.peripheral.DeviceManager.DeviceAddedEvent, self).__init__(
+                device, allDevices, source
+            )
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceManager.DeviceAddedEvent, self).encode()
+            json = super(
+                raritan.rpc.peripheral.DeviceManager.DeviceAddedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for peripheral.DeviceManager_2_0_0.DeviceEvent
-                device = ValueObject.decode(json['device'], agent),
-                allDevices = [ValueObject.decode(x0, agent) for x0 in json['allDevices']],
+                device=ValueObject.decode(json["device"], agent),
+                allDevices=[ValueObject.decode(x0, agent) for x0 in json["allDevices"]],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.peripheral.DeviceManager.DeviceAddedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceManager.DeviceAddedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -761,26 +981,35 @@ class DeviceManager(Interface):
         idlType = "peripheral.DeviceManager.DeviceRemovedEvent:1.0.0"
 
         def __init__(self, device, allDevices, source):
-            super(raritan.rpc.peripheral.DeviceManager.DeviceRemovedEvent, self).__init__(device, allDevices, source)
+            super(
+                raritan.rpc.peripheral.DeviceManager.DeviceRemovedEvent, self
+            ).__init__(device, allDevices, source)
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceManager.DeviceRemovedEvent, self).encode()
+            json = super(
+                raritan.rpc.peripheral.DeviceManager.DeviceRemovedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for peripheral.DeviceManager_2_0_0.DeviceEvent
-                device = ValueObject.decode(json['device'], agent),
-                allDevices = [ValueObject.decode(x0, agent) for x0 in json['allDevices']],
+                device=ValueObject.decode(json["device"], agent),
+                allDevices=[ValueObject.decode(x0, agent) for x0 in json["allDevices"]],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.peripheral.DeviceManager.DeviceRemovedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceManager.DeviceRemovedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -788,33 +1017,50 @@ class DeviceManager(Interface):
         idlType = "peripheral.DeviceManager.UnknownDeviceAttachedEvent:1.0.0"
 
         def __init__(self, romCode, position, source):
-            super(raritan.rpc.peripheral.DeviceManager.UnknownDeviceAttachedEvent, self).__init__(source)
+            super(
+                raritan.rpc.peripheral.DeviceManager.UnknownDeviceAttachedEvent, self
+            ).__init__(source)
             typecheck.is_string(romCode, AssertionError)
             for x0 in position:
-                typecheck.is_struct(x0, raritan.rpc.peripheral.PosElement, AssertionError)
+                typecheck.is_struct(
+                    x0, raritan.rpc.peripheral.PosElement, AssertionError
+                )
 
             self.romCode = romCode
             self.position = position
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceManager.UnknownDeviceAttachedEvent, self).encode()
-            json['romCode'] = self.romCode
-            json['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in self.position]
+            json = super(
+                raritan.rpc.peripheral.DeviceManager.UnknownDeviceAttachedEvent, self
+            ).encode()
+            json["romCode"] = self.romCode
+            json["position"] = [
+                raritan.rpc.peripheral.PosElement.encode(x0) for x0 in self.position
+            ]
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                romCode = json['romCode'],
-                position = [raritan.rpc.peripheral.PosElement.decode(x0, agent) for x0 in json['position']],
+                romCode=json["romCode"],
+                position=[
+                    raritan.rpc.peripheral.PosElement.decode(x0, agent)
+                    for x0 in json["position"]
+                ],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["romCode", "position"]
-            elements = elements + super(raritan.rpc.peripheral.DeviceManager.UnknownDeviceAttachedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceManager.UnknownDeviceAttachedEvent,
+                    self,
+                ).listElements()
+            )
             return elements
 
     # enumeration
@@ -831,11 +1077,18 @@ class DeviceManager(Interface):
         idlType = "peripheral.DeviceManager.DeviceFirmwareUpdateStateChangedEvent:1.0.0"
 
         def __init__(self, oldVersion, newVersion, serial, state, source):
-            super(raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateStateChangedEvent, self).__init__(source)
+            super(
+                raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateStateChangedEvent,
+                self,
+            ).__init__(source)
             typecheck.is_string(oldVersion, AssertionError)
             typecheck.is_string(newVersion, AssertionError)
             typecheck.is_string(serial, AssertionError)
-            typecheck.is_enum(state, raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateState, AssertionError)
+            typecheck.is_enum(
+                state,
+                raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateState,
+                AssertionError,
+            )
 
             self.oldVersion = oldVersion
             self.newVersion = newVersion
@@ -843,28 +1096,43 @@ class DeviceManager(Interface):
             self.state = state
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateStateChangedEvent, self).encode()
-            json['oldVersion'] = self.oldVersion
-            json['newVersion'] = self.newVersion
-            json['serial'] = self.serial
-            json['state'] = raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateState.encode(self.state)
+            json = super(
+                raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateStateChangedEvent,
+                self,
+            ).encode()
+            json["oldVersion"] = self.oldVersion
+            json["newVersion"] = self.newVersion
+            json["serial"] = self.serial
+            json[
+                "state"
+            ] = raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateState.encode(
+                self.state
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldVersion = json['oldVersion'],
-                newVersion = json['newVersion'],
-                serial = json['serial'],
-                state = raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateState.decode(json['state']),
+                oldVersion=json["oldVersion"],
+                newVersion=json["newVersion"],
+                serial=json["serial"],
+                state=raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateState.decode(
+                    json["state"]
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldVersion", "newVersion", "serial", "state"]
-            elements = elements + super(raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateStateChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceManager.DeviceFirmwareUpdateStateChangedEvent,
+                    self,
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -872,33 +1140,55 @@ class DeviceManager(Interface):
         idlType = "peripheral.DeviceManager.PackageEvent:1.0.0"
 
         def __init__(self, packageInfo, allPackages, source):
-            super(raritan.rpc.peripheral.DeviceManager.PackageEvent, self).__init__(source)
-            typecheck.is_struct(packageInfo, raritan.rpc.peripheral.PackageInfo, AssertionError)
+            super(raritan.rpc.peripheral.DeviceManager.PackageEvent, self).__init__(
+                source
+            )
+            typecheck.is_struct(
+                packageInfo, raritan.rpc.peripheral.PackageInfo, AssertionError
+            )
             for x0 in allPackages:
-                typecheck.is_struct(x0, raritan.rpc.peripheral.PackageInfo, AssertionError)
+                typecheck.is_struct(
+                    x0, raritan.rpc.peripheral.PackageInfo, AssertionError
+                )
 
             self.packageInfo = packageInfo
             self.allPackages = allPackages
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceManager.PackageEvent, self).encode()
-            json['packageInfo'] = raritan.rpc.peripheral.PackageInfo.encode(self.packageInfo)
-            json['allPackages'] = [raritan.rpc.peripheral.PackageInfo.encode(x0) for x0 in self.allPackages]
+            json = super(
+                raritan.rpc.peripheral.DeviceManager.PackageEvent, self
+            ).encode()
+            json["packageInfo"] = raritan.rpc.peripheral.PackageInfo.encode(
+                self.packageInfo
+            )
+            json["allPackages"] = [
+                raritan.rpc.peripheral.PackageInfo.encode(x0) for x0 in self.allPackages
+            ]
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                packageInfo = raritan.rpc.peripheral.PackageInfo.decode(json['packageInfo'], agent),
-                allPackages = [raritan.rpc.peripheral.PackageInfo.decode(x0, agent) for x0 in json['allPackages']],
+                packageInfo=raritan.rpc.peripheral.PackageInfo.decode(
+                    json["packageInfo"], agent
+                ),
+                allPackages=[
+                    raritan.rpc.peripheral.PackageInfo.decode(x0, agent)
+                    for x0 in json["allPackages"]
+                ],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["packageInfo", "allPackages"]
-            elements = elements + super(raritan.rpc.peripheral.DeviceManager.PackageEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceManager.PackageEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -906,26 +1196,40 @@ class DeviceManager(Interface):
         idlType = "peripheral.DeviceManager.PackageAddedEvent:1.0.0"
 
         def __init__(self, packageInfo, allPackages, source):
-            super(raritan.rpc.peripheral.DeviceManager.PackageAddedEvent, self).__init__(packageInfo, allPackages, source)
+            super(
+                raritan.rpc.peripheral.DeviceManager.PackageAddedEvent, self
+            ).__init__(packageInfo, allPackages, source)
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceManager.PackageAddedEvent, self).encode()
+            json = super(
+                raritan.rpc.peripheral.DeviceManager.PackageAddedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for peripheral.DeviceManager_2_0_0.PackageEvent
-                packageInfo = raritan.rpc.peripheral.PackageInfo.decode(json['packageInfo'], agent),
-                allPackages = [raritan.rpc.peripheral.PackageInfo.decode(x0, agent) for x0 in json['allPackages']],
+                packageInfo=raritan.rpc.peripheral.PackageInfo.decode(
+                    json["packageInfo"], agent
+                ),
+                allPackages=[
+                    raritan.rpc.peripheral.PackageInfo.decode(x0, agent)
+                    for x0 in json["allPackages"]
+                ],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.peripheral.DeviceManager.PackageAddedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceManager.PackageAddedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -933,26 +1237,40 @@ class DeviceManager(Interface):
         idlType = "peripheral.DeviceManager.PackageRemovedEvent:1.0.0"
 
         def __init__(self, packageInfo, allPackages, source):
-            super(raritan.rpc.peripheral.DeviceManager.PackageRemovedEvent, self).__init__(packageInfo, allPackages, source)
+            super(
+                raritan.rpc.peripheral.DeviceManager.PackageRemovedEvent, self
+            ).__init__(packageInfo, allPackages, source)
 
         def encode(self):
-            json = super(raritan.rpc.peripheral.DeviceManager.PackageRemovedEvent, self).encode()
+            json = super(
+                raritan.rpc.peripheral.DeviceManager.PackageRemovedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for peripheral.DeviceManager_2_0_0.PackageEvent
-                packageInfo = raritan.rpc.peripheral.PackageInfo.decode(json['packageInfo'], agent),
-                allPackages = [raritan.rpc.peripheral.PackageInfo.decode(x0, agent) for x0 in json['allPackages']],
+                packageInfo=raritan.rpc.peripheral.PackageInfo.decode(
+                    json["packageInfo"], agent
+                ),
+                allPackages=[
+                    raritan.rpc.peripheral.PackageInfo.decode(x0, agent)
+                    for x0 in json["allPackages"]
+                ],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.peripheral.DeviceManager.PackageRemovedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.peripheral.DeviceManager.PackageRemovedEvent, self
+                ).listElements()
+            )
             return elements
 
     # structure
@@ -968,39 +1286,43 @@ class DeviceManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                cSumErrCnt = json['cSumErrCnt'],
+                cSumErrCnt=json["cSumErrCnt"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['cSumErrCnt'] = self.cSumErrCnt
+            json["cSumErrCnt"] = self.cSumErrCnt
             return json
 
     def getDeviceSlots(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDeviceSlots', args)
-        _ret_ = [Interface.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getDeviceSlots", args)
+        _ret_ = [Interface.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
-            typecheck.is_interface(x0, raritan.rpc.peripheral.DeviceSlot, DecodeException)
+            typecheck.is_interface(
+                x0, raritan.rpc.peripheral.DeviceSlot, DecodeException
+            )
         return _ret_
 
     def getDeviceSlot(self, idx):
         agent = self.agent
         typecheck.is_int(idx, AssertionError)
         args = {}
-        args['idx'] = idx
-        rsp = agent.json_rpc(self.target, 'getDeviceSlot', args)
-        _ret_ = Interface.decode(rsp['_ret_'], agent)
-        typecheck.is_interface(_ret_, raritan.rpc.peripheral.DeviceSlot, DecodeException)
+        args["idx"] = idx
+        rsp = agent.json_rpc(self.target, "getDeviceSlot", args)
+        _ret_ = Interface.decode(rsp["_ret_"], agent)
+        typecheck.is_interface(
+            _ret_, raritan.rpc.peripheral.DeviceSlot, DecodeException
+        )
         return _ret_
 
     def getDiscoveredDevices(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDiscoveredDevices', args)
-        _ret_ = [ValueObject.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getDiscoveredDevices", args)
+        _ret_ = [ValueObject.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_valobj(x0, raritan.rpc.peripheral.Device, DecodeException)
         return _ret_
@@ -1008,8 +1330,10 @@ class DeviceManager(Interface):
     def getDiscoveredPackageInfos(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDiscoveredPackageInfos', args)
-        _ret_ = [raritan.rpc.peripheral.PackageInfo.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getDiscoveredPackageInfos", args)
+        _ret_ = [
+            raritan.rpc.peripheral.PackageInfo.decode(x0, agent) for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
             typecheck.is_struct(x0, raritan.rpc.peripheral.PackageInfo, DecodeException)
         return _ret_
@@ -1017,45 +1341,68 @@ class DeviceManager(Interface):
     def getSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSettings', args)
-        _ret_ = raritan.rpc.peripheral.DeviceManager.Settings.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.peripheral.DeviceManager.Settings, DecodeException)
+        rsp = agent.json_rpc(self.target, "getSettings", args)
+        _ret_ = raritan.rpc.peripheral.DeviceManager.Settings.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_, raritan.rpc.peripheral.DeviceManager.Settings, DecodeException
+        )
         return _ret_
 
     def setSettings(self, settings):
         agent = self.agent
-        typecheck.is_struct(settings, raritan.rpc.peripheral.DeviceManager.Settings, AssertionError)
+        typecheck.is_struct(
+            settings, raritan.rpc.peripheral.DeviceManager.Settings, AssertionError
+        )
         args = {}
-        args['settings'] = raritan.rpc.peripheral.DeviceManager.Settings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.peripheral.DeviceManager.Settings.encode(
+            settings
+        )
+        rsp = agent.json_rpc(self.target, "setSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getMetaData(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getMetaData', args)
-        _ret_ = raritan.rpc.peripheral.DeviceManager.MetaData.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.peripheral.DeviceManager.MetaData, DecodeException)
+        rsp = agent.json_rpc(self.target, "getMetaData", args)
+        _ret_ = raritan.rpc.peripheral.DeviceManager.MetaData.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_, raritan.rpc.peripheral.DeviceManager.MetaData, DecodeException
+        )
         return _ret_
 
     def getDeviceTypeInfos(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDeviceTypeInfos', args)
-        _ret_ = [raritan.rpc.peripheral.DeviceManager.DeviceTypeInfo.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getDeviceTypeInfos", args)
+        _ret_ = [
+            raritan.rpc.peripheral.DeviceManager.DeviceTypeInfo.decode(x0, agent)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.peripheral.DeviceManager.DeviceTypeInfo, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.peripheral.DeviceManager.DeviceTypeInfo, DecodeException
+            )
         return _ret_
 
     def getStatistics(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getStatistics', args)
-        _ret_ = raritan.rpc.peripheral.DeviceManager.Statistics.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.peripheral.DeviceManager.Statistics, DecodeException)
+        rsp = agent.json_rpc(self.target, "getStatistics", args)
+        _ret_ = raritan.rpc.peripheral.DeviceManager.Statistics.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_, raritan.rpc.peripheral.DeviceManager.Statistics, DecodeException
+        )
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -1064,7 +1411,14 @@ class DeviceManager(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.peripheral
 
 
@@ -1089,9 +1443,28 @@ class G2Production(Interface):
     # structure
     class FirmwareInfo(Structure):
         idlType = "peripheral.G2Production.FirmwareInfo:1.0.0"
-        elements = ["crc", "compiler", "compilerVersion", "compileDate", "version", "subVersion", "configurationId", "updateDate"]
+        elements = [
+            "crc",
+            "compiler",
+            "compilerVersion",
+            "compileDate",
+            "version",
+            "subVersion",
+            "configurationId",
+            "updateDate",
+        ]
 
-        def __init__(self, crc, compiler, compilerVersion, compileDate, version, subVersion, configurationId, updateDate):
+        def __init__(
+            self,
+            crc,
+            compiler,
+            compilerVersion,
+            compileDate,
+            version,
+            subVersion,
+            configurationId,
+            updateDate,
+        ):
             typecheck.is_int(crc, AssertionError)
             typecheck.is_string(compiler, AssertionError)
             typecheck.is_int(compilerVersion, AssertionError)
@@ -1113,36 +1486,36 @@ class G2Production(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                crc = json['crc'],
-                compiler = json['compiler'],
-                compilerVersion = json['compilerVersion'],
-                compileDate = json['compileDate'],
-                version = json['version'],
-                subVersion = json['subVersion'],
-                configurationId = json['configurationId'],
-                updateDate = json['updateDate'],
+                crc=json["crc"],
+                compiler=json["compiler"],
+                compilerVersion=json["compilerVersion"],
+                compileDate=json["compileDate"],
+                version=json["version"],
+                subVersion=json["subVersion"],
+                configurationId=json["configurationId"],
+                updateDate=json["updateDate"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['crc'] = self.crc
-            json['compiler'] = self.compiler
-            json['compilerVersion'] = self.compilerVersion
-            json['compileDate'] = self.compileDate
-            json['version'] = self.version
-            json['subVersion'] = self.subVersion
-            json['configurationId'] = self.configurationId
-            json['updateDate'] = self.updateDate
+            json["crc"] = self.crc
+            json["compiler"] = self.compiler
+            json["compilerVersion"] = self.compilerVersion
+            json["compileDate"] = self.compileDate
+            json["version"] = self.version
+            json["subVersion"] = self.subVersion
+            json["configurationId"] = self.configurationId
+            json["updateDate"] = self.updateDate
             return json
 
     def updateFirmware(self, romcode):
         agent = self.agent
         typecheck.is_string(romcode, AssertionError)
         args = {}
-        args['romcode'] = romcode
-        rsp = agent.json_rpc(self.target, 'updateFirmware', args)
-        _ret_ = rsp['_ret_']
+        args["romcode"] = romcode
+        rsp = agent.json_rpc(self.target, "updateFirmware", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1151,9 +1524,11 @@ class G2Production(Interface):
         for x0 in position:
             typecheck.is_struct(x0, raritan.rpc.peripheral.PosElement, AssertionError)
         args = {}
-        args['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position]
-        rsp = agent.json_rpc(self.target, 'updateFirmwarePos', args)
-        _ret_ = rsp['_ret_']
+        args["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position
+        ]
+        rsp = agent.json_rpc(self.target, "updateFirmwarePos", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1161,12 +1536,16 @@ class G2Production(Interface):
         agent = self.agent
         typecheck.is_string(romcode, AssertionError)
         args = {}
-        args['romcode'] = romcode
-        rsp = agent.json_rpc(self.target, 'getFirmwareInfo', args)
-        _ret_ = rsp['_ret_']
-        info = raritan.rpc.peripheral.G2Production.FirmwareInfo.decode(rsp['info'], agent)
+        args["romcode"] = romcode
+        rsp = agent.json_rpc(self.target, "getFirmwareInfo", args)
+        _ret_ = rsp["_ret_"]
+        info = raritan.rpc.peripheral.G2Production.FirmwareInfo.decode(
+            rsp["info"], agent
+        )
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_struct(info, raritan.rpc.peripheral.G2Production.FirmwareInfo, DecodeException)
+        typecheck.is_struct(
+            info, raritan.rpc.peripheral.G2Production.FirmwareInfo, DecodeException
+        )
         return (_ret_, info)
 
     def getFirmwareInfoPos(self, position):
@@ -1174,12 +1553,18 @@ class G2Production(Interface):
         for x0 in position:
             typecheck.is_struct(x0, raritan.rpc.peripheral.PosElement, AssertionError)
         args = {}
-        args['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position]
-        rsp = agent.json_rpc(self.target, 'getFirmwareInfoPos', args)
-        _ret_ = rsp['_ret_']
-        info = raritan.rpc.peripheral.G2Production.FirmwareInfo.decode(rsp['info'], agent)
+        args["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position
+        ]
+        rsp = agent.json_rpc(self.target, "getFirmwareInfoPos", args)
+        _ret_ = rsp["_ret_"]
+        info = raritan.rpc.peripheral.G2Production.FirmwareInfo.decode(
+            rsp["info"], agent
+        )
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_struct(info, raritan.rpc.peripheral.G2Production.FirmwareInfo, DecodeException)
+        typecheck.is_struct(
+            info, raritan.rpc.peripheral.G2Production.FirmwareInfo, DecodeException
+        )
         return (_ret_, info)
 
     # enumeration
@@ -1195,13 +1580,15 @@ class G2Production(Interface):
     def readConfigurationSpace(self, romcode, cs):
         agent = self.agent
         typecheck.is_string(romcode, AssertionError)
-        typecheck.is_enum(cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError)
+        typecheck.is_enum(
+            cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError
+        )
         args = {}
-        args['romcode'] = romcode
-        args['cs'] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
-        rsp = agent.json_rpc(self.target, 'readConfigurationSpace', args)
-        _ret_ = rsp['_ret_']
-        cfg = [x0 for x0 in rsp['cfg']]
+        args["romcode"] = romcode
+        args["cs"] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
+        rsp = agent.json_rpc(self.target, "readConfigurationSpace", args)
+        _ret_ = rsp["_ret_"]
+        cfg = [x0 for x0 in rsp["cfg"]]
         typecheck.is_int(_ret_, DecodeException)
         for x0 in cfg:
             typecheck.is_byte(x0, DecodeException)
@@ -1211,13 +1598,17 @@ class G2Production(Interface):
         agent = self.agent
         for x0 in position:
             typecheck.is_struct(x0, raritan.rpc.peripheral.PosElement, AssertionError)
-        typecheck.is_enum(cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError)
+        typecheck.is_enum(
+            cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError
+        )
         args = {}
-        args['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position]
-        args['cs'] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
-        rsp = agent.json_rpc(self.target, 'readConfigurationSpacePos', args)
-        _ret_ = rsp['_ret_']
-        cfg = [x0 for x0 in rsp['cfg']]
+        args["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position
+        ]
+        args["cs"] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
+        rsp = agent.json_rpc(self.target, "readConfigurationSpacePos", args)
+        _ret_ = rsp["_ret_"]
+        cfg = [x0 for x0 in rsp["cfg"]]
         typecheck.is_int(_ret_, DecodeException)
         for x0 in cfg:
             typecheck.is_byte(x0, DecodeException)
@@ -1226,12 +1617,14 @@ class G2Production(Interface):
     def eraseConfigurationSpace(self, romcode, cs):
         agent = self.agent
         typecheck.is_string(romcode, AssertionError)
-        typecheck.is_enum(cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError)
+        typecheck.is_enum(
+            cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError
+        )
         args = {}
-        args['romcode'] = romcode
-        args['cs'] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
-        rsp = agent.json_rpc(self.target, 'eraseConfigurationSpace', args)
-        _ret_ = rsp['_ret_']
+        args["romcode"] = romcode
+        args["cs"] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
+        rsp = agent.json_rpc(self.target, "eraseConfigurationSpace", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1239,27 +1632,33 @@ class G2Production(Interface):
         agent = self.agent
         for x0 in position:
             typecheck.is_struct(x0, raritan.rpc.peripheral.PosElement, AssertionError)
-        typecheck.is_enum(cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError)
+        typecheck.is_enum(
+            cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError
+        )
         args = {}
-        args['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position]
-        args['cs'] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
-        rsp = agent.json_rpc(self.target, 'eraseConfigurationSpacePos', args)
-        _ret_ = rsp['_ret_']
+        args["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position
+        ]
+        args["cs"] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
+        rsp = agent.json_rpc(self.target, "eraseConfigurationSpacePos", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def writeConfigurationSpace(self, romcode, cs, cfg):
         agent = self.agent
         typecheck.is_string(romcode, AssertionError)
-        typecheck.is_enum(cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError)
+        typecheck.is_enum(
+            cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError
+        )
         for x0 in cfg:
             typecheck.is_byte(x0, AssertionError)
         args = {}
-        args['romcode'] = romcode
-        args['cs'] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
-        args['cfg'] = [x0 for x0 in cfg]
-        rsp = agent.json_rpc(self.target, 'writeConfigurationSpace', args)
-        _ret_ = rsp['_ret_']
+        args["romcode"] = romcode
+        args["cs"] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
+        args["cfg"] = [x0 for x0 in cfg]
+        rsp = agent.json_rpc(self.target, "writeConfigurationSpace", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1267,15 +1666,19 @@ class G2Production(Interface):
         agent = self.agent
         for x0 in position:
             typecheck.is_struct(x0, raritan.rpc.peripheral.PosElement, AssertionError)
-        typecheck.is_enum(cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError)
+        typecheck.is_enum(
+            cs, raritan.rpc.peripheral.G2Production.ConfigurationSpace, AssertionError
+        )
         for x0 in cfg:
             typecheck.is_byte(x0, AssertionError)
         args = {}
-        args['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position]
-        args['cs'] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
-        args['cfg'] = [x0 for x0 in cfg]
-        rsp = agent.json_rpc(self.target, 'writeConfigurationSpacePos', args)
-        _ret_ = rsp['_ret_']
+        args["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position
+        ]
+        args["cs"] = raritan.rpc.peripheral.G2Production.ConfigurationSpace.encode(cs)
+        args["cfg"] = [x0 for x0 in cfg]
+        rsp = agent.json_rpc(self.target, "writeConfigurationSpacePos", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1285,12 +1688,12 @@ class G2Production(Interface):
         typecheck.is_int(address, AssertionError)
         typecheck.is_int(count, AssertionError)
         args = {}
-        args['romcode'] = romcode
-        args['address'] = address
-        args['count'] = count
-        rsp = agent.json_rpc(self.target, 'readRegisters', args)
-        _ret_ = rsp['_ret_']
-        data = [x0 for x0 in rsp['data']]
+        args["romcode"] = romcode
+        args["address"] = address
+        args["count"] = count
+        rsp = agent.json_rpc(self.target, "readRegisters", args)
+        _ret_ = rsp["_ret_"]
+        data = [x0 for x0 in rsp["data"]]
         typecheck.is_int(_ret_, DecodeException)
         for x0 in data:
             typecheck.is_byte(x0, DecodeException)
@@ -1303,12 +1706,14 @@ class G2Production(Interface):
         typecheck.is_int(address, AssertionError)
         typecheck.is_int(count, AssertionError)
         args = {}
-        args['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position]
-        args['address'] = address
-        args['count'] = count
-        rsp = agent.json_rpc(self.target, 'readRegistersPos', args)
-        _ret_ = rsp['_ret_']
-        data = [x0 for x0 in rsp['data']]
+        args["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position
+        ]
+        args["address"] = address
+        args["count"] = count
+        rsp = agent.json_rpc(self.target, "readRegistersPos", args)
+        _ret_ = rsp["_ret_"]
+        data = [x0 for x0 in rsp["data"]]
         typecheck.is_int(_ret_, DecodeException)
         for x0 in data:
             typecheck.is_byte(x0, DecodeException)
@@ -1321,11 +1726,11 @@ class G2Production(Interface):
         for x0 in data:
             typecheck.is_byte(x0, AssertionError)
         args = {}
-        args['romcode'] = romcode
-        args['address'] = address
-        args['data'] = [x0 for x0 in data]
-        rsp = agent.json_rpc(self.target, 'writeRegisters', args)
-        _ret_ = rsp['_ret_']
+        args["romcode"] = romcode
+        args["address"] = address
+        args["data"] = [x0 for x0 in data]
+        rsp = agent.json_rpc(self.target, "writeRegisters", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1337,11 +1742,13 @@ class G2Production(Interface):
         for x0 in data:
             typecheck.is_byte(x0, AssertionError)
         args = {}
-        args['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position]
-        args['address'] = address
-        args['data'] = [x0 for x0 in data]
-        rsp = agent.json_rpc(self.target, 'writeRegistersPos', args)
-        _ret_ = rsp['_ret_']
+        args["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position
+        ]
+        args["address"] = address
+        args["data"] = [x0 for x0 in data]
+        rsp = agent.json_rpc(self.target, "writeRegistersPos", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1352,12 +1759,12 @@ class G2Production(Interface):
         typecheck.is_byte(mask, AssertionError)
         typecheck.is_byte(bits, AssertionError)
         args = {}
-        args['romcode'] = romcode
-        args['address'] = address
-        args['mask'] = mask
-        args['bits'] = bits
-        rsp = agent.json_rpc(self.target, 'writeRegisterBits', args)
-        _ret_ = rsp['_ret_']
+        args["romcode"] = romcode
+        args["address"] = address
+        args["mask"] = mask
+        args["bits"] = bits
+        rsp = agent.json_rpc(self.target, "writeRegisterBits", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1369,12 +1776,14 @@ class G2Production(Interface):
         typecheck.is_byte(mask, AssertionError)
         typecheck.is_byte(bits, AssertionError)
         args = {}
-        args['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position]
-        args['address'] = address
-        args['mask'] = mask
-        args['bits'] = bits
-        rsp = agent.json_rpc(self.target, 'writeRegisterBitsPos', args)
-        _ret_ = rsp['_ret_']
+        args["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position
+        ]
+        args["address"] = address
+        args["mask"] = mask
+        args["bits"] = bits
+        rsp = agent.json_rpc(self.target, "writeRegisterBitsPos", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1389,12 +1798,14 @@ class G2Production(Interface):
     def reset(self, romcode, method):
         agent = self.agent
         typecheck.is_string(romcode, AssertionError)
-        typecheck.is_enum(method, raritan.rpc.peripheral.G2Production.ResetMethod, AssertionError)
+        typecheck.is_enum(
+            method, raritan.rpc.peripheral.G2Production.ResetMethod, AssertionError
+        )
         args = {}
-        args['romcode'] = romcode
-        args['method'] = raritan.rpc.peripheral.G2Production.ResetMethod.encode(method)
-        rsp = agent.json_rpc(self.target, 'reset', args)
-        _ret_ = rsp['_ret_']
+        args["romcode"] = romcode
+        args["method"] = raritan.rpc.peripheral.G2Production.ResetMethod.encode(method)
+        rsp = agent.json_rpc(self.target, "reset", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1402,11 +1813,15 @@ class G2Production(Interface):
         agent = self.agent
         for x0 in position:
             typecheck.is_struct(x0, raritan.rpc.peripheral.PosElement, AssertionError)
-        typecheck.is_enum(method, raritan.rpc.peripheral.G2Production.ResetMethod, AssertionError)
+        typecheck.is_enum(
+            method, raritan.rpc.peripheral.G2Production.ResetMethod, AssertionError
+        )
         args = {}
-        args['position'] = [raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position]
-        args['method'] = raritan.rpc.peripheral.G2Production.ResetMethod.encode(method)
-        rsp = agent.json_rpc(self.target, 'resetPos', args)
-        _ret_ = rsp['_ret_']
+        args["position"] = [
+            raritan.rpc.peripheral.PosElement.encode(x0) for x0 in position
+        ]
+        args["method"] = raritan.rpc.peripheral.G2Production.ResetMethod.encode(method)
+        rsp = agent.json_rpc(self.target, "resetPos", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_

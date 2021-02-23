@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.bulkcfg
 
 
@@ -17,7 +24,13 @@ class BulkConfiguration(Interface):
     # enumeration
     class Status(Enumeration):
         idlType = "bulkcfg.BulkConfiguration.Status:1.0.0"
-        values = ["UNKNOWN", "UPLOAD_FAILED", "RESTORE_PENDING", "RESTORE_OK", "RESTORE_FAILED"]
+        values = [
+            "UNKNOWN",
+            "UPLOAD_FAILED",
+            "RESTORE_PENDING",
+            "RESTORE_OK",
+            "RESTORE_FAILED",
+        ]
 
     Status.UNKNOWN = Status(0)
     Status.UPLOAD_FAILED = Status(1)
@@ -28,9 +41,11 @@ class BulkConfiguration(Interface):
     def getStatus(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getStatus', args)
-        status = raritan.rpc.bulkcfg.BulkConfiguration.Status.decode(rsp['status'])
-        timeStamp = raritan.rpc.Time.decode(rsp['timeStamp'])
-        typecheck.is_enum(status, raritan.rpc.bulkcfg.BulkConfiguration.Status, DecodeException)
+        rsp = agent.json_rpc(self.target, "getStatus", args)
+        status = raritan.rpc.bulkcfg.BulkConfiguration.Status.decode(rsp["status"])
+        timeStamp = raritan.rpc.Time.decode(rsp["timeStamp"])
+        typecheck.is_enum(
+            status, raritan.rpc.bulkcfg.BulkConfiguration.Status, DecodeException
+        )
         typecheck.is_time(timeStamp, DecodeException)
         return (status, timeStamp)

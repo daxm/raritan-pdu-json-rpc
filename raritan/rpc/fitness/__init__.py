@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.fitness
 
 
@@ -23,9 +30,19 @@ class Fitness(Interface):
     # structure
     class DataEntry(Structure):
         idlType = "fitness.Fitness.DataEntry:1.0.0"
-        elements = ["id", "value", "maxValue", "worstValue", "thresholdValue", "rawValue", "flags"]
+        elements = [
+            "id",
+            "value",
+            "maxValue",
+            "worstValue",
+            "thresholdValue",
+            "rawValue",
+            "flags",
+        ]
 
-        def __init__(self, id, value, maxValue, worstValue, thresholdValue, rawValue, flags):
+        def __init__(
+            self, id, value, maxValue, worstValue, thresholdValue, rawValue, flags
+        ):
             typecheck.is_string(id, AssertionError)
             typecheck.is_int(value, AssertionError)
             typecheck.is_int(maxValue, AssertionError)
@@ -45,33 +62,42 @@ class Fitness(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                id = json['id'],
-                value = json['value'],
-                maxValue = json['maxValue'],
-                worstValue = json['worstValue'],
-                thresholdValue = json['thresholdValue'],
-                rawValue = int(json['rawValue']),
-                flags = json['flags'],
+                id=json["id"],
+                value=json["value"],
+                maxValue=json["maxValue"],
+                worstValue=json["worstValue"],
+                thresholdValue=json["thresholdValue"],
+                rawValue=int(json["rawValue"]),
+                flags=json["flags"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['id'] = self.id
-            json['value'] = self.value
-            json['maxValue'] = self.maxValue
-            json['worstValue'] = self.worstValue
-            json['thresholdValue'] = self.thresholdValue
-            json['rawValue'] = self.rawValue
-            json['flags'] = self.flags
+            json["id"] = self.id
+            json["value"] = self.value
+            json["maxValue"] = self.maxValue
+            json["worstValue"] = self.worstValue
+            json["thresholdValue"] = self.thresholdValue
+            json["rawValue"] = self.rawValue
+            json["flags"] = self.flags
             return json
 
     # structure
     class ErrorLogEntry(Structure):
         idlType = "fitness.Fitness.ErrorLogEntry:1.0.0"
-        elements = ["id", "value", "thresholdValue", "rawValue", "powerOnHours", "timeStampUTC"]
+        elements = [
+            "id",
+            "value",
+            "thresholdValue",
+            "rawValue",
+            "powerOnHours",
+            "timeStampUTC",
+        ]
 
-        def __init__(self, id, value, thresholdValue, rawValue, powerOnHours, timeStampUTC):
+        def __init__(
+            self, id, value, thresholdValue, rawValue, powerOnHours, timeStampUTC
+        ):
             typecheck.is_string(id, AssertionError)
             typecheck.is_int(value, AssertionError)
             typecheck.is_int(thresholdValue, AssertionError)
@@ -89,40 +115,45 @@ class Fitness(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                id = json['id'],
-                value = json['value'],
-                thresholdValue = json['thresholdValue'],
-                rawValue = int(json['rawValue']),
-                powerOnHours = json['powerOnHours'],
-                timeStampUTC = raritan.rpc.Time.decode(json['timeStampUTC']),
+                id=json["id"],
+                value=json["value"],
+                thresholdValue=json["thresholdValue"],
+                rawValue=int(json["rawValue"]),
+                powerOnHours=json["powerOnHours"],
+                timeStampUTC=raritan.rpc.Time.decode(json["timeStampUTC"]),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['id'] = self.id
-            json['value'] = self.value
-            json['thresholdValue'] = self.thresholdValue
-            json['rawValue'] = self.rawValue
-            json['powerOnHours'] = self.powerOnHours
-            json['timeStampUTC'] = raritan.rpc.Time.encode(self.timeStampUTC)
+            json["id"] = self.id
+            json["value"] = self.value
+            json["thresholdValue"] = self.thresholdValue
+            json["rawValue"] = self.rawValue
+            json["powerOnHours"] = self.powerOnHours
+            json["timeStampUTC"] = raritan.rpc.Time.encode(self.timeStampUTC)
             return json
 
     def getDataEntries(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getDataEntries', args)
-        _ret_ = [raritan.rpc.fitness.Fitness.DataEntry.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getDataEntries", args)
+        _ret_ = [
+            raritan.rpc.fitness.Fitness.DataEntry.decode(x0, agent)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.fitness.Fitness.DataEntry, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.fitness.Fitness.DataEntry, DecodeException
+            )
         return _ret_
 
     def getErrorLogIndexRange(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getErrorLogIndexRange', args)
-        firstIndex = rsp['firstIndex']
-        entryCount = rsp['entryCount']
+        rsp = agent.json_rpc(self.target, "getErrorLogIndexRange", args)
+        firstIndex = rsp["firstIndex"]
+        entryCount = rsp["entryCount"]
         typecheck.is_int(firstIndex, DecodeException)
         typecheck.is_int(entryCount, DecodeException)
         return (firstIndex, entryCount)
@@ -132,10 +163,15 @@ class Fitness(Interface):
         typecheck.is_int(startIndex, AssertionError)
         typecheck.is_int(count, AssertionError)
         args = {}
-        args['startIndex'] = startIndex
-        args['count'] = count
-        rsp = agent.json_rpc(self.target, 'getErrorLogEntries', args)
-        _ret_ = [raritan.rpc.fitness.Fitness.ErrorLogEntry.decode(x0, agent) for x0 in rsp['_ret_']]
+        args["startIndex"] = startIndex
+        args["count"] = count
+        rsp = agent.json_rpc(self.target, "getErrorLogEntries", args)
+        _ret_ = [
+            raritan.rpc.fitness.Fitness.ErrorLogEntry.decode(x0, agent)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.fitness.Fitness.ErrorLogEntry, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.fitness.Fitness.ErrorLogEntry, DecodeException
+            )
         return _ret_

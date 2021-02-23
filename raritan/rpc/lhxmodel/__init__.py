@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.idl
 
 import raritan.rpc.lhxmodel
@@ -23,7 +30,32 @@ class Parameter(Interface):
     # enumeration
     class Unit(Enumeration):
         idlType = "lhxmodel.Parameter.Unit:1.0.0"
-        values = ["NONE", "NUMBER", "BINARY", "TEMP_ABS", "TEMP_REL", "BAR", "PASCAL", "SIEMENS", "METER", "VOLT", "AMPERE", "HOURS", "MINUTES", "SECONDS", "TIME", "METERS_PER_SECOND", "NEWTON", "GRAMMS", "HUMIDITY_REL", "HERTZ", "OHM", "PERCENT", "LITERS_PER_MINUTE", "LITERS_PER_HOUR"]
+        values = [
+            "NONE",
+            "NUMBER",
+            "BINARY",
+            "TEMP_ABS",
+            "TEMP_REL",
+            "BAR",
+            "PASCAL",
+            "SIEMENS",
+            "METER",
+            "VOLT",
+            "AMPERE",
+            "HOURS",
+            "MINUTES",
+            "SECONDS",
+            "TIME",
+            "METERS_PER_SECOND",
+            "NEWTON",
+            "GRAMMS",
+            "HUMIDITY_REL",
+            "HERTZ",
+            "OHM",
+            "PERCENT",
+            "LITERS_PER_MINUTE",
+            "LITERS_PER_HOUR",
+        ]
 
     Unit.NONE = Unit(0)
     Unit.NUMBER = Unit(1)
@@ -71,27 +103,35 @@ class Parameter(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                switchedOn = json['switchedOn'],
-                active = json['active'],
-                overflow = json['overflow'],
-                underflow = json['underflow'],
-                valid = json['valid'],
+                switchedOn=json["switchedOn"],
+                active=json["active"],
+                overflow=json["overflow"],
+                underflow=json["underflow"],
+                valid=json["valid"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['switchedOn'] = self.switchedOn
-            json['active'] = self.active
-            json['overflow'] = self.overflow
-            json['underflow'] = self.underflow
-            json['valid'] = self.valid
+            json["switchedOn"] = self.switchedOn
+            json["active"] = self.active
+            json["overflow"] = self.overflow
+            json["underflow"] = self.underflow
+            json["valid"] = self.valid
             return json
 
     # structure
     class MetaData(Structure):
         idlType = "lhxmodel.Parameter.MetaData:1.0.0"
-        elements = ["unit", "id", "defaultValue", "min", "max", "read_only", "decDigits"]
+        elements = [
+            "unit",
+            "id",
+            "defaultValue",
+            "min",
+            "max",
+            "read_only",
+            "decDigits",
+        ]
 
         def __init__(self, unit, id, defaultValue, min, max, read_only, decDigits):
             typecheck.is_enum(unit, raritan.rpc.lhxmodel.Parameter.Unit, AssertionError)
@@ -113,25 +153,25 @@ class Parameter(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                unit = raritan.rpc.lhxmodel.Parameter.Unit.decode(json['unit']),
-                id = json['id'],
-                defaultValue = json['defaultValue'],
-                min = json['min'],
-                max = json['max'],
-                read_only = json['read_only'],
-                decDigits = json['decDigits'],
+                unit=raritan.rpc.lhxmodel.Parameter.Unit.decode(json["unit"]),
+                id=json["id"],
+                defaultValue=json["defaultValue"],
+                min=json["min"],
+                max=json["max"],
+                read_only=json["read_only"],
+                decDigits=json["decDigits"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['unit'] = raritan.rpc.lhxmodel.Parameter.Unit.encode(self.unit)
-            json['id'] = self.id
-            json['defaultValue'] = self.defaultValue
-            json['min'] = self.min
-            json['max'] = self.max
-            json['read_only'] = self.read_only
-            json['decDigits'] = self.decDigits
+            json["unit"] = raritan.rpc.lhxmodel.Parameter.Unit.encode(self.unit)
+            json["id"] = self.id
+            json["defaultValue"] = self.defaultValue
+            json["min"] = self.min
+            json["max"] = self.max
+            json["read_only"] = self.read_only
+            json["decDigits"] = self.decDigits
             return json
 
     # structure
@@ -141,7 +181,9 @@ class Parameter(Interface):
 
         def __init__(self, timestamp, status, value):
             typecheck.is_time(timestamp, AssertionError)
-            typecheck.is_struct(status, raritan.rpc.lhxmodel.Parameter.Status, AssertionError)
+            typecheck.is_struct(
+                status, raritan.rpc.lhxmodel.Parameter.Status, AssertionError
+            )
             typecheck.is_double(value, AssertionError)
 
             self.timestamp = timestamp
@@ -151,17 +193,19 @@ class Parameter(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                timestamp = raritan.rpc.Time.decode(json['timestamp']),
-                status = raritan.rpc.lhxmodel.Parameter.Status.decode(json['status'], agent),
-                value = json['value'],
+                timestamp=raritan.rpc.Time.decode(json["timestamp"]),
+                status=raritan.rpc.lhxmodel.Parameter.Status.decode(
+                    json["status"], agent
+                ),
+                value=json["value"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['timestamp'] = raritan.rpc.Time.encode(self.timestamp)
-            json['status'] = raritan.rpc.lhxmodel.Parameter.Status.encode(self.status)
-            json['value'] = self.value
+            json["timestamp"] = raritan.rpc.Time.encode(self.timestamp)
+            json["status"] = raritan.rpc.lhxmodel.Parameter.Status.encode(self.status)
+            json["value"] = self.value
             return json
 
     # value object
@@ -169,32 +213,53 @@ class Parameter(Interface):
         idlType = "lhxmodel.Parameter.MetaDataChangedEvent:1.0.0"
 
         def __init__(self, oldMetaData, newMetaData, source):
-            super(raritan.rpc.lhxmodel.Parameter.MetaDataChangedEvent, self).__init__(source)
-            typecheck.is_struct(oldMetaData, raritan.rpc.lhxmodel.Parameter.MetaData, AssertionError)
-            typecheck.is_struct(newMetaData, raritan.rpc.lhxmodel.Parameter.MetaData, AssertionError)
+            super(raritan.rpc.lhxmodel.Parameter.MetaDataChangedEvent, self).__init__(
+                source
+            )
+            typecheck.is_struct(
+                oldMetaData, raritan.rpc.lhxmodel.Parameter.MetaData, AssertionError
+            )
+            typecheck.is_struct(
+                newMetaData, raritan.rpc.lhxmodel.Parameter.MetaData, AssertionError
+            )
 
             self.oldMetaData = oldMetaData
             self.newMetaData = newMetaData
 
         def encode(self):
-            json = super(raritan.rpc.lhxmodel.Parameter.MetaDataChangedEvent, self).encode()
-            json['oldMetaData'] = raritan.rpc.lhxmodel.Parameter.MetaData.encode(self.oldMetaData)
-            json['newMetaData'] = raritan.rpc.lhxmodel.Parameter.MetaData.encode(self.newMetaData)
+            json = super(
+                raritan.rpc.lhxmodel.Parameter.MetaDataChangedEvent, self
+            ).encode()
+            json["oldMetaData"] = raritan.rpc.lhxmodel.Parameter.MetaData.encode(
+                self.oldMetaData
+            )
+            json["newMetaData"] = raritan.rpc.lhxmodel.Parameter.MetaData.encode(
+                self.newMetaData
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldMetaData = raritan.rpc.lhxmodel.Parameter.MetaData.decode(json['oldMetaData'], agent),
-                newMetaData = raritan.rpc.lhxmodel.Parameter.MetaData.decode(json['newMetaData'], agent),
+                oldMetaData=raritan.rpc.lhxmodel.Parameter.MetaData.decode(
+                    json["oldMetaData"], agent
+                ),
+                newMetaData=raritan.rpc.lhxmodel.Parameter.MetaData.decode(
+                    json["newMetaData"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldMetaData", "newMetaData"]
-            elements = elements + super(raritan.rpc.lhxmodel.Parameter.MetaDataChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.lhxmodel.Parameter.MetaDataChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -202,51 +267,70 @@ class Parameter(Interface):
         idlType = "lhxmodel.Parameter.ValueChangedEvent:1.0.0"
 
         def __init__(self, newValue, source):
-            super(raritan.rpc.lhxmodel.Parameter.ValueChangedEvent, self).__init__(source)
-            typecheck.is_struct(newValue, raritan.rpc.lhxmodel.Parameter.Value, AssertionError)
+            super(raritan.rpc.lhxmodel.Parameter.ValueChangedEvent, self).__init__(
+                source
+            )
+            typecheck.is_struct(
+                newValue, raritan.rpc.lhxmodel.Parameter.Value, AssertionError
+            )
 
             self.newValue = newValue
 
         def encode(self):
-            json = super(raritan.rpc.lhxmodel.Parameter.ValueChangedEvent, self).encode()
-            json['newValue'] = raritan.rpc.lhxmodel.Parameter.Value.encode(self.newValue)
+            json = super(
+                raritan.rpc.lhxmodel.Parameter.ValueChangedEvent, self
+            ).encode()
+            json["newValue"] = raritan.rpc.lhxmodel.Parameter.Value.encode(
+                self.newValue
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                newValue = raritan.rpc.lhxmodel.Parameter.Value.decode(json['newValue'], agent),
+                newValue=raritan.rpc.lhxmodel.Parameter.Value.decode(
+                    json["newValue"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["newValue"]
-            elements = elements + super(raritan.rpc.lhxmodel.Parameter.ValueChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.lhxmodel.Parameter.ValueChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getMetaData(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getMetaData', args)
-        _ret_ = raritan.rpc.lhxmodel.Parameter.MetaData.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.lhxmodel.Parameter.MetaData, DecodeException)
+        rsp = agent.json_rpc(self.target, "getMetaData", args)
+        _ret_ = raritan.rpc.lhxmodel.Parameter.MetaData.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.lhxmodel.Parameter.MetaData, DecodeException
+        )
         return _ret_
 
     def getValue(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getValue', args)
-        _ret_ = raritan.rpc.lhxmodel.Parameter.Value.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.lhxmodel.Parameter.Value, DecodeException)
+        rsp = agent.json_rpc(self.target, "getValue", args)
+        _ret_ = raritan.rpc.lhxmodel.Parameter.Value.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.lhxmodel.Parameter.Value, DecodeException
+        )
         return _ret_
 
     def getRawValue(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getRawValue', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "getRawValue", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -255,12 +339,14 @@ class Parameter(Interface):
         typecheck.is_int(rawValue, AssertionError)
         typecheck.is_bool(validateRange, AssertionError)
         args = {}
-        args['rawValue'] = rawValue
-        args['validateRange'] = validateRange
-        rsp = agent.json_rpc(self.target, 'setRawValue', args)
-        _ret_ = rsp['_ret_']
+        args["rawValue"] = rawValue
+        args["validateRange"] = validateRange
+        rsp = agent.json_rpc(self.target, "setRawValue", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -269,7 +355,14 @@ class Parameter(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.event
 
 import raritan.rpc.idl
@@ -286,10 +379,31 @@ class Sensor(raritan.rpc.sensors.Sensor):
     # structure
     class MetaData(Structure):
         idlType = "lhxmodel.Sensor.MetaData:1.0.0"
-        elements = ["type", "numDecDigits", "numRangeMin", "numRangeMax", "numThresholdMin", "numThresholdMax", "label", "id"]
+        elements = [
+            "type",
+            "numDecDigits",
+            "numRangeMin",
+            "numRangeMax",
+            "numThresholdMin",
+            "numThresholdMax",
+            "label",
+            "id",
+        ]
 
-        def __init__(self, type, numDecDigits, numRangeMin, numRangeMax, numThresholdMin, numThresholdMax, label, id):
-            typecheck.is_struct(type, raritan.rpc.sensors.Sensor.TypeSpec, AssertionError)
+        def __init__(
+            self,
+            type,
+            numDecDigits,
+            numRangeMin,
+            numRangeMax,
+            numThresholdMin,
+            numThresholdMax,
+            label,
+            id,
+        ):
+            typecheck.is_struct(
+                type, raritan.rpc.sensors.Sensor.TypeSpec, AssertionError
+            )
             typecheck.is_int(numDecDigits, AssertionError)
             typecheck.is_double(numRangeMin, AssertionError)
             typecheck.is_double(numRangeMax, AssertionError)
@@ -310,35 +424,56 @@ class Sensor(raritan.rpc.sensors.Sensor):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                type = raritan.rpc.sensors.Sensor.TypeSpec.decode(json['type'], agent),
-                numDecDigits = json['numDecDigits'],
-                numRangeMin = json['numRangeMin'],
-                numRangeMax = json['numRangeMax'],
-                numThresholdMin = json['numThresholdMin'],
-                numThresholdMax = json['numThresholdMax'],
-                label = json['label'],
-                id = json['id'],
+                type=raritan.rpc.sensors.Sensor.TypeSpec.decode(json["type"], agent),
+                numDecDigits=json["numDecDigits"],
+                numRangeMin=json["numRangeMin"],
+                numRangeMax=json["numRangeMax"],
+                numThresholdMin=json["numThresholdMin"],
+                numThresholdMax=json["numThresholdMax"],
+                label=json["label"],
+                id=json["id"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['type'] = raritan.rpc.sensors.Sensor.TypeSpec.encode(self.type)
-            json['numDecDigits'] = self.numDecDigits
-            json['numRangeMin'] = self.numRangeMin
-            json['numRangeMax'] = self.numRangeMax
-            json['numThresholdMin'] = self.numThresholdMin
-            json['numThresholdMax'] = self.numThresholdMax
-            json['label'] = self.label
-            json['id'] = self.id
+            json["type"] = raritan.rpc.sensors.Sensor.TypeSpec.encode(self.type)
+            json["numDecDigits"] = self.numDecDigits
+            json["numRangeMin"] = self.numRangeMin
+            json["numRangeMax"] = self.numRangeMax
+            json["numThresholdMin"] = self.numThresholdMin
+            json["numThresholdMax"] = self.numThresholdMax
+            json["label"] = self.label
+            json["id"] = self.id
             return json
 
     # structure
     class NumThresholds(Structure):
         idlType = "lhxmodel.Sensor.NumThresholds:1.0.0"
-        elements = ["lowerCriticalIsEnabled", "lowerCritical", "lowerWarningIsEnabled", "lowerWarning", "upperWarningIsEnabled", "upperWarning", "upperCriticalIsEnabled", "upperCritical", "hysteresis"]
+        elements = [
+            "lowerCriticalIsEnabled",
+            "lowerCritical",
+            "lowerWarningIsEnabled",
+            "lowerWarning",
+            "upperWarningIsEnabled",
+            "upperWarning",
+            "upperCriticalIsEnabled",
+            "upperCritical",
+            "hysteresis",
+        ]
 
-        def __init__(self, lowerCriticalIsEnabled, lowerCritical, lowerWarningIsEnabled, lowerWarning, upperWarningIsEnabled, upperWarning, upperCriticalIsEnabled, upperCritical, hysteresis):
+        def __init__(
+            self,
+            lowerCriticalIsEnabled,
+            lowerCritical,
+            lowerWarningIsEnabled,
+            lowerWarning,
+            upperWarningIsEnabled,
+            upperWarning,
+            upperCriticalIsEnabled,
+            upperCritical,
+            hysteresis,
+        ):
             typecheck.is_bool(lowerCriticalIsEnabled, AssertionError)
             typecheck.is_double(lowerCritical, AssertionError)
             typecheck.is_bool(lowerWarningIsEnabled, AssertionError)
@@ -362,29 +497,29 @@ class Sensor(raritan.rpc.sensors.Sensor):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                lowerCriticalIsEnabled = json['lowerCriticalIsEnabled'],
-                lowerCritical = json['lowerCritical'],
-                lowerWarningIsEnabled = json['lowerWarningIsEnabled'],
-                lowerWarning = json['lowerWarning'],
-                upperWarningIsEnabled = json['upperWarningIsEnabled'],
-                upperWarning = json['upperWarning'],
-                upperCriticalIsEnabled = json['upperCriticalIsEnabled'],
-                upperCritical = json['upperCritical'],
-                hysteresis = json['hysteresis'],
+                lowerCriticalIsEnabled=json["lowerCriticalIsEnabled"],
+                lowerCritical=json["lowerCritical"],
+                lowerWarningIsEnabled=json["lowerWarningIsEnabled"],
+                lowerWarning=json["lowerWarning"],
+                upperWarningIsEnabled=json["upperWarningIsEnabled"],
+                upperWarning=json["upperWarning"],
+                upperCriticalIsEnabled=json["upperCriticalIsEnabled"],
+                upperCritical=json["upperCritical"],
+                hysteresis=json["hysteresis"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['lowerCriticalIsEnabled'] = self.lowerCriticalIsEnabled
-            json['lowerCritical'] = self.lowerCritical
-            json['lowerWarningIsEnabled'] = self.lowerWarningIsEnabled
-            json['lowerWarning'] = self.lowerWarning
-            json['upperWarningIsEnabled'] = self.upperWarningIsEnabled
-            json['upperWarning'] = self.upperWarning
-            json['upperCriticalIsEnabled'] = self.upperCriticalIsEnabled
-            json['upperCritical'] = self.upperCritical
-            json['hysteresis'] = self.hysteresis
+            json["lowerCriticalIsEnabled"] = self.lowerCriticalIsEnabled
+            json["lowerCritical"] = self.lowerCritical
+            json["lowerWarningIsEnabled"] = self.lowerWarningIsEnabled
+            json["lowerWarning"] = self.lowerWarning
+            json["upperWarningIsEnabled"] = self.upperWarningIsEnabled
+            json["upperWarning"] = self.upperWarning
+            json["upperCriticalIsEnabled"] = self.upperCriticalIsEnabled
+            json["upperCritical"] = self.upperCritical
+            json["hysteresis"] = self.hysteresis
             return json
 
     STATE_NOT_AVAILABLE = -1
@@ -422,55 +557,78 @@ class Sensor(raritan.rpc.sensors.Sensor):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                timestamp = raritan.rpc.Time.decode(json['timestamp']),
-                state = json['state'],
-                value = json['value'],
-                isValid = json['isValid'],
+                timestamp=raritan.rpc.Time.decode(json["timestamp"]),
+                state=json["state"],
+                value=json["value"],
+                isValid=json["isValid"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['timestamp'] = raritan.rpc.Time.encode(self.timestamp)
-            json['state'] = self.state
-            json['value'] = self.value
-            json['isValid'] = self.isValid
+            json["timestamp"] = raritan.rpc.Time.encode(self.timestamp)
+            json["state"] = self.state
+            json["value"] = self.value
+            json["isValid"] = self.isValid
             return json
 
     # value object
     class ThresholdsChangedEvent(raritan.rpc.event.UserEvent):
         idlType = "lhxmodel.Sensor.ThresholdsChangedEvent:1.0.0"
 
-        def __init__(self, oldThresholds, newThresholds, actUserName, actIpAddr, source):
-            super(raritan.rpc.lhxmodel.Sensor.ThresholdsChangedEvent, self).__init__(actUserName, actIpAddr, source)
-            typecheck.is_struct(oldThresholds, raritan.rpc.lhxmodel.Sensor.NumThresholds, AssertionError)
-            typecheck.is_struct(newThresholds, raritan.rpc.lhxmodel.Sensor.NumThresholds, AssertionError)
+        def __init__(
+            self, oldThresholds, newThresholds, actUserName, actIpAddr, source
+        ):
+            super(raritan.rpc.lhxmodel.Sensor.ThresholdsChangedEvent, self).__init__(
+                actUserName, actIpAddr, source
+            )
+            typecheck.is_struct(
+                oldThresholds, raritan.rpc.lhxmodel.Sensor.NumThresholds, AssertionError
+            )
+            typecheck.is_struct(
+                newThresholds, raritan.rpc.lhxmodel.Sensor.NumThresholds, AssertionError
+            )
 
             self.oldThresholds = oldThresholds
             self.newThresholds = newThresholds
 
         def encode(self):
-            json = super(raritan.rpc.lhxmodel.Sensor.ThresholdsChangedEvent, self).encode()
-            json['oldThresholds'] = raritan.rpc.lhxmodel.Sensor.NumThresholds.encode(self.oldThresholds)
-            json['newThresholds'] = raritan.rpc.lhxmodel.Sensor.NumThresholds.encode(self.newThresholds)
+            json = super(
+                raritan.rpc.lhxmodel.Sensor.ThresholdsChangedEvent, self
+            ).encode()
+            json["oldThresholds"] = raritan.rpc.lhxmodel.Sensor.NumThresholds.encode(
+                self.oldThresholds
+            )
+            json["newThresholds"] = raritan.rpc.lhxmodel.Sensor.NumThresholds.encode(
+                self.newThresholds
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldThresholds = raritan.rpc.lhxmodel.Sensor.NumThresholds.decode(json['oldThresholds'], agent),
-                newThresholds = raritan.rpc.lhxmodel.Sensor.NumThresholds.decode(json['newThresholds'], agent),
+                oldThresholds=raritan.rpc.lhxmodel.Sensor.NumThresholds.decode(
+                    json["oldThresholds"], agent
+                ),
+                newThresholds=raritan.rpc.lhxmodel.Sensor.NumThresholds.decode(
+                    json["newThresholds"], agent
+                ),
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldThresholds", "newThresholds"]
-            elements = elements + super(raritan.rpc.lhxmodel.Sensor.ThresholdsChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.lhxmodel.Sensor.ThresholdsChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -479,31 +637,48 @@ class Sensor(raritan.rpc.sensors.Sensor):
 
         def __init__(self, oldReading, newReading, source):
             super(raritan.rpc.lhxmodel.Sensor.StateChangedEvent, self).__init__(source)
-            typecheck.is_struct(oldReading, raritan.rpc.lhxmodel.Sensor.Reading, AssertionError)
-            typecheck.is_struct(newReading, raritan.rpc.lhxmodel.Sensor.Reading, AssertionError)
+            typecheck.is_struct(
+                oldReading, raritan.rpc.lhxmodel.Sensor.Reading, AssertionError
+            )
+            typecheck.is_struct(
+                newReading, raritan.rpc.lhxmodel.Sensor.Reading, AssertionError
+            )
 
             self.oldReading = oldReading
             self.newReading = newReading
 
         def encode(self):
             json = super(raritan.rpc.lhxmodel.Sensor.StateChangedEvent, self).encode()
-            json['oldReading'] = raritan.rpc.lhxmodel.Sensor.Reading.encode(self.oldReading)
-            json['newReading'] = raritan.rpc.lhxmodel.Sensor.Reading.encode(self.newReading)
+            json["oldReading"] = raritan.rpc.lhxmodel.Sensor.Reading.encode(
+                self.oldReading
+            )
+            json["newReading"] = raritan.rpc.lhxmodel.Sensor.Reading.encode(
+                self.newReading
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldReading = raritan.rpc.lhxmodel.Sensor.Reading.decode(json['oldReading'], agent),
-                newReading = raritan.rpc.lhxmodel.Sensor.Reading.decode(json['newReading'], agent),
+                oldReading=raritan.rpc.lhxmodel.Sensor.Reading.decode(
+                    json["oldReading"], agent
+                ),
+                newReading=raritan.rpc.lhxmodel.Sensor.Reading.decode(
+                    json["newReading"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldReading", "newReading"]
-            elements = elements + super(raritan.rpc.lhxmodel.Sensor.StateChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.lhxmodel.Sensor.StateChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -511,28 +686,41 @@ class Sensor(raritan.rpc.sensors.Sensor):
         idlType = "lhxmodel.Sensor.ReadingChangedEvent:1.0.0"
 
         def __init__(self, newReading, source):
-            super(raritan.rpc.lhxmodel.Sensor.ReadingChangedEvent, self).__init__(source)
-            typecheck.is_struct(newReading, raritan.rpc.lhxmodel.Sensor.Reading, AssertionError)
+            super(raritan.rpc.lhxmodel.Sensor.ReadingChangedEvent, self).__init__(
+                source
+            )
+            typecheck.is_struct(
+                newReading, raritan.rpc.lhxmodel.Sensor.Reading, AssertionError
+            )
 
             self.newReading = newReading
 
         def encode(self):
             json = super(raritan.rpc.lhxmodel.Sensor.ReadingChangedEvent, self).encode()
-            json['newReading'] = raritan.rpc.lhxmodel.Sensor.Reading.encode(self.newReading)
+            json["newReading"] = raritan.rpc.lhxmodel.Sensor.Reading.encode(
+                self.newReading
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                newReading = raritan.rpc.lhxmodel.Sensor.Reading.decode(json['newReading'], agent),
+                newReading=raritan.rpc.lhxmodel.Sensor.Reading.decode(
+                    json["newReading"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["newReading"]
-            elements = elements + super(raritan.rpc.lhxmodel.Sensor.ReadingChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.lhxmodel.Sensor.ReadingChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     ERR_INVALID_PARAM = 1
@@ -542,36 +730,46 @@ class Sensor(raritan.rpc.sensors.Sensor):
     def getMetaData(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getMetaData', args)
-        _ret_ = raritan.rpc.lhxmodel.Sensor.MetaData.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.lhxmodel.Sensor.MetaData, DecodeException)
+        rsp = agent.json_rpc(self.target, "getMetaData", args)
+        _ret_ = raritan.rpc.lhxmodel.Sensor.MetaData.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.lhxmodel.Sensor.MetaData, DecodeException
+        )
         return _ret_
 
     def getThresholds(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getThresholds', args)
-        _ret_ = raritan.rpc.lhxmodel.Sensor.NumThresholds.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.lhxmodel.Sensor.NumThresholds, DecodeException)
+        rsp = agent.json_rpc(self.target, "getThresholds", args)
+        _ret_ = raritan.rpc.lhxmodel.Sensor.NumThresholds.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.lhxmodel.Sensor.NumThresholds, DecodeException
+        )
         return _ret_
 
     def setThresholds(self, thresholds):
         agent = self.agent
-        typecheck.is_struct(thresholds, raritan.rpc.lhxmodel.Sensor.NumThresholds, AssertionError)
+        typecheck.is_struct(
+            thresholds, raritan.rpc.lhxmodel.Sensor.NumThresholds, AssertionError
+        )
         args = {}
-        args['thresholds'] = raritan.rpc.lhxmodel.Sensor.NumThresholds.encode(thresholds)
-        rsp = agent.json_rpc(self.target, 'setThresholds', args)
-        _ret_ = rsp['_ret_']
+        args["thresholds"] = raritan.rpc.lhxmodel.Sensor.NumThresholds.encode(
+            thresholds
+        )
+        rsp = agent.json_rpc(self.target, "setThresholds", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getReading(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getReading', args)
-        _ret_ = raritan.rpc.lhxmodel.Sensor.Reading.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getReading", args)
+        _ret_ = raritan.rpc.lhxmodel.Sensor.Reading.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.lhxmodel.Sensor.Reading, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -580,7 +778,14 @@ class Sensor(raritan.rpc.sensors.Sensor):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.event
 
 import raritan.rpc.idl
@@ -615,30 +820,51 @@ class Lhx(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                min = json['min'],
-                max = json['max'],
-                decdigits = json['decdigits'],
+                min=json["min"],
+                max=json["max"],
+                decdigits=json["decdigits"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['min'] = self.min
-            json['max'] = self.max
-            json['decdigits'] = self.decdigits
+            json["min"] = self.min
+            json["max"] = self.max
+            json["decdigits"] = self.decdigits
             return json
 
     # structure
     class MetaData(Structure):
         idlType = "lhxmodel.Lhx.MetaData:1.0.0"
-        elements = ["model", "version", "setpointWaterValveCfg", "setpointVentilatorsCfg", "defaultFanSpeedCfg"]
+        elements = [
+            "model",
+            "version",
+            "setpointWaterValveCfg",
+            "setpointVentilatorsCfg",
+            "defaultFanSpeedCfg",
+        ]
 
-        def __init__(self, model, version, setpointWaterValveCfg, setpointVentilatorsCfg, defaultFanSpeedCfg):
+        def __init__(
+            self,
+            model,
+            version,
+            setpointWaterValveCfg,
+            setpointVentilatorsCfg,
+            defaultFanSpeedCfg,
+        ):
             typecheck.is_string(model, AssertionError)
             typecheck.is_string(version, AssertionError)
-            typecheck.is_struct(setpointWaterValveCfg, raritan.rpc.lhxmodel.Lhx.ParamCfg, AssertionError)
-            typecheck.is_struct(setpointVentilatorsCfg, raritan.rpc.lhxmodel.Lhx.ParamCfg, AssertionError)
-            typecheck.is_struct(defaultFanSpeedCfg, raritan.rpc.lhxmodel.Lhx.ParamCfg, AssertionError)
+            typecheck.is_struct(
+                setpointWaterValveCfg, raritan.rpc.lhxmodel.Lhx.ParamCfg, AssertionError
+            )
+            typecheck.is_struct(
+                setpointVentilatorsCfg,
+                raritan.rpc.lhxmodel.Lhx.ParamCfg,
+                AssertionError,
+            )
+            typecheck.is_struct(
+                defaultFanSpeedCfg, raritan.rpc.lhxmodel.Lhx.ParamCfg, AssertionError
+            )
 
             self.model = model
             self.version = version
@@ -649,21 +875,33 @@ class Lhx(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                model = json['model'],
-                version = json['version'],
-                setpointWaterValveCfg = raritan.rpc.lhxmodel.Lhx.ParamCfg.decode(json['setpointWaterValveCfg'], agent),
-                setpointVentilatorsCfg = raritan.rpc.lhxmodel.Lhx.ParamCfg.decode(json['setpointVentilatorsCfg'], agent),
-                defaultFanSpeedCfg = raritan.rpc.lhxmodel.Lhx.ParamCfg.decode(json['defaultFanSpeedCfg'], agent),
+                model=json["model"],
+                version=json["version"],
+                setpointWaterValveCfg=raritan.rpc.lhxmodel.Lhx.ParamCfg.decode(
+                    json["setpointWaterValveCfg"], agent
+                ),
+                setpointVentilatorsCfg=raritan.rpc.lhxmodel.Lhx.ParamCfg.decode(
+                    json["setpointVentilatorsCfg"], agent
+                ),
+                defaultFanSpeedCfg=raritan.rpc.lhxmodel.Lhx.ParamCfg.decode(
+                    json["defaultFanSpeedCfg"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['model'] = self.model
-            json['version'] = self.version
-            json['setpointWaterValveCfg'] = raritan.rpc.lhxmodel.Lhx.ParamCfg.encode(self.setpointWaterValveCfg)
-            json['setpointVentilatorsCfg'] = raritan.rpc.lhxmodel.Lhx.ParamCfg.encode(self.setpointVentilatorsCfg)
-            json['defaultFanSpeedCfg'] = raritan.rpc.lhxmodel.Lhx.ParamCfg.encode(self.defaultFanSpeedCfg)
+            json["model"] = self.model
+            json["version"] = self.version
+            json["setpointWaterValveCfg"] = raritan.rpc.lhxmodel.Lhx.ParamCfg.encode(
+                self.setpointWaterValveCfg
+            )
+            json["setpointVentilatorsCfg"] = raritan.rpc.lhxmodel.Lhx.ParamCfg.encode(
+                self.setpointVentilatorsCfg
+            )
+            json["defaultFanSpeedCfg"] = raritan.rpc.lhxmodel.Lhx.ParamCfg.encode(
+                self.defaultFanSpeedCfg
+            )
             return json
 
     # structure
@@ -683,25 +921,62 @@ class Lhx(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                setpointWaterValve = json['setpointWaterValve'],
-                setpointVentilators = json['setpointVentilators'],
-                defaultFanSpeed = json['defaultFanSpeed'],
+                setpointWaterValve=json["setpointWaterValve"],
+                setpointVentilators=json["setpointVentilators"],
+                defaultFanSpeed=json["defaultFanSpeed"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['setpointWaterValve'] = self.setpointWaterValve
-            json['setpointVentilators'] = self.setpointVentilators
-            json['defaultFanSpeed'] = self.defaultFanSpeed
+            json["setpointWaterValve"] = self.setpointWaterValve
+            json["setpointVentilators"] = self.setpointVentilators
+            json["defaultFanSpeed"] = self.defaultFanSpeed
             return json
 
     # structure
     class AlertStatus(Structure):
         idlType = "lhxmodel.Lhx.AlertStatus:1.0.0"
-        elements = ["sensorFailure", "fanFailure", "powerSupplyFailure", "thresholdAirOutlet", "thresholdAirInlet", "thresholdWaterInlet", "doorOpened", "maximumCoolingRequest", "emergencyCooling", "waterLeak", "thresholdHumidity", "externalWaterCoolingFailure", "thresholdWaterOutlet", "stBusError", "condenserPumpFailure", "baseElectronicsFailure", "voltageLow"]
+        elements = [
+            "sensorFailure",
+            "fanFailure",
+            "powerSupplyFailure",
+            "thresholdAirOutlet",
+            "thresholdAirInlet",
+            "thresholdWaterInlet",
+            "doorOpened",
+            "maximumCoolingRequest",
+            "emergencyCooling",
+            "waterLeak",
+            "thresholdHumidity",
+            "externalWaterCoolingFailure",
+            "thresholdWaterOutlet",
+            "stBusError",
+            "condenserPumpFailure",
+            "baseElectronicsFailure",
+            "voltageLow",
+        ]
 
-        def __init__(self, sensorFailure, fanFailure, powerSupplyFailure, thresholdAirOutlet, thresholdAirInlet, thresholdWaterInlet, doorOpened, maximumCoolingRequest, emergencyCooling, waterLeak, thresholdHumidity, externalWaterCoolingFailure, thresholdWaterOutlet, stBusError, condenserPumpFailure, baseElectronicsFailure, voltageLow):
+        def __init__(
+            self,
+            sensorFailure,
+            fanFailure,
+            powerSupplyFailure,
+            thresholdAirOutlet,
+            thresholdAirInlet,
+            thresholdWaterInlet,
+            doorOpened,
+            maximumCoolingRequest,
+            emergencyCooling,
+            waterLeak,
+            thresholdHumidity,
+            externalWaterCoolingFailure,
+            thresholdWaterOutlet,
+            stBusError,
+            condenserPumpFailure,
+            baseElectronicsFailure,
+            voltageLow,
+        ):
             for x0 in sensorFailure:
                 typecheck.is_bool(x0, AssertionError)
             for x0 in fanFailure:
@@ -744,45 +1019,45 @@ class Lhx(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                sensorFailure = [x0 for x0 in json['sensorFailure']],
-                fanFailure = [x0 for x0 in json['fanFailure']],
-                powerSupplyFailure = [x0 for x0 in json['powerSupplyFailure']],
-                thresholdAirOutlet = json['thresholdAirOutlet'],
-                thresholdAirInlet = json['thresholdAirInlet'],
-                thresholdWaterInlet = json['thresholdWaterInlet'],
-                doorOpened = json['doorOpened'],
-                maximumCoolingRequest = json['maximumCoolingRequest'],
-                emergencyCooling = json['emergencyCooling'],
-                waterLeak = json['waterLeak'],
-                thresholdHumidity = json['thresholdHumidity'],
-                externalWaterCoolingFailure = json['externalWaterCoolingFailure'],
-                thresholdWaterOutlet = json['thresholdWaterOutlet'],
-                stBusError = json['stBusError'],
-                condenserPumpFailure = json['condenserPumpFailure'],
-                baseElectronicsFailure = json['baseElectronicsFailure'],
-                voltageLow = json['voltageLow'],
+                sensorFailure=[x0 for x0 in json["sensorFailure"]],
+                fanFailure=[x0 for x0 in json["fanFailure"]],
+                powerSupplyFailure=[x0 for x0 in json["powerSupplyFailure"]],
+                thresholdAirOutlet=json["thresholdAirOutlet"],
+                thresholdAirInlet=json["thresholdAirInlet"],
+                thresholdWaterInlet=json["thresholdWaterInlet"],
+                doorOpened=json["doorOpened"],
+                maximumCoolingRequest=json["maximumCoolingRequest"],
+                emergencyCooling=json["emergencyCooling"],
+                waterLeak=json["waterLeak"],
+                thresholdHumidity=json["thresholdHumidity"],
+                externalWaterCoolingFailure=json["externalWaterCoolingFailure"],
+                thresholdWaterOutlet=json["thresholdWaterOutlet"],
+                stBusError=json["stBusError"],
+                condenserPumpFailure=json["condenserPumpFailure"],
+                baseElectronicsFailure=json["baseElectronicsFailure"],
+                voltageLow=json["voltageLow"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['sensorFailure'] = [x0 for x0 in self.sensorFailure]
-            json['fanFailure'] = [x0 for x0 in self.fanFailure]
-            json['powerSupplyFailure'] = [x0 for x0 in self.powerSupplyFailure]
-            json['thresholdAirOutlet'] = self.thresholdAirOutlet
-            json['thresholdAirInlet'] = self.thresholdAirInlet
-            json['thresholdWaterInlet'] = self.thresholdWaterInlet
-            json['doorOpened'] = self.doorOpened
-            json['maximumCoolingRequest'] = self.maximumCoolingRequest
-            json['emergencyCooling'] = self.emergencyCooling
-            json['waterLeak'] = self.waterLeak
-            json['thresholdHumidity'] = self.thresholdHumidity
-            json['externalWaterCoolingFailure'] = self.externalWaterCoolingFailure
-            json['thresholdWaterOutlet'] = self.thresholdWaterOutlet
-            json['stBusError'] = self.stBusError
-            json['condenserPumpFailure'] = self.condenserPumpFailure
-            json['baseElectronicsFailure'] = self.baseElectronicsFailure
-            json['voltageLow'] = self.voltageLow
+            json["sensorFailure"] = [x0 for x0 in self.sensorFailure]
+            json["fanFailure"] = [x0 for x0 in self.fanFailure]
+            json["powerSupplyFailure"] = [x0 for x0 in self.powerSupplyFailure]
+            json["thresholdAirOutlet"] = self.thresholdAirOutlet
+            json["thresholdAirInlet"] = self.thresholdAirInlet
+            json["thresholdWaterInlet"] = self.thresholdWaterInlet
+            json["doorOpened"] = self.doorOpened
+            json["maximumCoolingRequest"] = self.maximumCoolingRequest
+            json["emergencyCooling"] = self.emergencyCooling
+            json["waterLeak"] = self.waterLeak
+            json["thresholdHumidity"] = self.thresholdHumidity
+            json["externalWaterCoolingFailure"] = self.externalWaterCoolingFailure
+            json["thresholdWaterOutlet"] = self.thresholdWaterOutlet
+            json["stBusError"] = self.stBusError
+            json["condenserPumpFailure"] = self.condenserPumpFailure
+            json["baseElectronicsFailure"] = self.baseElectronicsFailure
+            json["voltageLow"] = self.voltageLow
             return json
 
     # structure
@@ -792,7 +1067,9 @@ class Lhx(Interface):
 
         def __init__(self, on, alertStatus, operatingHoursLhx, operatingHoursFan):
             typecheck.is_bool(on, AssertionError)
-            typecheck.is_struct(alertStatus, raritan.rpc.lhxmodel.Lhx.AlertStatus, AssertionError)
+            typecheck.is_struct(
+                alertStatus, raritan.rpc.lhxmodel.Lhx.AlertStatus, AssertionError
+            )
             typecheck.is_int(operatingHoursLhx, AssertionError)
             for x0 in operatingHoursFan:
                 typecheck.is_int(x0, AssertionError)
@@ -805,19 +1082,23 @@ class Lhx(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                on = json['on'],
-                alertStatus = raritan.rpc.lhxmodel.Lhx.AlertStatus.decode(json['alertStatus'], agent),
-                operatingHoursLhx = json['operatingHoursLhx'],
-                operatingHoursFan = [x0 for x0 in json['operatingHoursFan']],
+                on=json["on"],
+                alertStatus=raritan.rpc.lhxmodel.Lhx.AlertStatus.decode(
+                    json["alertStatus"], agent
+                ),
+                operatingHoursLhx=json["operatingHoursLhx"],
+                operatingHoursFan=[x0 for x0 in json["operatingHoursFan"]],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['on'] = self.on
-            json['alertStatus'] = raritan.rpc.lhxmodel.Lhx.AlertStatus.encode(self.alertStatus)
-            json['operatingHoursLhx'] = self.operatingHoursLhx
-            json['operatingHoursFan'] = [x0 for x0 in self.operatingHoursFan]
+            json["on"] = self.on
+            json["alertStatus"] = raritan.rpc.lhxmodel.Lhx.AlertStatus.encode(
+                self.alertStatus
+            )
+            json["operatingHoursLhx"] = self.operatingHoursLhx
+            json["operatingHoursFan"] = [x0 for x0 in self.operatingHoursFan]
             return json
 
     # structure
@@ -826,7 +1107,9 @@ class Lhx(Interface):
         elements = ["alerts", "features"]
 
         def __init__(self, alerts, features):
-            typecheck.is_struct(alerts, raritan.rpc.lhxmodel.Lhx.AlertStatus, AssertionError)
+            typecheck.is_struct(
+                alerts, raritan.rpc.lhxmodel.Lhx.AlertStatus, AssertionError
+            )
 
             self.alerts = alerts
             self.features = features
@@ -834,21 +1117,19 @@ class Lhx(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                alerts = raritan.rpc.lhxmodel.Lhx.AlertStatus.decode(json['alerts'], agent),
-                features = dict([(
-                    elem['key'],
-                    elem['value'])
-                    for elem in json['features']]),
+                alerts=raritan.rpc.lhxmodel.Lhx.AlertStatus.decode(
+                    json["alerts"], agent
+                ),
+                features=dict(
+                    [(elem["key"], elem["value"]) for elem in json["features"]]
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['alerts'] = raritan.rpc.lhxmodel.Lhx.AlertStatus.encode(self.alerts)
-            json['features'] = [dict(
-                key = k,
-                value = v)
-                for k, v in self.features.items()]
+            json["alerts"] = raritan.rpc.lhxmodel.Lhx.AlertStatus.encode(self.alerts)
+            json["features"] = [dict(key=k, value=v) for k, v in self.features.items()]
             return json
 
     # value object
@@ -857,31 +1138,44 @@ class Lhx(Interface):
 
         def __init__(self, oldState, newState, source):
             super(raritan.rpc.lhxmodel.Lhx.OpStateChangedEvent, self).__init__(source)
-            typecheck.is_struct(oldState, raritan.rpc.lhxmodel.Lhx.OpState, AssertionError)
-            typecheck.is_struct(newState, raritan.rpc.lhxmodel.Lhx.OpState, AssertionError)
+            typecheck.is_struct(
+                oldState, raritan.rpc.lhxmodel.Lhx.OpState, AssertionError
+            )
+            typecheck.is_struct(
+                newState, raritan.rpc.lhxmodel.Lhx.OpState, AssertionError
+            )
 
             self.oldState = oldState
             self.newState = newState
 
         def encode(self):
             json = super(raritan.rpc.lhxmodel.Lhx.OpStateChangedEvent, self).encode()
-            json['oldState'] = raritan.rpc.lhxmodel.Lhx.OpState.encode(self.oldState)
-            json['newState'] = raritan.rpc.lhxmodel.Lhx.OpState.encode(self.newState)
+            json["oldState"] = raritan.rpc.lhxmodel.Lhx.OpState.encode(self.oldState)
+            json["newState"] = raritan.rpc.lhxmodel.Lhx.OpState.encode(self.newState)
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldState = raritan.rpc.lhxmodel.Lhx.OpState.decode(json['oldState'], agent),
-                newState = raritan.rpc.lhxmodel.Lhx.OpState.decode(json['newState'], agent),
+                oldState=raritan.rpc.lhxmodel.Lhx.OpState.decode(
+                    json["oldState"], agent
+                ),
+                newState=raritan.rpc.lhxmodel.Lhx.OpState.decode(
+                    json["newState"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldState", "newState"]
-            elements = elements + super(raritan.rpc.lhxmodel.Lhx.OpStateChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.lhxmodel.Lhx.OpStateChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -889,58 +1183,79 @@ class Lhx(Interface):
         idlType = "lhxmodel.Lhx.SettingsChangedEvent:1.0.0"
 
         def __init__(self, oldSettings, newSettings, actUserName, actIpAddr, source):
-            super(raritan.rpc.lhxmodel.Lhx.SettingsChangedEvent, self).__init__(actUserName, actIpAddr, source)
-            typecheck.is_struct(oldSettings, raritan.rpc.lhxmodel.Lhx.Settings, AssertionError)
-            typecheck.is_struct(newSettings, raritan.rpc.lhxmodel.Lhx.Settings, AssertionError)
+            super(raritan.rpc.lhxmodel.Lhx.SettingsChangedEvent, self).__init__(
+                actUserName, actIpAddr, source
+            )
+            typecheck.is_struct(
+                oldSettings, raritan.rpc.lhxmodel.Lhx.Settings, AssertionError
+            )
+            typecheck.is_struct(
+                newSettings, raritan.rpc.lhxmodel.Lhx.Settings, AssertionError
+            )
 
             self.oldSettings = oldSettings
             self.newSettings = newSettings
 
         def encode(self):
             json = super(raritan.rpc.lhxmodel.Lhx.SettingsChangedEvent, self).encode()
-            json['oldSettings'] = raritan.rpc.lhxmodel.Lhx.Settings.encode(self.oldSettings)
-            json['newSettings'] = raritan.rpc.lhxmodel.Lhx.Settings.encode(self.newSettings)
+            json["oldSettings"] = raritan.rpc.lhxmodel.Lhx.Settings.encode(
+                self.oldSettings
+            )
+            json["newSettings"] = raritan.rpc.lhxmodel.Lhx.Settings.encode(
+                self.newSettings
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldSettings = raritan.rpc.lhxmodel.Lhx.Settings.decode(json['oldSettings'], agent),
-                newSettings = raritan.rpc.lhxmodel.Lhx.Settings.decode(json['newSettings'], agent),
+                oldSettings=raritan.rpc.lhxmodel.Lhx.Settings.decode(
+                    json["oldSettings"], agent
+                ),
+                newSettings=raritan.rpc.lhxmodel.Lhx.Settings.decode(
+                    json["newSettings"], agent
+                ),
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldSettings", "newSettings"]
-            elements = elements + super(raritan.rpc.lhxmodel.Lhx.SettingsChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.lhxmodel.Lhx.SettingsChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getCapabilities(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getCapabilities', args)
-        _ret_ = raritan.rpc.lhxmodel.Lhx.Capabilities.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.lhxmodel.Lhx.Capabilities, DecodeException)
+        rsp = agent.json_rpc(self.target, "getCapabilities", args)
+        _ret_ = raritan.rpc.lhxmodel.Lhx.Capabilities.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.lhxmodel.Lhx.Capabilities, DecodeException
+        )
         return _ret_
 
     def getMetaData(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getMetaData', args)
-        _ret_ = raritan.rpc.lhxmodel.Lhx.MetaData.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getMetaData", args)
+        _ret_ = raritan.rpc.lhxmodel.Lhx.MetaData.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.lhxmodel.Lhx.MetaData, DecodeException)
         return _ret_
 
     def getSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSettings', args)
-        _ret_ = raritan.rpc.lhxmodel.Lhx.Settings.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getSettings", args)
+        _ret_ = raritan.rpc.lhxmodel.Lhx.Settings.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.lhxmodel.Lhx.Settings, DecodeException)
         return _ret_
 
@@ -948,17 +1263,17 @@ class Lhx(Interface):
         agent = self.agent
         typecheck.is_struct(settings, raritan.rpc.lhxmodel.Lhx.Settings, AssertionError)
         args = {}
-        args['settings'] = raritan.rpc.lhxmodel.Lhx.Settings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.lhxmodel.Lhx.Settings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getSensors(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSensors', args)
-        _ret_ = [Interface.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getSensors", args)
+        _ret_ = [Interface.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_interface(x0, raritan.rpc.lhxmodel.Sensor, DecodeException)
         return _ret_
@@ -966,8 +1281,8 @@ class Lhx(Interface):
     def getOpState(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getOpState', args)
-        _ret_ = raritan.rpc.lhxmodel.Lhx.OpState.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getOpState", args)
+        _ret_ = raritan.rpc.lhxmodel.Lhx.OpState.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.lhxmodel.Lhx.OpState, DecodeException)
         return _ret_
 
@@ -975,17 +1290,17 @@ class Lhx(Interface):
         agent = self.agent
         typecheck.is_enum(state, raritan.rpc.sensors.Sensor.OnOffState, AssertionError)
         args = {}
-        args['state'] = raritan.rpc.sensors.Sensor.OnOffState.encode(state)
-        rsp = agent.json_rpc(self.target, 'setPowerState', args)
-        _ret_ = rsp['_ret_']
+        args["state"] = raritan.rpc.sensors.Sensor.OnOffState.encode(state)
+        rsp = agent.json_rpc(self.target, "setPowerState", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getParameters(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getParameters', args)
-        _ret_ = [Interface.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getParameters", args)
+        _ret_ = [Interface.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_interface(x0, raritan.rpc.lhxmodel.Parameter, DecodeException)
         return _ret_
@@ -993,8 +1308,8 @@ class Lhx(Interface):
     def getActualValues(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getActualValues', args)
-        _ret_ = [Interface.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getActualValues", args)
+        _ret_ = [Interface.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_interface(x0, raritan.rpc.lhxmodel.Parameter, DecodeException)
         return _ret_
@@ -1003,19 +1318,21 @@ class Lhx(Interface):
         agent = self.agent
         typecheck.is_bool(requested, AssertionError)
         args = {}
-        args['requested'] = requested
-        rsp = agent.json_rpc(self.target, 'setMaximumCoolingRequest', args)
-        _ret_ = rsp['_ret_']
+        args["requested"] = requested
+        rsp = agent.json_rpc(self.target, "setMaximumCoolingRequest", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def acknowledgeAlertStatus(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'acknowledgeAlertStatus', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "acknowledgeAlertStatus", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -1024,7 +1341,14 @@ class Lhx(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.event
 
 import raritan.rpc.lhxmodel
@@ -1053,15 +1377,15 @@ class Config(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                devAddr = json['devAddr'],
-                lhxAddr = json['lhxAddr'],
+                devAddr=json["devAddr"],
+                lhxAddr=json["lhxAddr"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['devAddr'] = self.devAddr
-            json['lhxAddr'] = self.lhxAddr
+            json["devAddr"] = self.devAddr
+            json["lhxAddr"] = self.lhxAddr
             return json
 
     # value object
@@ -1069,35 +1393,56 @@ class Config(Interface):
         idlType = "lhxmodel.Config.ComSettingsChangedEvent:1.0.0"
 
         def __init__(self, oldSettings, newSettings, actUserName, actIpAddr, source):
-            super(raritan.rpc.lhxmodel.Config.ComSettingsChangedEvent, self).__init__(actUserName, actIpAddr, source)
-            typecheck.is_struct(oldSettings, raritan.rpc.lhxmodel.Config.ComSettings, AssertionError)
-            typecheck.is_struct(newSettings, raritan.rpc.lhxmodel.Config.ComSettings, AssertionError)
+            super(raritan.rpc.lhxmodel.Config.ComSettingsChangedEvent, self).__init__(
+                actUserName, actIpAddr, source
+            )
+            typecheck.is_struct(
+                oldSettings, raritan.rpc.lhxmodel.Config.ComSettings, AssertionError
+            )
+            typecheck.is_struct(
+                newSettings, raritan.rpc.lhxmodel.Config.ComSettings, AssertionError
+            )
 
             self.oldSettings = oldSettings
             self.newSettings = newSettings
 
         def encode(self):
-            json = super(raritan.rpc.lhxmodel.Config.ComSettingsChangedEvent, self).encode()
-            json['oldSettings'] = raritan.rpc.lhxmodel.Config.ComSettings.encode(self.oldSettings)
-            json['newSettings'] = raritan.rpc.lhxmodel.Config.ComSettings.encode(self.newSettings)
+            json = super(
+                raritan.rpc.lhxmodel.Config.ComSettingsChangedEvent, self
+            ).encode()
+            json["oldSettings"] = raritan.rpc.lhxmodel.Config.ComSettings.encode(
+                self.oldSettings
+            )
+            json["newSettings"] = raritan.rpc.lhxmodel.Config.ComSettings.encode(
+                self.newSettings
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldSettings = raritan.rpc.lhxmodel.Config.ComSettings.decode(json['oldSettings'], agent),
-                newSettings = raritan.rpc.lhxmodel.Config.ComSettings.decode(json['newSettings'], agent),
+                oldSettings=raritan.rpc.lhxmodel.Config.ComSettings.decode(
+                    json["oldSettings"], agent
+                ),
+                newSettings=raritan.rpc.lhxmodel.Config.ComSettings.decode(
+                    json["newSettings"], agent
+                ),
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldSettings", "newSettings"]
-            elements = elements + super(raritan.rpc.lhxmodel.Config.ComSettingsChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.lhxmodel.Config.ComSettingsChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -1105,7 +1450,9 @@ class Config(Interface):
         idlType = "lhxmodel.Config.PortNameChangedEvent:1.0.0"
 
         def __init__(self, oldName, newName, actUserName, actIpAddr, source):
-            super(raritan.rpc.lhxmodel.Config.PortNameChangedEvent, self).__init__(actUserName, actIpAddr, source)
+            super(raritan.rpc.lhxmodel.Config.PortNameChangedEvent, self).__init__(
+                actUserName, actIpAddr, source
+            )
             typecheck.is_string(oldName, AssertionError)
             typecheck.is_string(newName, AssertionError)
 
@@ -1113,52 +1460,63 @@ class Config(Interface):
             self.newName = newName
 
         def encode(self):
-            json = super(raritan.rpc.lhxmodel.Config.PortNameChangedEvent, self).encode()
-            json['oldName'] = self.oldName
-            json['newName'] = self.newName
+            json = super(
+                raritan.rpc.lhxmodel.Config.PortNameChangedEvent, self
+            ).encode()
+            json["oldName"] = self.oldName
+            json["newName"] = self.newName
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                oldName = json['oldName'],
-                newName = json['newName'],
+                oldName=json["oldName"],
+                newName=json["newName"],
                 # for event.UserEvent
-                actUserName = json['actUserName'],
-                actIpAddr = json['actIpAddr'],
+                actUserName=json["actUserName"],
+                actIpAddr=json["actIpAddr"],
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["oldName", "newName"]
-            elements = elements + super(raritan.rpc.lhxmodel.Config.PortNameChangedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.lhxmodel.Config.PortNameChangedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getComSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getComSettings', args)
-        _ret_ = raritan.rpc.lhxmodel.Config.ComSettings.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.lhxmodel.Config.ComSettings, DecodeException)
+        rsp = agent.json_rpc(self.target, "getComSettings", args)
+        _ret_ = raritan.rpc.lhxmodel.Config.ComSettings.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.lhxmodel.Config.ComSettings, DecodeException
+        )
         return _ret_
 
     def setComSettings(self, settings):
         agent = self.agent
-        typecheck.is_struct(settings, raritan.rpc.lhxmodel.Config.ComSettings, AssertionError)
+        typecheck.is_struct(
+            settings, raritan.rpc.lhxmodel.Config.ComSettings, AssertionError
+        )
         args = {}
-        args['settings'] = raritan.rpc.lhxmodel.Config.ComSettings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setComSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.lhxmodel.Config.ComSettings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setComSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getName(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getName', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "getName", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_string(_ret_, DecodeException)
         return _ret_
 
@@ -1166,11 +1524,13 @@ class Config(Interface):
         agent = self.agent
         typecheck.is_string(name, AssertionError)
         args = {}
-        args['name'] = name
-        rsp = agent.json_rpc(self.target, 'setName', args)
-        _ret_ = rsp['_ret_']
+        args["name"] = name
+        rsp = agent.json_rpc(self.target, "setName", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -1179,7 +1539,14 @@ class Config(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.lhxmodel
 
 
@@ -1195,7 +1562,9 @@ class LhxDevel(Lhx):
         def __init__(self, value, rawValue, metadata):
             typecheck.is_double(value, AssertionError)
             typecheck.is_int(rawValue, AssertionError)
-            typecheck.is_struct(metadata, raritan.rpc.lhxmodel.Parameter.MetaData, AssertionError)
+            typecheck.is_struct(
+                metadata, raritan.rpc.lhxmodel.Parameter.MetaData, AssertionError
+            )
 
             self.value = value
             self.rawValue = rawValue
@@ -1204,24 +1573,33 @@ class LhxDevel(Lhx):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                value = json['value'],
-                rawValue = json['rawValue'],
-                metadata = raritan.rpc.lhxmodel.Parameter.MetaData.decode(json['metadata'], agent),
+                value=json["value"],
+                rawValue=json["rawValue"],
+                metadata=raritan.rpc.lhxmodel.Parameter.MetaData.decode(
+                    json["metadata"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['value'] = self.value
-            json['rawValue'] = self.rawValue
-            json['metadata'] = raritan.rpc.lhxmodel.Parameter.MetaData.encode(self.metadata)
+            json["value"] = self.value
+            json["rawValue"] = self.rawValue
+            json["metadata"] = raritan.rpc.lhxmodel.Parameter.MetaData.encode(
+                self.metadata
+            )
             return json
 
     def dumpParameter(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'dumpParameter', args)
-        _ret_ = [raritan.rpc.lhxmodel.LhxDevel.ParameterData.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "dumpParameter", args)
+        _ret_ = [
+            raritan.rpc.lhxmodel.LhxDevel.ParameterData.decode(x0, agent)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.lhxmodel.LhxDevel.ParameterData, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.lhxmodel.LhxDevel.ParameterData, DecodeException
+            )
         return _ret_

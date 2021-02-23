@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.datetime
 
 
@@ -31,17 +38,17 @@ class DateTime(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                id = json['id'],
-                name = json['name'],
-                hasDSTInfo = json['hasDSTInfo'],
+                id=json["id"],
+                name=json["name"],
+                hasDSTInfo=json["hasDSTInfo"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['id'] = self.id
-            json['name'] = self.name
-            json['hasDSTInfo'] = self.hasDSTInfo
+            json["id"] = self.id
+            json["name"] = self.name
+            json["hasDSTInfo"] = self.hasDSTInfo
             return json
 
     # structure
@@ -61,17 +68,17 @@ class DateTime(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                id = json['id'],
-                name = json['name'],
-                enableAutoDST = json['enableAutoDST'],
+                id=json["id"],
+                name=json["name"],
+                enableAutoDST=json["enableAutoDST"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['id'] = self.id
-            json['name'] = self.name
-            json['enableAutoDST'] = self.enableAutoDST
+            json["id"] = self.id
+            json["name"] = self.name
+            json["enableAutoDST"] = self.enableAutoDST
             return json
 
     # enumeration
@@ -99,17 +106,17 @@ class DateTime(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                forceStatic = json['forceStatic'],
-                server1 = json['server1'],
-                server2 = json['server2'],
+                forceStatic=json["forceStatic"],
+                server1=json["server1"],
+                server2=json["server2"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['forceStatic'] = self.forceStatic
-            json['server1'] = self.server1
-            json['server2'] = self.server2
+            json["forceStatic"] = self.forceStatic
+            json["server1"] = self.server1
+            json["server2"] = self.server2
             return json
 
     # structure
@@ -118,10 +125,16 @@ class DateTime(Interface):
         elements = ["zoneCfg", "protocol", "deviceTime", "ntpCfg"]
 
         def __init__(self, zoneCfg, protocol, deviceTime, ntpCfg):
-            typecheck.is_struct(zoneCfg, raritan.rpc.datetime.DateTime.ZoneCfg, AssertionError)
-            typecheck.is_enum(protocol, raritan.rpc.datetime.DateTime.Protocol, AssertionError)
+            typecheck.is_struct(
+                zoneCfg, raritan.rpc.datetime.DateTime.ZoneCfg, AssertionError
+            )
+            typecheck.is_enum(
+                protocol, raritan.rpc.datetime.DateTime.Protocol, AssertionError
+            )
             typecheck.is_time(deviceTime, AssertionError)
-            typecheck.is_struct(ntpCfg, raritan.rpc.datetime.DateTime.NtpCfg, AssertionError)
+            typecheck.is_struct(
+                ntpCfg, raritan.rpc.datetime.DateTime.NtpCfg, AssertionError
+            )
 
             self.zoneCfg = zoneCfg
             self.protocol = protocol
@@ -131,47 +144,60 @@ class DateTime(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                zoneCfg = raritan.rpc.datetime.DateTime.ZoneCfg.decode(json['zoneCfg'], agent),
-                protocol = raritan.rpc.datetime.DateTime.Protocol.decode(json['protocol']),
-                deviceTime = raritan.rpc.Time.decode(json['deviceTime']),
-                ntpCfg = raritan.rpc.datetime.DateTime.NtpCfg.decode(json['ntpCfg'], agent),
+                zoneCfg=raritan.rpc.datetime.DateTime.ZoneCfg.decode(
+                    json["zoneCfg"], agent
+                ),
+                protocol=raritan.rpc.datetime.DateTime.Protocol.decode(
+                    json["protocol"]
+                ),
+                deviceTime=raritan.rpc.Time.decode(json["deviceTime"]),
+                ntpCfg=raritan.rpc.datetime.DateTime.NtpCfg.decode(
+                    json["ntpCfg"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['zoneCfg'] = raritan.rpc.datetime.DateTime.ZoneCfg.encode(self.zoneCfg)
-            json['protocol'] = raritan.rpc.datetime.DateTime.Protocol.encode(self.protocol)
-            json['deviceTime'] = raritan.rpc.Time.encode(self.deviceTime)
-            json['ntpCfg'] = raritan.rpc.datetime.DateTime.NtpCfg.encode(self.ntpCfg)
+            json["zoneCfg"] = raritan.rpc.datetime.DateTime.ZoneCfg.encode(self.zoneCfg)
+            json["protocol"] = raritan.rpc.datetime.DateTime.Protocol.encode(
+                self.protocol
+            )
+            json["deviceTime"] = raritan.rpc.Time.encode(self.deviceTime)
+            json["ntpCfg"] = raritan.rpc.datetime.DateTime.NtpCfg.encode(self.ntpCfg)
             return json
 
     def getZoneInfos(self, useOlson):
         agent = self.agent
         typecheck.is_bool(useOlson, AssertionError)
         args = {}
-        args['useOlson'] = useOlson
-        rsp = agent.json_rpc(self.target, 'getZoneInfos', args)
-        zoneInfos = [raritan.rpc.datetime.DateTime.ZoneInfo.decode(x0, agent) for x0 in rsp['zoneInfos']]
+        args["useOlson"] = useOlson
+        rsp = agent.json_rpc(self.target, "getZoneInfos", args)
+        zoneInfos = [
+            raritan.rpc.datetime.DateTime.ZoneInfo.decode(x0, agent)
+            for x0 in rsp["zoneInfos"]
+        ]
         for x0 in zoneInfos:
-            typecheck.is_struct(x0, raritan.rpc.datetime.DateTime.ZoneInfo, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.datetime.DateTime.ZoneInfo, DecodeException
+            )
         return zoneInfos
 
     def checkNtpServer(self, ntpServer):
         agent = self.agent
         typecheck.is_string(ntpServer, AssertionError)
         args = {}
-        args['ntpServer'] = ntpServer
-        rsp = agent.json_rpc(self.target, 'checkNtpServer', args)
-        _ret_ = rsp['_ret_']
+        args["ntpServer"] = ntpServer
+        rsp = agent.json_rpc(self.target, "checkNtpServer", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_bool(_ret_, DecodeException)
         return _ret_
 
     def getCfg(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getCfg', args)
-        cfg = raritan.rpc.datetime.DateTime.Cfg.decode(rsp['cfg'], agent)
+        rsp = agent.json_rpc(self.target, "getCfg", args)
+        cfg = raritan.rpc.datetime.DateTime.Cfg.decode(rsp["cfg"], agent)
         typecheck.is_struct(cfg, raritan.rpc.datetime.DateTime.Cfg, DecodeException)
         return cfg
 
@@ -179,9 +205,9 @@ class DateTime(Interface):
         agent = self.agent
         typecheck.is_struct(cfg, raritan.rpc.datetime.DateTime.Cfg, AssertionError)
         args = {}
-        args['cfg'] = raritan.rpc.datetime.DateTime.Cfg.encode(cfg)
-        rsp = agent.json_rpc(self.target, 'setCfg', args)
-        _ret_ = rsp['_ret_']
+        args["cfg"] = raritan.rpc.datetime.DateTime.Cfg.encode(cfg)
+        rsp = agent.json_rpc(self.target, "setCfg", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -189,13 +215,15 @@ class DateTime(Interface):
         agent = self.agent
         typecheck.is_bool(useOlson, AssertionError)
         args = {}
-        args['useOlson'] = useOlson
-        rsp = agent.json_rpc(self.target, 'getTime', args)
-        zone = raritan.rpc.datetime.DateTime.ZoneInfo.decode(rsp['zone'], agent)
-        dstEnabled = rsp['dstEnabled']
-        utcOffset = rsp['utcOffset']
-        currentTime = raritan.rpc.Time.decode(rsp['currentTime'])
-        typecheck.is_struct(zone, raritan.rpc.datetime.DateTime.ZoneInfo, DecodeException)
+        args["useOlson"] = useOlson
+        rsp = agent.json_rpc(self.target, "getTime", args)
+        zone = raritan.rpc.datetime.DateTime.ZoneInfo.decode(rsp["zone"], agent)
+        dstEnabled = rsp["dstEnabled"]
+        utcOffset = rsp["utcOffset"]
+        currentTime = raritan.rpc.Time.decode(rsp["currentTime"])
+        typecheck.is_struct(
+            zone, raritan.rpc.datetime.DateTime.ZoneInfo, DecodeException
+        )
         typecheck.is_bool(dstEnabled, DecodeException)
         typecheck.is_int(utcOffset, DecodeException)
         typecheck.is_time(currentTime, DecodeException)

@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 
 # interface
 class Production(Interface):
@@ -16,21 +23,21 @@ class Production(Interface):
         agent = self.agent
         typecheck.is_string(password, AssertionError)
         args = {}
-        args['password'] = password
-        rsp = agent.json_rpc(self.target, 'enterFactoryConfigMode', args)
-        _ret_ = rsp['_ret_']
+        args["password"] = password
+        rsp = agent.json_rpc(self.target, "enterFactoryConfigMode", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def leaveFactoryConfigMode(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'leaveFactoryConfigMode', args)
+        rsp = agent.json_rpc(self.target, "leaveFactoryConfigMode", args)
 
     def isFactoryConfigModeEnabled(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'isFactoryConfigModeEnabled', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "isFactoryConfigModeEnabled", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_bool(_ret_, DecodeException)
         return _ret_

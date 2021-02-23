@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.idl
 
 import raritan.rpc.smartcard
@@ -37,17 +44,17 @@ class CardReader(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                manufacturer = json['manufacturer'],
-                product = json['product'],
-                serialNumber = json['serialNumber'],
+                manufacturer=json["manufacturer"],
+                product=json["product"],
+                serialNumber=json["serialNumber"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['manufacturer'] = self.manufacturer
-            json['product'] = self.product
-            json['serialNumber'] = self.serialNumber
+            json["manufacturer"] = self.manufacturer
+            json["product"] = self.product
+            json["serialNumber"] = self.serialNumber
             return json
 
     # structure
@@ -65,15 +72,15 @@ class CardReader(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                type = json['type'],
-                uid = json['uid'],
+                type=json["type"],
+                uid=json["uid"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['type'] = self.type
-            json['uid'] = self.uid
+            json["type"] = self.type
+            json["uid"] = self.uid
             return json
 
     # value object
@@ -82,27 +89,38 @@ class CardReader(Interface):
 
         def __init__(self, cardInfo, source):
             super(raritan.rpc.smartcard.CardReader.CardEvent, self).__init__(source)
-            typecheck.is_struct(cardInfo, raritan.rpc.smartcard.CardReader.CardInformation, AssertionError)
+            typecheck.is_struct(
+                cardInfo,
+                raritan.rpc.smartcard.CardReader.CardInformation,
+                AssertionError,
+            )
 
             self.cardInfo = cardInfo
 
         def encode(self):
             json = super(raritan.rpc.smartcard.CardReader.CardEvent, self).encode()
-            json['cardInfo'] = raritan.rpc.smartcard.CardReader.CardInformation.encode(self.cardInfo)
+            json["cardInfo"] = raritan.rpc.smartcard.CardReader.CardInformation.encode(
+                self.cardInfo
+            )
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                cardInfo = raritan.rpc.smartcard.CardReader.CardInformation.decode(json['cardInfo'], agent),
+                cardInfo=raritan.rpc.smartcard.CardReader.CardInformation.decode(
+                    json["cardInfo"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["cardInfo"]
-            elements = elements + super(raritan.rpc.smartcard.CardReader.CardEvent, self).listElements()
+            elements = (
+                elements
+                + super(raritan.rpc.smartcard.CardReader.CardEvent, self).listElements()
+            )
             return elements
 
     # value object
@@ -110,25 +128,36 @@ class CardReader(Interface):
         idlType = "smartcard.CardReader.CardInsertedEvent:1.0.0"
 
         def __init__(self, cardInfo, source):
-            super(raritan.rpc.smartcard.CardReader.CardInsertedEvent, self).__init__(cardInfo, source)
+            super(raritan.rpc.smartcard.CardReader.CardInsertedEvent, self).__init__(
+                cardInfo, source
+            )
 
         def encode(self):
-            json = super(raritan.rpc.smartcard.CardReader.CardInsertedEvent, self).encode()
+            json = super(
+                raritan.rpc.smartcard.CardReader.CardInsertedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for smartcard.CardReader.CardEvent
-                cardInfo = raritan.rpc.smartcard.CardReader.CardInformation.decode(json['cardInfo'], agent),
+                cardInfo=raritan.rpc.smartcard.CardReader.CardInformation.decode(
+                    json["cardInfo"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.smartcard.CardReader.CardInsertedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.smartcard.CardReader.CardInsertedEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -136,44 +165,63 @@ class CardReader(Interface):
         idlType = "smartcard.CardReader.CardRemovedEvent:1.0.0"
 
         def __init__(self, cardInfo, source):
-            super(raritan.rpc.smartcard.CardReader.CardRemovedEvent, self).__init__(cardInfo, source)
+            super(raritan.rpc.smartcard.CardReader.CardRemovedEvent, self).__init__(
+                cardInfo, source
+            )
 
         def encode(self):
-            json = super(raritan.rpc.smartcard.CardReader.CardRemovedEvent, self).encode()
+            json = super(
+                raritan.rpc.smartcard.CardReader.CardRemovedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for smartcard.CardReader.CardEvent
-                cardInfo = raritan.rpc.smartcard.CardReader.CardInformation.decode(json['cardInfo'], agent),
+                cardInfo=raritan.rpc.smartcard.CardReader.CardInformation.decode(
+                    json["cardInfo"], agent
+                ),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.smartcard.CardReader.CardRemovedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.smartcard.CardReader.CardRemovedEvent, self
+                ).listElements()
+            )
             return elements
 
     def getMetaData(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getMetaData', args)
-        _ret_ = raritan.rpc.smartcard.CardReader.MetaData.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.smartcard.CardReader.MetaData, DecodeException)
+        rsp = agent.json_rpc(self.target, "getMetaData", args)
+        _ret_ = raritan.rpc.smartcard.CardReader.MetaData.decode(rsp["_ret_"], agent)
+        typecheck.is_struct(
+            _ret_, raritan.rpc.smartcard.CardReader.MetaData, DecodeException
+        )
         return _ret_
 
     def getCardInformation(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getCardInformation', args)
-        _ret_ = rsp['_ret_']
-        cardInfo = raritan.rpc.smartcard.CardReader.CardInformation.decode(rsp['cardInfo'], agent)
+        rsp = agent.json_rpc(self.target, "getCardInformation", args)
+        _ret_ = rsp["_ret_"]
+        cardInfo = raritan.rpc.smartcard.CardReader.CardInformation.decode(
+            rsp["cardInfo"], agent
+        )
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_struct(cardInfo, raritan.rpc.smartcard.CardReader.CardInformation, DecodeException)
+        typecheck.is_struct(
+            cardInfo, raritan.rpc.smartcard.CardReader.CardInformation, DecodeException
+        )
         return (_ret_, cardInfo)
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -182,7 +230,14 @@ class CardReader(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.idl
 
 import raritan.rpc.smartcard
@@ -197,28 +252,39 @@ class CardReaderManager(Interface):
         idlType = "smartcard.CardReaderManager.CardReaderEvent:1.0.0"
 
         def __init__(self, cardReader, source):
-            super(raritan.rpc.smartcard.CardReaderManager.CardReaderEvent, self).__init__(source)
-            typecheck.is_interface(cardReader, raritan.rpc.smartcard.CardReader, AssertionError)
+            super(
+                raritan.rpc.smartcard.CardReaderManager.CardReaderEvent, self
+            ).__init__(source)
+            typecheck.is_interface(
+                cardReader, raritan.rpc.smartcard.CardReader, AssertionError
+            )
 
             self.cardReader = cardReader
 
         def encode(self):
-            json = super(raritan.rpc.smartcard.CardReaderManager.CardReaderEvent, self).encode()
-            json['cardReader'] = Interface.encode(self.cardReader)
+            json = super(
+                raritan.rpc.smartcard.CardReaderManager.CardReaderEvent, self
+            ).encode()
+            json["cardReader"] = Interface.encode(self.cardReader)
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                cardReader = Interface.decode(json['cardReader'], agent),
+                cardReader=Interface.decode(json["cardReader"], agent),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = ["cardReader"]
-            elements = elements + super(raritan.rpc.smartcard.CardReaderManager.CardReaderEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.smartcard.CardReaderManager.CardReaderEvent, self
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -226,25 +292,35 @@ class CardReaderManager(Interface):
         idlType = "smartcard.CardReaderManager.CardReaderAttachedEvent:1.0.0"
 
         def __init__(self, cardReader, source):
-            super(raritan.rpc.smartcard.CardReaderManager.CardReaderAttachedEvent, self).__init__(cardReader, source)
+            super(
+                raritan.rpc.smartcard.CardReaderManager.CardReaderAttachedEvent, self
+            ).__init__(cardReader, source)
 
         def encode(self):
-            json = super(raritan.rpc.smartcard.CardReaderManager.CardReaderAttachedEvent, self).encode()
+            json = super(
+                raritan.rpc.smartcard.CardReaderManager.CardReaderAttachedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for smartcard.CardReaderManager.CardReaderEvent
-                cardReader = Interface.decode(json['cardReader'], agent),
+                cardReader=Interface.decode(json["cardReader"], agent),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.smartcard.CardReaderManager.CardReaderAttachedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.smartcard.CardReaderManager.CardReaderAttachedEvent,
+                    self,
+                ).listElements()
+            )
             return elements
 
     # value object
@@ -252,42 +328,54 @@ class CardReaderManager(Interface):
         idlType = "smartcard.CardReaderManager.CardReaderDetachedEvent:1.0.0"
 
         def __init__(self, cardReader, source):
-            super(raritan.rpc.smartcard.CardReaderManager.CardReaderDetachedEvent, self).__init__(cardReader, source)
+            super(
+                raritan.rpc.smartcard.CardReaderManager.CardReaderDetachedEvent, self
+            ).__init__(cardReader, source)
 
         def encode(self):
-            json = super(raritan.rpc.smartcard.CardReaderManager.CardReaderDetachedEvent, self).encode()
+            json = super(
+                raritan.rpc.smartcard.CardReaderManager.CardReaderDetachedEvent, self
+            ).encode()
             return json
 
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
                 # for smartcard.CardReaderManager.CardReaderEvent
-                cardReader = Interface.decode(json['cardReader'], agent),
+                cardReader=Interface.decode(json["cardReader"], agent),
                 # for idl.Event
-                source = Interface.decode(json['source'], agent),
+                source=Interface.decode(json["source"], agent),
             )
             return obj
 
         def listElements(self):
             elements = []
-            elements = elements + super(raritan.rpc.smartcard.CardReaderManager.CardReaderDetachedEvent, self).listElements()
+            elements = (
+                elements
+                + super(
+                    raritan.rpc.smartcard.CardReaderManager.CardReaderDetachedEvent,
+                    self,
+                ).listElements()
+            )
             return elements
 
     def getCardReaders(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getCardReaders', args)
-        _ret_ = [Interface.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getCardReaders", args)
+        _ret_ = [Interface.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
-            typecheck.is_interface(x0, raritan.rpc.smartcard.CardReader, DecodeException)
+            typecheck.is_interface(
+                x0, raritan.rpc.smartcard.CardReader, DecodeException
+            )
         return _ret_
 
     def getCardReaderById(self, readerId):
         agent = self.agent
         typecheck.is_string(readerId, AssertionError)
         args = {}
-        args['readerId'] = readerId
-        rsp = agent.json_rpc(self.target, 'getCardReaderById', args)
-        _ret_ = Interface.decode(rsp['_ret_'], agent)
+        args["readerId"] = readerId
+        rsp = agent.json_rpc(self.target, "getCardReaderById", args)
+        _ret_ = Interface.decode(rsp["_ret_"], agent)
         typecheck.is_interface(_ret_, raritan.rpc.smartcard.CardReader, DecodeException)
         return _ret_

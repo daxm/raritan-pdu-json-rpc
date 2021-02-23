@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 
 # interface
 class NameService(Interface):
@@ -16,8 +23,8 @@ class NameService(Interface):
         agent = self.agent
         typecheck.is_string(name, AssertionError)
         args = {}
-        args['name'] = name
-        rsp = agent.json_rpc(self.target, 'lookup', args)
-        _ret_ = Interface.decode(rsp['_ret_'], agent)
+        args["name"] = name
+        rsp = agent.json_rpc(self.target, "lookup", args)
+        _ret_ = Interface.decode(rsp["_ret_"], agent)
         typecheck.is_remote_obj(_ret_, DecodeException)
         return _ret_

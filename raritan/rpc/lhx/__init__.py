@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 
 # interface
 class Support(Interface):
@@ -16,13 +23,13 @@ class Support(Interface):
         agent = self.agent
         typecheck.is_bool(enabled, AssertionError)
         args = {}
-        args['enabled'] = enabled
-        rsp = agent.json_rpc(self.target, 'setEnabled', args)
+        args["enabled"] = enabled
+        rsp = agent.json_rpc(self.target, "setEnabled", args)
 
     def isEnabled(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'isEnabled', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "isEnabled", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_bool(_ret_, DecodeException)
         return _ret_

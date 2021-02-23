@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.servermon
 
 
@@ -27,9 +34,28 @@ class ServerMonitor(Interface):
     # structure
     class ServerSettings(Structure):
         idlType = "servermon.ServerMonitor.ServerSettings:1.0.0"
-        elements = ["host", "enabled", "pingInterval", "retryInterval", "activationCount", "failureCount", "resumeDelay", "resumeCount"]
+        elements = [
+            "host",
+            "enabled",
+            "pingInterval",
+            "retryInterval",
+            "activationCount",
+            "failureCount",
+            "resumeDelay",
+            "resumeCount",
+        ]
 
-        def __init__(self, host, enabled, pingInterval, retryInterval, activationCount, failureCount, resumeDelay, resumeCount):
+        def __init__(
+            self,
+            host,
+            enabled,
+            pingInterval,
+            retryInterval,
+            activationCount,
+            failureCount,
+            resumeDelay,
+            resumeCount,
+        ):
             typecheck.is_string(host, AssertionError)
             typecheck.is_bool(enabled, AssertionError)
             typecheck.is_int(pingInterval, AssertionError)
@@ -51,36 +77,57 @@ class ServerMonitor(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                host = json['host'],
-                enabled = json['enabled'],
-                pingInterval = json['pingInterval'],
-                retryInterval = json['retryInterval'],
-                activationCount = json['activationCount'],
-                failureCount = json['failureCount'],
-                resumeDelay = json['resumeDelay'],
-                resumeCount = json['resumeCount'],
+                host=json["host"],
+                enabled=json["enabled"],
+                pingInterval=json["pingInterval"],
+                retryInterval=json["retryInterval"],
+                activationCount=json["activationCount"],
+                failureCount=json["failureCount"],
+                resumeDelay=json["resumeDelay"],
+                resumeCount=json["resumeCount"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['host'] = self.host
-            json['enabled'] = self.enabled
-            json['pingInterval'] = self.pingInterval
-            json['retryInterval'] = self.retryInterval
-            json['activationCount'] = self.activationCount
-            json['failureCount'] = self.failureCount
-            json['resumeDelay'] = self.resumeDelay
-            json['resumeCount'] = self.resumeCount
+            json["host"] = self.host
+            json["enabled"] = self.enabled
+            json["pingInterval"] = self.pingInterval
+            json["retryInterval"] = self.retryInterval
+            json["activationCount"] = self.activationCount
+            json["failureCount"] = self.failureCount
+            json["resumeDelay"] = self.resumeDelay
+            json["resumeCount"] = self.resumeCount
             return json
 
     # structure
     class ServerStatus(Structure):
         idlType = "servermon.ServerMonitor.ServerStatus:1.0.0"
-        elements = ["reachable", "lastRequest", "lastResponse", "requests", "responses", "failures", "resumes"]
+        elements = [
+            "reachable",
+            "lastRequest",
+            "lastResponse",
+            "requests",
+            "responses",
+            "failures",
+            "resumes",
+        ]
 
-        def __init__(self, reachable, lastRequest, lastResponse, requests, responses, failures, resumes):
-            typecheck.is_enum(reachable, raritan.rpc.servermon.ServerMonitor.ServerReachability, AssertionError)
+        def __init__(
+            self,
+            reachable,
+            lastRequest,
+            lastResponse,
+            requests,
+            responses,
+            failures,
+            resumes,
+        ):
+            typecheck.is_enum(
+                reachable,
+                raritan.rpc.servermon.ServerMonitor.ServerReachability,
+                AssertionError,
+            )
             typecheck.is_time(lastRequest, AssertionError)
             typecheck.is_time(lastResponse, AssertionError)
             typecheck.is_int(requests, AssertionError)
@@ -99,25 +146,31 @@ class ServerMonitor(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                reachable = raritan.rpc.servermon.ServerMonitor.ServerReachability.decode(json['reachable']),
-                lastRequest = raritan.rpc.Time.decode(json['lastRequest']),
-                lastResponse = raritan.rpc.Time.decode(json['lastResponse']),
-                requests = json['requests'],
-                responses = json['responses'],
-                failures = json['failures'],
-                resumes = json['resumes'],
+                reachable=raritan.rpc.servermon.ServerMonitor.ServerReachability.decode(
+                    json["reachable"]
+                ),
+                lastRequest=raritan.rpc.Time.decode(json["lastRequest"]),
+                lastResponse=raritan.rpc.Time.decode(json["lastResponse"]),
+                requests=json["requests"],
+                responses=json["responses"],
+                failures=json["failures"],
+                resumes=json["resumes"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['reachable'] = raritan.rpc.servermon.ServerMonitor.ServerReachability.encode(self.reachable)
-            json['lastRequest'] = raritan.rpc.Time.encode(self.lastRequest)
-            json['lastResponse'] = raritan.rpc.Time.encode(self.lastResponse)
-            json['requests'] = self.requests
-            json['responses'] = self.responses
-            json['failures'] = self.failures
-            json['resumes'] = self.resumes
+            json[
+                "reachable"
+            ] = raritan.rpc.servermon.ServerMonitor.ServerReachability.encode(
+                self.reachable
+            )
+            json["lastRequest"] = raritan.rpc.Time.encode(self.lastRequest)
+            json["lastResponse"] = raritan.rpc.Time.encode(self.lastResponse)
+            json["requests"] = self.requests
+            json["responses"] = self.responses
+            json["failures"] = self.failures
+            json["resumes"] = self.resumes
             return json
 
     # structure
@@ -126,8 +179,14 @@ class ServerMonitor(Interface):
         elements = ["settings", "status"]
 
         def __init__(self, settings, status):
-            typecheck.is_struct(settings, raritan.rpc.servermon.ServerMonitor.ServerSettings, AssertionError)
-            typecheck.is_struct(status, raritan.rpc.servermon.ServerMonitor.ServerStatus, AssertionError)
+            typecheck.is_struct(
+                settings,
+                raritan.rpc.servermon.ServerMonitor.ServerSettings,
+                AssertionError,
+            )
+            typecheck.is_struct(
+                status, raritan.rpc.servermon.ServerMonitor.ServerStatus, AssertionError
+            )
 
             self.settings = settings
             self.status = status
@@ -135,15 +194,23 @@ class ServerMonitor(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                settings = raritan.rpc.servermon.ServerMonitor.ServerSettings.decode(json['settings'], agent),
-                status = raritan.rpc.servermon.ServerMonitor.ServerStatus.decode(json['status'], agent),
+                settings=raritan.rpc.servermon.ServerMonitor.ServerSettings.decode(
+                    json["settings"], agent
+                ),
+                status=raritan.rpc.servermon.ServerMonitor.ServerStatus.decode(
+                    json["status"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['settings'] = raritan.rpc.servermon.ServerMonitor.ServerSettings.encode(self.settings)
-            json['status'] = raritan.rpc.servermon.ServerMonitor.ServerStatus.encode(self.status)
+            json[
+                "settings"
+            ] = raritan.rpc.servermon.ServerMonitor.ServerSettings.encode(self.settings)
+            json["status"] = raritan.rpc.servermon.ServerMonitor.ServerStatus.encode(
+                self.status
+            )
             return json
 
     ERR_NO_SUCH_ID = 1
@@ -156,12 +223,16 @@ class ServerMonitor(Interface):
 
     def addServer(self, settings):
         agent = self.agent
-        typecheck.is_struct(settings, raritan.rpc.servermon.ServerMonitor.ServerSettings, AssertionError)
+        typecheck.is_struct(
+            settings, raritan.rpc.servermon.ServerMonitor.ServerSettings, AssertionError
+        )
         args = {}
-        args['settings'] = raritan.rpc.servermon.ServerMonitor.ServerSettings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'addServer', args)
-        _ret_ = rsp['_ret_']
-        id = rsp['id']
+        args["settings"] = raritan.rpc.servermon.ServerMonitor.ServerSettings.encode(
+            settings
+        )
+        rsp = agent.json_rpc(self.target, "addServer", args)
+        _ret_ = rsp["_ret_"]
+        id = rsp["id"]
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_int(id, DecodeException)
         return (_ret_, id)
@@ -169,12 +240,16 @@ class ServerMonitor(Interface):
     def modifyServer(self, id, settings):
         agent = self.agent
         typecheck.is_int(id, AssertionError)
-        typecheck.is_struct(settings, raritan.rpc.servermon.ServerMonitor.ServerSettings, AssertionError)
+        typecheck.is_struct(
+            settings, raritan.rpc.servermon.ServerMonitor.ServerSettings, AssertionError
+        )
         args = {}
-        args['id'] = id
-        args['settings'] = raritan.rpc.servermon.ServerMonitor.ServerSettings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'modifyServer', args)
-        _ret_ = rsp['_ret_']
+        args["id"] = id
+        args["settings"] = raritan.rpc.servermon.ServerMonitor.ServerSettings.encode(
+            settings
+        )
+        rsp = agent.json_rpc(self.target, "modifyServer", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -182,9 +257,9 @@ class ServerMonitor(Interface):
         agent = self.agent
         typecheck.is_int(id, AssertionError)
         args = {}
-        args['id'] = id
-        rsp = agent.json_rpc(self.target, 'deleteServer', args)
-        _ret_ = rsp['_ret_']
+        args["id"] = id
+        rsp = agent.json_rpc(self.target, "deleteServer", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -192,20 +267,29 @@ class ServerMonitor(Interface):
         agent = self.agent
         typecheck.is_int(id, AssertionError)
         args = {}
-        args['id'] = id
-        rsp = agent.json_rpc(self.target, 'getServer', args)
-        _ret_ = rsp['_ret_']
-        server = raritan.rpc.servermon.ServerMonitor.Server.decode(rsp['server'], agent)
+        args["id"] = id
+        rsp = agent.json_rpc(self.target, "getServer", args)
+        _ret_ = rsp["_ret_"]
+        server = raritan.rpc.servermon.ServerMonitor.Server.decode(rsp["server"], agent)
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_struct(server, raritan.rpc.servermon.ServerMonitor.Server, DecodeException)
+        typecheck.is_struct(
+            server, raritan.rpc.servermon.ServerMonitor.Server, DecodeException
+        )
         return (_ret_, server)
 
     def listServers(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'listServers', args)
-        _ret_ = dict([(
-            elem['key'],
-            raritan.rpc.servermon.ServerMonitor.Server.decode(elem['value'], agent))
-            for elem in rsp['_ret_']])
+        rsp = agent.json_rpc(self.target, "listServers", args)
+        _ret_ = dict(
+            [
+                (
+                    elem["key"],
+                    raritan.rpc.servermon.ServerMonitor.Server.decode(
+                        elem["value"], agent
+                    ),
+                )
+                for elem in rsp["_ret_"]
+            ]
+        )
         return _ret_

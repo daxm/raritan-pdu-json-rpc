@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.webcam
 
 
@@ -14,6 +21,7 @@ import raritan.rpc.webcam
 class PixelFormat(Enumeration):
     idlType = "webcam.PixelFormat:1.0.0"
     values = ["MJPEG", "JPEG", "RGB", "YUV"]
+
 
 PixelFormat.MJPEG = PixelFormat(0)
 PixelFormat.JPEG = PixelFormat(1)
@@ -24,6 +32,7 @@ PixelFormat.YUV = PixelFormat(3)
 class PowerLineFrequency(Enumeration):
     idlType = "webcam.PowerLineFrequency:1.0.0"
     values = ["NOT_SUPPORTED", "HZ50", "HZ60", "DISABLED"]
+
 
 PowerLineFrequency.NOT_SUPPORTED = PowerLineFrequency(0)
 PowerLineFrequency.HZ50 = PowerLineFrequency(1)
@@ -47,31 +56,43 @@ class Format(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            width = json['width'],
-            height = json['height'],
-            pixelFormat = raritan.rpc.webcam.PixelFormat.decode(json['pixelFormat']),
+            width=json["width"],
+            height=json["height"],
+            pixelFormat=raritan.rpc.webcam.PixelFormat.decode(json["pixelFormat"]),
         )
         return obj
 
     def encode(self):
         json = {}
-        json['width'] = self.width
-        json['height'] = self.height
-        json['pixelFormat'] = raritan.rpc.webcam.PixelFormat.encode(self.pixelFormat)
+        json["width"] = self.width
+        json["height"] = self.height
+        json["pixelFormat"] = raritan.rpc.webcam.PixelFormat.encode(self.pixelFormat)
         return json
+
 
 # structure
 class Controls(Structure):
     idlType = "webcam.Controls:1.0.0"
-    elements = ["brightness", "contrast", "saturation", "gain", "gamma", "powerLineFrequency"]
+    elements = [
+        "brightness",
+        "contrast",
+        "saturation",
+        "gain",
+        "gamma",
+        "powerLineFrequency",
+    ]
 
-    def __init__(self, brightness, contrast, saturation, gain, gamma, powerLineFrequency):
+    def __init__(
+        self, brightness, contrast, saturation, gain, gamma, powerLineFrequency
+    ):
         typecheck.is_int(brightness, AssertionError)
         typecheck.is_int(contrast, AssertionError)
         typecheck.is_int(saturation, AssertionError)
         typecheck.is_int(gain, AssertionError)
         typecheck.is_int(gamma, AssertionError)
-        typecheck.is_enum(powerLineFrequency, raritan.rpc.webcam.PowerLineFrequency, AssertionError)
+        typecheck.is_enum(
+            powerLineFrequency, raritan.rpc.webcam.PowerLineFrequency, AssertionError
+        )
 
         self.brightness = brightness
         self.contrast = contrast
@@ -83,24 +104,29 @@ class Controls(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            brightness = json['brightness'],
-            contrast = json['contrast'],
-            saturation = json['saturation'],
-            gain = json['gain'],
-            gamma = json['gamma'],
-            powerLineFrequency = raritan.rpc.webcam.PowerLineFrequency.decode(json['powerLineFrequency']),
+            brightness=json["brightness"],
+            contrast=json["contrast"],
+            saturation=json["saturation"],
+            gain=json["gain"],
+            gamma=json["gamma"],
+            powerLineFrequency=raritan.rpc.webcam.PowerLineFrequency.decode(
+                json["powerLineFrequency"]
+            ),
         )
         return obj
 
     def encode(self):
         json = {}
-        json['brightness'] = self.brightness
-        json['contrast'] = self.contrast
-        json['saturation'] = self.saturation
-        json['gain'] = self.gain
-        json['gamma'] = self.gamma
-        json['powerLineFrequency'] = raritan.rpc.webcam.PowerLineFrequency.encode(self.powerLineFrequency)
+        json["brightness"] = self.brightness
+        json["contrast"] = self.contrast
+        json["saturation"] = self.saturation
+        json["gain"] = self.gain
+        json["gamma"] = self.gamma
+        json["powerLineFrequency"] = raritan.rpc.webcam.PowerLineFrequency.encode(
+            self.powerLineFrequency
+        )
         return json
+
 
 # structure
 class Location(Structure):
@@ -121,20 +147,21 @@ class Location(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            name = json['name'],
-            x = json['x'],
-            y = json['y'],
-            z = json['z'],
+            name=json["name"],
+            x=json["x"],
+            y=json["y"],
+            z=json["z"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['name'] = self.name
-        json['x'] = self.x
-        json['y'] = self.y
-        json['z'] = self.z
+        json["name"] = self.name
+        json["x"] = self.x
+        json["y"] = self.y
+        json["z"] = self.z
         return json
+
 
 # structure
 class ImageMetaData(Structure):
@@ -153,18 +180,19 @@ class ImageMetaData(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            format = raritan.rpc.webcam.Format.decode(json['format'], agent),
-            timestamp = int(json['timestamp']),
-            location = raritan.rpc.webcam.Location.decode(json['location'], agent),
+            format=raritan.rpc.webcam.Format.decode(json["format"], agent),
+            timestamp=int(json["timestamp"]),
+            location=raritan.rpc.webcam.Location.decode(json["location"], agent),
         )
         return obj
 
     def encode(self):
         json = {}
-        json['format'] = raritan.rpc.webcam.Format.encode(self.format)
-        json['timestamp'] = self.timestamp
-        json['location'] = raritan.rpc.webcam.Location.encode(self.location)
+        json["format"] = raritan.rpc.webcam.Format.encode(self.format)
+        json["timestamp"] = self.timestamp
+        json["location"] = raritan.rpc.webcam.Location.encode(self.location)
         return json
+
 
 # structure
 class Image(Structure):
@@ -181,16 +209,17 @@ class Image(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            meta = raritan.rpc.webcam.ImageMetaData.decode(json['meta'], agent),
-            data = json['data'],
+            meta=raritan.rpc.webcam.ImageMetaData.decode(json["meta"], agent),
+            data=json["data"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['meta'] = raritan.rpc.webcam.ImageMetaData.encode(self.meta)
-        json['data'] = self.data
+        json["meta"] = raritan.rpc.webcam.ImageMetaData.encode(self.meta)
+        json["data"] = self.data
         return json
+
 
 # structure
 class Settings(Structure):
@@ -213,22 +242,23 @@ class Settings(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            format = raritan.rpc.webcam.Format.decode(json['format'], agent),
-            controls = raritan.rpc.webcam.Controls.decode(json['controls'], agent),
-            name = json['name'],
-            location = raritan.rpc.webcam.Location.decode(json['location'], agent),
-            refreshInterval = json['refreshInterval'],
+            format=raritan.rpc.webcam.Format.decode(json["format"], agent),
+            controls=raritan.rpc.webcam.Controls.decode(json["controls"], agent),
+            name=json["name"],
+            location=raritan.rpc.webcam.Location.decode(json["location"], agent),
+            refreshInterval=json["refreshInterval"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['format'] = raritan.rpc.webcam.Format.encode(self.format)
-        json['controls'] = raritan.rpc.webcam.Controls.encode(self.controls)
-        json['name'] = self.name
-        json['location'] = raritan.rpc.webcam.Location.encode(self.location)
-        json['refreshInterval'] = self.refreshInterval
+        json["format"] = raritan.rpc.webcam.Format.encode(self.format)
+        json["controls"] = raritan.rpc.webcam.Controls.encode(self.controls)
+        json["name"] = self.name
+        json["location"] = raritan.rpc.webcam.Location.encode(self.location)
+        json["refreshInterval"] = self.refreshInterval
         return json
+
 
 # structure
 class Information(Structure):
@@ -246,16 +276,22 @@ class Information(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            id = json['id'],
-            supportedFormats = [raritan.rpc.webcam.Format.decode(x0, agent) for x0 in json['supportedFormats']],
+            id=json["id"],
+            supportedFormats=[
+                raritan.rpc.webcam.Format.decode(x0, agent)
+                for x0 in json["supportedFormats"]
+            ],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['id'] = self.id
-        json['supportedFormats'] = [raritan.rpc.webcam.Format.encode(x0) for x0 in self.supportedFormats]
+        json["id"] = self.id
+        json["supportedFormats"] = [
+            raritan.rpc.webcam.Format.encode(x0) for x0 in self.supportedFormats
+        ]
         return json
+
 
 # interface
 class Webcam(Interface):
@@ -264,16 +300,16 @@ class Webcam(Interface):
     def getInformation(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getInformation', args)
-        _ret_ = raritan.rpc.webcam.Information.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getInformation", args)
+        _ret_ = raritan.rpc.webcam.Information.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.webcam.Information, DecodeException)
         return _ret_
 
     def getSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSettings', args)
-        _ret_ = raritan.rpc.webcam.Settings.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getSettings", args)
+        _ret_ = raritan.rpc.webcam.Settings.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.webcam.Settings, DecodeException)
         return _ret_
 
@@ -281,9 +317,9 @@ class Webcam(Interface):
         agent = self.agent
         typecheck.is_struct(settings, raritan.rpc.webcam.Settings, AssertionError)
         args = {}
-        args['settings'] = raritan.rpc.webcam.Settings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.webcam.Settings.encode(settings)
+        rsp = agent.json_rpc(self.target, "setSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -291,19 +327,21 @@ class Webcam(Interface):
         agent = self.agent
         typecheck.is_struct(controls, raritan.rpc.webcam.Controls, AssertionError)
         args = {}
-        args['controls'] = raritan.rpc.webcam.Controls.encode(controls)
-        rsp = agent.json_rpc(self.target, 'setControls', args)
-        _ret_ = rsp['_ret_']
+        args["controls"] = raritan.rpc.webcam.Controls.encode(controls)
+        rsp = agent.json_rpc(self.target, "setControls", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getControlDefaults(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getControlDefaults', args)
-        _ret_ = raritan.rpc.webcam.Controls.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getControlDefaults", args)
+        _ret_ = raritan.rpc.webcam.Controls.decode(rsp["_ret_"], agent)
         typecheck.is_struct(_ret_, raritan.rpc.webcam.Controls, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -312,7 +350,14 @@ class Webcam(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.webcam
 
 
@@ -329,38 +374,38 @@ class Channel(Interface):
     def getClientType(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getClientType', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "getClientType", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_string(_ret_, DecodeException)
         return _ret_
 
     def getWebcam(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getWebcam', args)
-        _ret_ = Interface.decode(rsp['_ret_'], agent)
+        rsp = agent.json_rpc(self.target, "getWebcam", args)
+        _ret_ = Interface.decode(rsp["_ret_"], agent)
         typecheck.is_interface(_ret_, raritan.rpc.webcam.Webcam, DecodeException)
         return _ret_
 
     def isAvailable(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'isAvailable', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "isAvailable", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_bool(_ret_, DecodeException)
         return _ret_
 
     def release(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'release', args)
+        rsp = agent.json_rpc(self.target, "release", args)
 
     def captureImage(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'captureImage', args)
-        _ret_ = rsp['_ret_']
-        image = raritan.rpc.webcam.Image.decode(rsp['image'], agent)
+        rsp = agent.json_rpc(self.target, "captureImage", args)
+        _ret_ = rsp["_ret_"]
+        image = raritan.rpc.webcam.Image.decode(rsp["image"], agent)
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_struct(image, raritan.rpc.webcam.Image, DecodeException)
         return (_ret_, image)
@@ -368,12 +413,14 @@ class Channel(Interface):
     def triggerCapture(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'triggerCapture', args)
-        _ret_ = rsp['_ret_']
-        captureToken = rsp['captureToken']
+        rsp = agent.json_rpc(self.target, "triggerCapture", args)
+        _ret_ = rsp["_ret_"]
+        captureToken = rsp["captureToken"]
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_string(captureToken, DecodeException)
         return (_ret_, captureToken)
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -382,7 +429,14 @@ class Channel(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.idl
 
 import raritan.rpc.webcam
@@ -392,6 +446,7 @@ import raritan.rpc.webcam
 class Priority(Enumeration):
     idlType = "webcam.Priority:1.0.0"
     values = ["VERY_LOW", "LOW", "NORMAL", "HIGH", "VERY_HIGH"]
+
 
 Priority.VERY_LOW = Priority(0)
 Priority.LOW = Priority(1)
@@ -411,15 +466,15 @@ class WebcamEvent(raritan.rpc.idl.Event):
 
     def encode(self):
         json = super(raritan.rpc.webcam.WebcamEvent, self).encode()
-        json['webcam'] = Interface.encode(self.webcam)
+        json["webcam"] = Interface.encode(self.webcam)
         return json
 
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            webcam = Interface.decode(json['webcam'], agent),
+            webcam=Interface.decode(json["webcam"], agent),
             # for idl.Event
-            source = Interface.decode(json['source'], agent),
+            source=Interface.decode(json["source"], agent),
         )
         return obj
 
@@ -427,6 +482,7 @@ class WebcamEvent(raritan.rpc.idl.Event):
         elements = ["webcam"]
         elements = elements + super(raritan.rpc.webcam.WebcamEvent, self).listElements()
         return elements
+
 
 # value object
 class WebcamAddedEvent(WebcamEvent):
@@ -443,16 +499,19 @@ class WebcamAddedEvent(WebcamEvent):
     def decode(cls, json, agent):
         obj = cls(
             # for webcam.WebcamEvent
-            webcam = Interface.decode(json['webcam'], agent),
+            webcam=Interface.decode(json["webcam"], agent),
             # for idl.Event
-            source = Interface.decode(json['source'], agent),
+            source=Interface.decode(json["source"], agent),
         )
         return obj
 
     def listElements(self):
         elements = []
-        elements = elements + super(raritan.rpc.webcam.WebcamAddedEvent, self).listElements()
+        elements = (
+            elements + super(raritan.rpc.webcam.WebcamAddedEvent, self).listElements()
+        )
         return elements
+
 
 # value object
 class WebcamRemovedEvent(WebcamEvent):
@@ -469,23 +528,28 @@ class WebcamRemovedEvent(WebcamEvent):
     def decode(cls, json, agent):
         obj = cls(
             # for webcam.WebcamEvent
-            webcam = Interface.decode(json['webcam'], agent),
+            webcam=Interface.decode(json["webcam"], agent),
             # for idl.Event
-            source = Interface.decode(json['source'], agent),
+            source=Interface.decode(json["source"], agent),
         )
         return obj
 
     def listElements(self):
         elements = []
-        elements = elements + super(raritan.rpc.webcam.WebcamRemovedEvent, self).listElements()
+        elements = (
+            elements + super(raritan.rpc.webcam.WebcamRemovedEvent, self).listElements()
+        )
         return elements
+
 
 # value object
 class WebcamSettingsChangedEvent(WebcamEvent):
     idlType = "webcam.WebcamSettingsChangedEvent:1.0.0"
 
     def __init__(self, username, oldSettings, newSettings, webcam, source):
-        super(raritan.rpc.webcam.WebcamSettingsChangedEvent, self).__init__(webcam, source)
+        super(raritan.rpc.webcam.WebcamSettingsChangedEvent, self).__init__(
+            webcam, source
+        )
         typecheck.is_string(username, AssertionError)
         typecheck.is_struct(oldSettings, raritan.rpc.webcam.Settings, AssertionError)
         typecheck.is_struct(newSettings, raritan.rpc.webcam.Settings, AssertionError)
@@ -496,28 +560,32 @@ class WebcamSettingsChangedEvent(WebcamEvent):
 
     def encode(self):
         json = super(raritan.rpc.webcam.WebcamSettingsChangedEvent, self).encode()
-        json['username'] = self.username
-        json['oldSettings'] = raritan.rpc.webcam.Settings.encode(self.oldSettings)
-        json['newSettings'] = raritan.rpc.webcam.Settings.encode(self.newSettings)
+        json["username"] = self.username
+        json["oldSettings"] = raritan.rpc.webcam.Settings.encode(self.oldSettings)
+        json["newSettings"] = raritan.rpc.webcam.Settings.encode(self.newSettings)
         return json
 
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            username = json['username'],
-            oldSettings = raritan.rpc.webcam.Settings.decode(json['oldSettings'], agent),
-            newSettings = raritan.rpc.webcam.Settings.decode(json['newSettings'], agent),
+            username=json["username"],
+            oldSettings=raritan.rpc.webcam.Settings.decode(json["oldSettings"], agent),
+            newSettings=raritan.rpc.webcam.Settings.decode(json["newSettings"], agent),
             # for webcam.WebcamEvent
-            webcam = Interface.decode(json['webcam'], agent),
+            webcam=Interface.decode(json["webcam"], agent),
             # for idl.Event
-            source = Interface.decode(json['source'], agent),
+            source=Interface.decode(json["source"], agent),
         )
         return obj
 
     def listElements(self):
         elements = ["username", "oldSettings", "newSettings"]
-        elements = elements + super(raritan.rpc.webcam.WebcamSettingsChangedEvent, self).listElements()
+        elements = (
+            elements
+            + super(raritan.rpc.webcam.WebcamSettingsChangedEvent, self).listElements()
+        )
         return elements
+
 
 # interface
 class WebcamManager(Interface):
@@ -530,8 +598,8 @@ class WebcamManager(Interface):
     def getWebcams(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getWebcams', args)
-        _ret_ = [Interface.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getWebcams", args)
+        _ret_ = [Interface.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_interface(x0, raritan.rpc.webcam.Webcam, DecodeException)
         return _ret_
@@ -541,11 +609,11 @@ class WebcamManager(Interface):
         typecheck.is_interface(webcam, raritan.rpc.webcam.Webcam, AssertionError)
         typecheck.is_string(clientType, AssertionError)
         args = {}
-        args['webcam'] = Interface.encode(webcam)
-        args['clientType'] = clientType
-        rsp = agent.json_rpc(self.target, 'getChannel', args)
-        _ret_ = rsp['_ret_']
-        channel = Interface.decode(rsp['channel'], agent)
+        args["webcam"] = Interface.encode(webcam)
+        args["clientType"] = clientType
+        rsp = agent.json_rpc(self.target, "getChannel", args)
+        _ret_ = rsp["_ret_"]
+        channel = Interface.decode(rsp["channel"], agent)
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_interface(channel, raritan.rpc.webcam.Channel, DecodeException)
         return (_ret_, channel)
@@ -553,8 +621,8 @@ class WebcamManager(Interface):
     def getChannels(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getChannels', args)
-        _ret_ = [Interface.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getChannels", args)
+        _ret_ = [Interface.decode(x0, agent) for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_interface(x0, raritan.rpc.webcam.Channel, DecodeException)
         return _ret_
@@ -563,17 +631,17 @@ class WebcamManager(Interface):
         agent = self.agent
         typecheck.is_string(clientType, AssertionError)
         args = {}
-        args['clientType'] = clientType
-        rsp = agent.json_rpc(self.target, 'removeClientType', args)
-        _ret_ = rsp['_ret_']
+        args["clientType"] = clientType
+        rsp = agent.json_rpc(self.target, "removeClientType", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getClientTypes(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getClientTypes', args)
-        _ret_ = [x0 for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getClientTypes", args)
+        _ret_ = [x0 for x0 in rsp["_ret_"]]
         for x0 in _ret_:
             typecheck.is_string(x0, DecodeException)
         return _ret_
@@ -581,46 +649,52 @@ class WebcamManager(Interface):
     def getClientTypePriorities(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getClientTypePriorities', args)
-        _ret_ = dict([(
-            elem['key'],
-            raritan.rpc.webcam.Priority.decode(elem['value']))
-            for elem in rsp['_ret_']])
+        rsp = agent.json_rpc(self.target, "getClientTypePriorities", args)
+        _ret_ = dict(
+            [
+                (elem["key"], raritan.rpc.webcam.Priority.decode(elem["value"]))
+                for elem in rsp["_ret_"]
+            ]
+        )
         return _ret_
 
     def setClientTypePriorities(self, priorities):
         agent = self.agent
         args = {}
-        args['priorities'] = [dict(
-            key = k,
-            value = raritan.rpc.webcam.Priority.encode(v))
-            for k, v in priorities.items()]
-        rsp = agent.json_rpc(self.target, 'setClientTypePriorities', args)
-        _ret_ = rsp['_ret_']
+        args["priorities"] = [
+            dict(key=k, value=raritan.rpc.webcam.Priority.encode(v))
+            for k, v in priorities.items()
+        ]
+        rsp = agent.json_rpc(self.target, "setClientTypePriorities", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getWebcamPriorities(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getWebcamPriorities', args)
-        _ret_ = dict([(
-            elem['key'],
-            raritan.rpc.webcam.Priority.decode(elem['value']))
-            for elem in rsp['_ret_']])
+        rsp = agent.json_rpc(self.target, "getWebcamPriorities", args)
+        _ret_ = dict(
+            [
+                (elem["key"], raritan.rpc.webcam.Priority.decode(elem["value"]))
+                for elem in rsp["_ret_"]
+            ]
+        )
         return _ret_
 
     def setWebcamPriorities(self, priorities):
         agent = self.agent
         args = {}
-        args['priorities'] = [dict(
-            key = k,
-            value = raritan.rpc.webcam.Priority.encode(v))
-            for k, v in priorities.items()]
-        rsp = agent.json_rpc(self.target, 'setWebcamPriorities', args)
-        _ret_ = rsp['_ret_']
+        args["priorities"] = [
+            dict(key=k, value=raritan.rpc.webcam.Priority.encode(v))
+            for k, v in priorities.items()
+        ]
+        rsp = agent.json_rpc(self.target, "setWebcamPriorities", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -629,7 +703,14 @@ class WebcamManager(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.webcam
 
 
@@ -692,19 +773,19 @@ class StorageManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                webcam = Interface.decode(json['webcam'], agent),
-                newestIndex = int(json['newestIndex']),
-                oldestIndex = int(json['oldestIndex']),
-                count = json['count'],
+                webcam=Interface.decode(json["webcam"], agent),
+                newestIndex=int(json["newestIndex"]),
+                oldestIndex=int(json["oldestIndex"]),
+                count=json["count"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['webcam'] = Interface.encode(self.webcam)
-            json['newestIndex'] = self.newestIndex
-            json['oldestIndex'] = self.oldestIndex
-            json['count'] = self.count
+            json["webcam"] = Interface.encode(self.webcam)
+            json["newestIndex"] = self.newestIndex
+            json["oldestIndex"] = self.oldestIndex
+            json["count"] = self.count
             return json
 
     # structure
@@ -713,11 +794,17 @@ class StorageManager(Interface):
         elements = ["status", "capacity", "used", "webcamStorageInfo"]
 
         def __init__(self, status, capacity, used, webcamStorageInfo):
-            typecheck.is_enum(status, raritan.rpc.webcam.StorageManager.StorageStatus, AssertionError)
+            typecheck.is_enum(
+                status, raritan.rpc.webcam.StorageManager.StorageStatus, AssertionError
+            )
             typecheck.is_int(capacity, AssertionError)
             typecheck.is_int(used, AssertionError)
             for x0 in webcamStorageInfo:
-                typecheck.is_struct(x0, raritan.rpc.webcam.StorageManager.WebcamStorageInfo, AssertionError)
+                typecheck.is_struct(
+                    x0,
+                    raritan.rpc.webcam.StorageManager.WebcamStorageInfo,
+                    AssertionError,
+                )
 
             self.status = status
             self.capacity = capacity
@@ -727,19 +814,31 @@ class StorageManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                status = raritan.rpc.webcam.StorageManager.StorageStatus.decode(json['status']),
-                capacity = json['capacity'],
-                used = json['used'],
-                webcamStorageInfo = [raritan.rpc.webcam.StorageManager.WebcamStorageInfo.decode(x0, agent) for x0 in json['webcamStorageInfo']],
+                status=raritan.rpc.webcam.StorageManager.StorageStatus.decode(
+                    json["status"]
+                ),
+                capacity=json["capacity"],
+                used=json["used"],
+                webcamStorageInfo=[
+                    raritan.rpc.webcam.StorageManager.WebcamStorageInfo.decode(
+                        x0, agent
+                    )
+                    for x0 in json["webcamStorageInfo"]
+                ],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['status'] = raritan.rpc.webcam.StorageManager.StorageStatus.encode(self.status)
-            json['capacity'] = self.capacity
-            json['used'] = self.used
-            json['webcamStorageInfo'] = [raritan.rpc.webcam.StorageManager.WebcamStorageInfo.encode(x0) for x0 in self.webcamStorageInfo]
+            json["status"] = raritan.rpc.webcam.StorageManager.StorageStatus.encode(
+                self.status
+            )
+            json["capacity"] = self.capacity
+            json["used"] = self.used
+            json["webcamStorageInfo"] = [
+                raritan.rpc.webcam.StorageManager.WebcamStorageInfo.encode(x0)
+                for x0 in self.webcamStorageInfo
+            ]
             return json
 
     # structure
@@ -748,7 +847,9 @@ class StorageManager(Interface):
         elements = ["type", "capacity", "server", "username", "password"]
 
         def __init__(self, type, capacity, server, username, password):
-            typecheck.is_enum(type, raritan.rpc.webcam.StorageManager.StorageType, AssertionError)
+            typecheck.is_enum(
+                type, raritan.rpc.webcam.StorageManager.StorageType, AssertionError
+            )
             typecheck.is_int(capacity, AssertionError)
             typecheck.is_string(server, AssertionError)
             typecheck.is_string(username, AssertionError)
@@ -763,21 +864,23 @@ class StorageManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                type = raritan.rpc.webcam.StorageManager.StorageType.decode(json['type']),
-                capacity = json['capacity'],
-                server = json['server'],
-                username = json['username'],
-                password = json['password'],
+                type=raritan.rpc.webcam.StorageManager.StorageType.decode(json["type"]),
+                capacity=json["capacity"],
+                server=json["server"],
+                username=json["username"],
+                password=json["password"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['type'] = raritan.rpc.webcam.StorageManager.StorageType.encode(self.type)
-            json['capacity'] = self.capacity
-            json['server'] = self.server
-            json['username'] = self.username
-            json['password'] = self.password
+            json["type"] = raritan.rpc.webcam.StorageManager.StorageType.encode(
+                self.type
+            )
+            json["capacity"] = self.capacity
+            json["server"] = self.server
+            json["username"] = self.username
+            json["password"] = self.password
             return json
 
     # structure
@@ -795,15 +898,15 @@ class StorageManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                index = int(json['index']),
-                webcam = Interface.decode(json['webcam'], agent),
+                index=int(json["index"]),
+                webcam=Interface.decode(json["webcam"], agent),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['index'] = self.index
-            json['webcam'] = Interface.encode(self.webcam)
+            json["index"] = self.index
+            json["webcam"] = Interface.encode(self.webcam)
             return json
 
     # structure
@@ -812,9 +915,15 @@ class StorageManager(Interface):
         elements = ["imageMeta", "fileSize", "storageMeta"]
 
         def __init__(self, imageMeta, fileSize, storageMeta):
-            typecheck.is_struct(imageMeta, raritan.rpc.webcam.ImageMetaData, AssertionError)
+            typecheck.is_struct(
+                imageMeta, raritan.rpc.webcam.ImageMetaData, AssertionError
+            )
             typecheck.is_int(fileSize, AssertionError)
-            typecheck.is_struct(storageMeta, raritan.rpc.webcam.StorageManager.StorageMetaData, AssertionError)
+            typecheck.is_struct(
+                storageMeta,
+                raritan.rpc.webcam.StorageManager.StorageMetaData,
+                AssertionError,
+            )
 
             self.imageMeta = imageMeta
             self.fileSize = fileSize
@@ -823,17 +932,25 @@ class StorageManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                imageMeta = raritan.rpc.webcam.ImageMetaData.decode(json['imageMeta'], agent),
-                fileSize = json['fileSize'],
-                storageMeta = raritan.rpc.webcam.StorageManager.StorageMetaData.decode(json['storageMeta'], agent),
+                imageMeta=raritan.rpc.webcam.ImageMetaData.decode(
+                    json["imageMeta"], agent
+                ),
+                fileSize=json["fileSize"],
+                storageMeta=raritan.rpc.webcam.StorageManager.StorageMetaData.decode(
+                    json["storageMeta"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['imageMeta'] = raritan.rpc.webcam.ImageMetaData.encode(self.imageMeta)
-            json['fileSize'] = self.fileSize
-            json['storageMeta'] = raritan.rpc.webcam.StorageManager.StorageMetaData.encode(self.storageMeta)
+            json["imageMeta"] = raritan.rpc.webcam.ImageMetaData.encode(self.imageMeta)
+            json["fileSize"] = self.fileSize
+            json[
+                "storageMeta"
+            ] = raritan.rpc.webcam.StorageManager.StorageMetaData.encode(
+                self.storageMeta
+            )
             return json
 
     # structure
@@ -843,7 +960,11 @@ class StorageManager(Interface):
 
         def __init__(self, image, metaData):
             typecheck.is_struct(image, raritan.rpc.webcam.Image, AssertionError)
-            typecheck.is_struct(metaData, raritan.rpc.webcam.StorageManager.StorageMetaData, AssertionError)
+            typecheck.is_struct(
+                metaData,
+                raritan.rpc.webcam.StorageManager.StorageMetaData,
+                AssertionError,
+            )
 
             self.image = image
             self.metaData = metaData
@@ -851,15 +972,19 @@ class StorageManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                image = raritan.rpc.webcam.Image.decode(json['image'], agent),
-                metaData = raritan.rpc.webcam.StorageManager.StorageMetaData.decode(json['metaData'], agent),
+                image=raritan.rpc.webcam.Image.decode(json["image"], agent),
+                metaData=raritan.rpc.webcam.StorageManager.StorageMetaData.decode(
+                    json["metaData"], agent
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['image'] = raritan.rpc.webcam.Image.encode(self.image)
-            json['metaData'] = raritan.rpc.webcam.StorageManager.StorageMetaData.encode(self.metaData)
+            json["image"] = raritan.rpc.webcam.Image.encode(self.image)
+            json["metaData"] = raritan.rpc.webcam.StorageManager.StorageMetaData.encode(
+                self.metaData
+            )
             return json
 
     # structure
@@ -881,53 +1006,70 @@ class StorageManager(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                webcam = Interface.decode(json['webcam'], agent),
-                interval = json['interval'],
-                count = json['count'],
-                done = json['done'],
+                webcam=Interface.decode(json["webcam"], agent),
+                interval=json["interval"],
+                count=json["count"],
+                done=json["done"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['webcam'] = Interface.encode(self.webcam)
-            json['interval'] = self.interval
-            json['count'] = self.count
-            json['done'] = self.done
+            json["webcam"] = Interface.encode(self.webcam)
+            json["interval"] = self.interval
+            json["count"] = self.count
+            json["done"] = self.done
             return json
 
     def getSupportedStorageTypes(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSupportedStorageTypes', args)
-        _ret_ = [raritan.rpc.webcam.StorageManager.StorageType.decode(x0) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getSupportedStorageTypes", args)
+        _ret_ = [
+            raritan.rpc.webcam.StorageManager.StorageType.decode(x0)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_enum(x0, raritan.rpc.webcam.StorageManager.StorageType, DecodeException)
+            typecheck.is_enum(
+                x0, raritan.rpc.webcam.StorageManager.StorageType, DecodeException
+            )
         return _ret_
 
     def getInformation(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getInformation', args)
-        _ret_ = raritan.rpc.webcam.StorageManager.StorageInformation.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.webcam.StorageManager.StorageInformation, DecodeException)
+        rsp = agent.json_rpc(self.target, "getInformation", args)
+        _ret_ = raritan.rpc.webcam.StorageManager.StorageInformation.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_, raritan.rpc.webcam.StorageManager.StorageInformation, DecodeException
+        )
         return _ret_
 
     def getSettings(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getSettings', args)
-        _ret_ = raritan.rpc.webcam.StorageManager.StorageSettings.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.webcam.StorageManager.StorageSettings, DecodeException)
+        rsp = agent.json_rpc(self.target, "getSettings", args)
+        _ret_ = raritan.rpc.webcam.StorageManager.StorageSettings.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_, raritan.rpc.webcam.StorageManager.StorageSettings, DecodeException
+        )
         return _ret_
 
     def setSettings(self, settings):
         agent = self.agent
-        typecheck.is_struct(settings, raritan.rpc.webcam.StorageManager.StorageSettings, AssertionError)
+        typecheck.is_struct(
+            settings, raritan.rpc.webcam.StorageManager.StorageSettings, AssertionError
+        )
         args = {}
-        args['settings'] = raritan.rpc.webcam.StorageManager.StorageSettings.encode(settings)
-        rsp = agent.json_rpc(self.target, 'setSettings', args)
-        _ret_ = rsp['_ret_']
+        args["settings"] = raritan.rpc.webcam.StorageManager.StorageSettings.encode(
+            settings
+        )
+        rsp = agent.json_rpc(self.target, "setSettings", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -936,11 +1078,11 @@ class StorageManager(Interface):
         typecheck.is_interface(webcam, raritan.rpc.webcam.Webcam, AssertionError)
         typecheck.is_struct(image, raritan.rpc.webcam.Image, AssertionError)
         args = {}
-        args['webcam'] = Interface.encode(webcam)
-        args['image'] = raritan.rpc.webcam.Image.encode(image)
-        rsp = agent.json_rpc(self.target, 'addImage', args)
-        _ret_ = rsp['_ret_']
-        index = int(rsp['index'])
+        args["webcam"] = Interface.encode(webcam)
+        args["image"] = raritan.rpc.webcam.Image.encode(image)
+        rsp = agent.json_rpc(self.target, "addImage", args)
+        _ret_ = rsp["_ret_"]
+        index = int(rsp["index"])
         typecheck.is_int(_ret_, DecodeException)
         typecheck.is_long(index, DecodeException)
         return (_ret_, index)
@@ -950,14 +1092,18 @@ class StorageManager(Interface):
         typecheck.is_interface(webcam, raritan.rpc.webcam.Webcam, AssertionError)
         typecheck.is_long(start, AssertionError)
         typecheck.is_int(count, AssertionError)
-        typecheck.is_enum(direction, raritan.rpc.webcam.StorageManager.Direction, AssertionError)
+        typecheck.is_enum(
+            direction, raritan.rpc.webcam.StorageManager.Direction, AssertionError
+        )
         args = {}
-        args['webcam'] = Interface.encode(webcam)
-        args['start'] = start
-        args['count'] = count
-        args['direction'] = raritan.rpc.webcam.StorageManager.Direction.encode(direction)
-        rsp = agent.json_rpc(self.target, 'removeImages', args)
-        _ret_ = rsp['_ret_']
+        args["webcam"] = Interface.encode(webcam)
+        args["start"] = start
+        args["count"] = count
+        args["direction"] = raritan.rpc.webcam.StorageManager.Direction.encode(
+            direction
+        )
+        rsp = agent.json_rpc(self.target, "removeImages", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -966,18 +1112,29 @@ class StorageManager(Interface):
         typecheck.is_interface(webcam, raritan.rpc.webcam.Webcam, AssertionError)
         typecheck.is_long(start, AssertionError)
         typecheck.is_int(count, AssertionError)
-        typecheck.is_enum(direction, raritan.rpc.webcam.StorageManager.Direction, AssertionError)
+        typecheck.is_enum(
+            direction, raritan.rpc.webcam.StorageManager.Direction, AssertionError
+        )
         args = {}
-        args['webcam'] = Interface.encode(webcam)
-        args['start'] = start
-        args['count'] = count
-        args['direction'] = raritan.rpc.webcam.StorageManager.Direction.encode(direction)
-        rsp = agent.json_rpc(self.target, 'getMetaData', args)
-        _ret_ = rsp['_ret_']
-        meta = [raritan.rpc.webcam.StorageManager.ImageStorageMetaData.decode(x0, agent) for x0 in rsp['meta']]
+        args["webcam"] = Interface.encode(webcam)
+        args["start"] = start
+        args["count"] = count
+        args["direction"] = raritan.rpc.webcam.StorageManager.Direction.encode(
+            direction
+        )
+        rsp = agent.json_rpc(self.target, "getMetaData", args)
+        _ret_ = rsp["_ret_"]
+        meta = [
+            raritan.rpc.webcam.StorageManager.ImageStorageMetaData.decode(x0, agent)
+            for x0 in rsp["meta"]
+        ]
         typecheck.is_int(_ret_, DecodeException)
         for x0 in meta:
-            typecheck.is_struct(x0, raritan.rpc.webcam.StorageManager.ImageStorageMetaData, DecodeException)
+            typecheck.is_struct(
+                x0,
+                raritan.rpc.webcam.StorageManager.ImageStorageMetaData,
+                DecodeException,
+            )
         return (_ret_, meta)
 
     def getImages(self, webcam, start, count, direction):
@@ -985,27 +1142,41 @@ class StorageManager(Interface):
         typecheck.is_interface(webcam, raritan.rpc.webcam.Webcam, AssertionError)
         typecheck.is_long(start, AssertionError)
         typecheck.is_int(count, AssertionError)
-        typecheck.is_enum(direction, raritan.rpc.webcam.StorageManager.Direction, AssertionError)
+        typecheck.is_enum(
+            direction, raritan.rpc.webcam.StorageManager.Direction, AssertionError
+        )
         args = {}
-        args['webcam'] = Interface.encode(webcam)
-        args['start'] = start
-        args['count'] = count
-        args['direction'] = raritan.rpc.webcam.StorageManager.Direction.encode(direction)
-        rsp = agent.json_rpc(self.target, 'getImages', args)
-        _ret_ = rsp['_ret_']
-        image = [raritan.rpc.webcam.StorageManager.StorageImage.decode(x0, agent) for x0 in rsp['image']]
+        args["webcam"] = Interface.encode(webcam)
+        args["start"] = start
+        args["count"] = count
+        args["direction"] = raritan.rpc.webcam.StorageManager.Direction.encode(
+            direction
+        )
+        rsp = agent.json_rpc(self.target, "getImages", args)
+        _ret_ = rsp["_ret_"]
+        image = [
+            raritan.rpc.webcam.StorageManager.StorageImage.decode(x0, agent)
+            for x0 in rsp["image"]
+        ]
         typecheck.is_int(_ret_, DecodeException)
         for x0 in image:
-            typecheck.is_struct(x0, raritan.rpc.webcam.StorageManager.StorageImage, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.webcam.StorageManager.StorageImage, DecodeException
+            )
         return (_ret_, image)
 
     def getActivities(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getActivities', args)
-        _ret_ = [raritan.rpc.webcam.StorageManager.Activity.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getActivities", args)
+        _ret_ = [
+            raritan.rpc.webcam.StorageManager.Activity.decode(x0, agent)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.webcam.StorageManager.Activity, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.webcam.StorageManager.Activity, DecodeException
+            )
         return _ret_
 
     def startActivity(self, webcam, count, interval):
@@ -1014,11 +1185,11 @@ class StorageManager(Interface):
         typecheck.is_int(count, AssertionError)
         typecheck.is_int(interval, AssertionError)
         args = {}
-        args['webcam'] = Interface.encode(webcam)
-        args['count'] = count
-        args['interval'] = interval
-        rsp = agent.json_rpc(self.target, 'startActivity', args)
-        _ret_ = rsp['_ret_']
+        args["webcam"] = Interface.encode(webcam)
+        args["count"] = count
+        args["interval"] = interval
+        rsp = agent.json_rpc(self.target, "startActivity", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -1026,8 +1197,8 @@ class StorageManager(Interface):
         agent = self.agent
         typecheck.is_interface(webcam, raritan.rpc.webcam.Webcam, AssertionError)
         args = {}
-        args['webcam'] = Interface.encode(webcam)
-        rsp = agent.json_rpc(self.target, 'stopActivity', args)
-        _ret_ = rsp['_ret_']
+        args["webcam"] = Interface.encode(webcam)
+        rsp = agent.json_rpc(self.target, "stopActivity", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_

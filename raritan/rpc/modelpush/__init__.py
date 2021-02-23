@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.modelpush
 
 
@@ -19,9 +26,32 @@ class ModelPush(Interface):
     # structure
     class Configuration(Structure):
         idlType = "modelpush.ModelPush.Configuration:1.0.0"
-        elements = ["enabled", "interval", "host", "port", "path", "useHttps", "caCert", "useAuth", "username", "password"]
+        elements = [
+            "enabled",
+            "interval",
+            "host",
+            "port",
+            "path",
+            "useHttps",
+            "caCert",
+            "useAuth",
+            "username",
+            "password",
+        ]
 
-        def __init__(self, enabled, interval, host, port, path, useHttps, caCert, useAuth, username, password):
+        def __init__(
+            self,
+            enabled,
+            interval,
+            host,
+            port,
+            path,
+            useHttps,
+            caCert,
+            useAuth,
+            username,
+            password,
+        ):
             typecheck.is_bool(enabled, AssertionError)
             typecheck.is_int(interval, AssertionError)
             typecheck.is_string(host, AssertionError)
@@ -47,47 +77,53 @@ class ModelPush(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                enabled = json['enabled'],
-                interval = json['interval'],
-                host = json['host'],
-                port = json['port'],
-                path = json['path'],
-                useHttps = json['useHttps'],
-                caCert = json['caCert'],
-                useAuth = json['useAuth'],
-                username = json['username'],
-                password = json['password'],
+                enabled=json["enabled"],
+                interval=json["interval"],
+                host=json["host"],
+                port=json["port"],
+                path=json["path"],
+                useHttps=json["useHttps"],
+                caCert=json["caCert"],
+                useAuth=json["useAuth"],
+                username=json["username"],
+                password=json["password"],
             )
             return obj
 
         def encode(self):
             json = {}
-            json['enabled'] = self.enabled
-            json['interval'] = self.interval
-            json['host'] = self.host
-            json['port'] = self.port
-            json['path'] = self.path
-            json['useHttps'] = self.useHttps
-            json['caCert'] = self.caCert
-            json['useAuth'] = self.useAuth
-            json['username'] = self.username
-            json['password'] = self.password
+            json["enabled"] = self.enabled
+            json["interval"] = self.interval
+            json["host"] = self.host
+            json["port"] = self.port
+            json["path"] = self.path
+            json["useHttps"] = self.useHttps
+            json["caCert"] = self.caCert
+            json["useAuth"] = self.useAuth
+            json["username"] = self.username
+            json["password"] = self.password
             return json
 
     def getConfiguration(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getConfiguration', args)
-        _ret_ = raritan.rpc.modelpush.ModelPush.Configuration.decode(rsp['_ret_'], agent)
-        typecheck.is_struct(_ret_, raritan.rpc.modelpush.ModelPush.Configuration, DecodeException)
+        rsp = agent.json_rpc(self.target, "getConfiguration", args)
+        _ret_ = raritan.rpc.modelpush.ModelPush.Configuration.decode(
+            rsp["_ret_"], agent
+        )
+        typecheck.is_struct(
+            _ret_, raritan.rpc.modelpush.ModelPush.Configuration, DecodeException
+        )
         return _ret_
 
     def setConfiguration(self, cfg):
         agent = self.agent
-        typecheck.is_struct(cfg, raritan.rpc.modelpush.ModelPush.Configuration, AssertionError)
+        typecheck.is_struct(
+            cfg, raritan.rpc.modelpush.ModelPush.Configuration, AssertionError
+        )
         args = {}
-        args['cfg'] = raritan.rpc.modelpush.ModelPush.Configuration.encode(cfg)
-        rsp = agent.json_rpc(self.target, 'setConfiguration', args)
-        _ret_ = rsp['_ret_']
+        args["cfg"] = raritan.rpc.modelpush.ModelPush.Configuration.encode(cfg)
+        rsp = agent.json_rpc(self.target, "setConfiguration", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_

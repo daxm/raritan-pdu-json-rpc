@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.diag
 
 
@@ -17,7 +24,14 @@ class DiagLogSettings(Interface):
     # enumeration
     class LogLevel(Enumeration):
         idlType = "diag.DiagLogSettings.LogLevel:1.0.0"
-        values = ["LOG_LEVEL_NONE", "LOG_LEVEL_ERR", "LOG_LEVEL_WARN", "LOG_LEVEL_INFO", "LOG_LEVEL_DEBUG", "LOG_LEVEL_TRACE"]
+        values = [
+            "LOG_LEVEL_NONE",
+            "LOG_LEVEL_ERR",
+            "LOG_LEVEL_WARN",
+            "LOG_LEVEL_INFO",
+            "LOG_LEVEL_DEBUG",
+            "LOG_LEVEL_TRACE",
+        ]
 
     LogLevel.LOG_LEVEL_NONE = LogLevel(0)
     LogLevel.LOG_LEVEL_ERR = LogLevel(1)
@@ -33,7 +47,9 @@ class DiagLogSettings(Interface):
 
         def __init__(self, ctxName, logLevel):
             typecheck.is_string(ctxName, AssertionError)
-            typecheck.is_enum(logLevel, raritan.rpc.diag.DiagLogSettings.LogLevel, AssertionError)
+            typecheck.is_enum(
+                logLevel, raritan.rpc.diag.DiagLogSettings.LogLevel, AssertionError
+            )
 
             self.ctxName = ctxName
             self.logLevel = logLevel
@@ -41,15 +57,19 @@ class DiagLogSettings(Interface):
         @classmethod
         def decode(cls, json, agent):
             obj = cls(
-                ctxName = json['ctxName'],
-                logLevel = raritan.rpc.diag.DiagLogSettings.LogLevel.decode(json['logLevel']),
+                ctxName=json["ctxName"],
+                logLevel=raritan.rpc.diag.DiagLogSettings.LogLevel.decode(
+                    json["logLevel"]
+                ),
             )
             return obj
 
         def encode(self):
             json = {}
-            json['ctxName'] = self.ctxName
-            json['logLevel'] = raritan.rpc.diag.DiagLogSettings.LogLevel.encode(self.logLevel)
+            json["ctxName"] = self.ctxName
+            json["logLevel"] = raritan.rpc.diag.DiagLogSettings.LogLevel.encode(
+                self.logLevel
+            )
             return json
 
     ERR_NONE = 0
@@ -61,24 +81,31 @@ class DiagLogSettings(Interface):
     def resetLogLevelsForAllCtxNames(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'resetLogLevelsForAllCtxNames', args)
+        rsp = agent.json_rpc(self.target, "resetLogLevelsForAllCtxNames", args)
 
     def getLogLevelsForAllCtxNames(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getLogLevelsForAllCtxNames', args)
-        _ret_ = [raritan.rpc.diag.DiagLogSettings.LogLevelEntry.decode(x0, agent) for x0 in rsp['_ret_']]
+        rsp = agent.json_rpc(self.target, "getLogLevelsForAllCtxNames", args)
+        _ret_ = [
+            raritan.rpc.diag.DiagLogSettings.LogLevelEntry.decode(x0, agent)
+            for x0 in rsp["_ret_"]
+        ]
         for x0 in _ret_:
-            typecheck.is_struct(x0, raritan.rpc.diag.DiagLogSettings.LogLevelEntry, DecodeException)
+            typecheck.is_struct(
+                x0, raritan.rpc.diag.DiagLogSettings.LogLevelEntry, DecodeException
+            )
         return _ret_
 
     def setLogLevelForAllCtxNames(self, logLevel):
         agent = self.agent
-        typecheck.is_enum(logLevel, raritan.rpc.diag.DiagLogSettings.LogLevel, AssertionError)
+        typecheck.is_enum(
+            logLevel, raritan.rpc.diag.DiagLogSettings.LogLevel, AssertionError
+        )
         args = {}
-        args['logLevel'] = raritan.rpc.diag.DiagLogSettings.LogLevel.encode(logLevel)
-        rsp = agent.json_rpc(self.target, 'setLogLevelForAllCtxNames', args)
-        _ret_ = rsp['_ret_']
+        args["logLevel"] = raritan.rpc.diag.DiagLogSettings.LogLevel.encode(logLevel)
+        rsp = agent.json_rpc(self.target, "setLogLevelForAllCtxNames", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -86,22 +113,26 @@ class DiagLogSettings(Interface):
         agent = self.agent
         typecheck.is_string(ctxName, AssertionError)
         args = {}
-        args['ctxName'] = ctxName
-        rsp = agent.json_rpc(self.target, 'getLogLevelByCtxName', args)
-        _ret_ = rsp['_ret_']
-        logLevel = raritan.rpc.diag.DiagLogSettings.LogLevel.decode(rsp['logLevel'])
+        args["ctxName"] = ctxName
+        rsp = agent.json_rpc(self.target, "getLogLevelByCtxName", args)
+        _ret_ = rsp["_ret_"]
+        logLevel = raritan.rpc.diag.DiagLogSettings.LogLevel.decode(rsp["logLevel"])
         typecheck.is_int(_ret_, DecodeException)
-        typecheck.is_enum(logLevel, raritan.rpc.diag.DiagLogSettings.LogLevel, DecodeException)
+        typecheck.is_enum(
+            logLevel, raritan.rpc.diag.DiagLogSettings.LogLevel, DecodeException
+        )
         return (_ret_, logLevel)
 
     def setLogLevelByCtxName(self, ctxName, logLevel):
         agent = self.agent
         typecheck.is_string(ctxName, AssertionError)
-        typecheck.is_enum(logLevel, raritan.rpc.diag.DiagLogSettings.LogLevel, AssertionError)
+        typecheck.is_enum(
+            logLevel, raritan.rpc.diag.DiagLogSettings.LogLevel, AssertionError
+        )
         args = {}
-        args['ctxName'] = ctxName
-        args['logLevel'] = raritan.rpc.diag.DiagLogSettings.LogLevel.encode(logLevel)
-        rsp = agent.json_rpc(self.target, 'setLogLevelByCtxName', args)
-        _ret_ = rsp['_ret_']
+        args["ctxName"] = ctxName
+        args["logLevel"] = raritan.rpc.diag.DiagLogSettings.LogLevel.encode(logLevel)
+        rsp = agent.json_rpc(self.target, "setLogLevelByCtxName", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_

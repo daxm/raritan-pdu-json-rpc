@@ -6,7 +6,14 @@
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 
 # structure
 class LogEntry(Structure):
@@ -27,25 +34,27 @@ class LogEntry(Structure):
     @classmethod
     def decode(cls, json, agent):
         obj = cls(
-            id = json['id'],
-            timestamp = raritan.rpc.Time.decode(json['timestamp']),
-            eventClass = json['eventClass'],
-            message = json['message'],
+            id=json["id"],
+            timestamp=raritan.rpc.Time.decode(json["timestamp"]),
+            eventClass=json["eventClass"],
+            message=json["message"],
         )
         return obj
 
     def encode(self):
         json = {}
-        json['id'] = self.id
-        json['timestamp'] = raritan.rpc.Time.encode(self.timestamp)
-        json['eventClass'] = self.eventClass
-        json['message'] = self.message
+        json["id"] = self.id
+        json["timestamp"] = raritan.rpc.Time.encode(self.timestamp)
+        json["eventClass"] = self.eventClass
+        json["message"] = self.message
         return json
+
 
 # enumeration
 class RangeDirection(Enumeration):
     idlType = "logging.RangeDirection:1.0.0"
     values = ["FORWARD", "BACKWARD"]
+
 
 RangeDirection.FORWARD = RangeDirection(0)
 RangeDirection.BACKWARD = RangeDirection(1)
@@ -57,7 +66,14 @@ RangeDirection.BACKWARD = RangeDirection(1)
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.event
 
 import raritan.rpc.logging
@@ -68,7 +84,9 @@ class EventLogClearedEvent(raritan.rpc.event.UserEvent):
     idlType = "logging.EventLogClearedEvent:1.0.0"
 
     def __init__(self, actUserName, actIpAddr, source):
-        super(raritan.rpc.logging.EventLogClearedEvent, self).__init__(actUserName, actIpAddr, source)
+        super(raritan.rpc.logging.EventLogClearedEvent, self).__init__(
+            actUserName, actIpAddr, source
+        )
 
     def encode(self):
         json = super(raritan.rpc.logging.EventLogClearedEvent, self).encode()
@@ -78,17 +96,21 @@ class EventLogClearedEvent(raritan.rpc.event.UserEvent):
     def decode(cls, json, agent):
         obj = cls(
             # for event.UserEvent
-            actUserName = json['actUserName'],
-            actIpAddr = json['actIpAddr'],
+            actUserName=json["actUserName"],
+            actIpAddr=json["actIpAddr"],
             # for idl.Event
-            source = Interface.decode(json['source'], agent),
+            source=Interface.decode(json["source"], agent),
         )
         return obj
 
     def listElements(self):
         elements = []
-        elements = elements + super(raritan.rpc.logging.EventLogClearedEvent, self).listElements()
+        elements = (
+            elements
+            + super(raritan.rpc.logging.EventLogClearedEvent, self).listElements()
+        )
         return elements
+
 
 # interface
 class EventLog(Interface):
@@ -97,21 +119,21 @@ class EventLog(Interface):
     def clear(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'clear', args)
+        rsp = agent.json_rpc(self.target, "clear", args)
 
     def getFirstId(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getFirstId', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "getFirstId", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getLastId(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getLastId', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "getLastId", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -121,11 +143,13 @@ class EventLog(Interface):
         typecheck.is_int(count, AssertionError)
         typecheck.is_enum(direction, raritan.rpc.logging.RangeDirection, AssertionError)
         args = {}
-        args['refId'] = refId
-        args['count'] = count
-        args['direction'] = raritan.rpc.logging.RangeDirection.encode(direction)
-        rsp = agent.json_rpc(self.target, 'getEntries', args)
-        entries = [raritan.rpc.logging.LogEntry.decode(x0, agent) for x0 in rsp['entries']]
+        args["refId"] = refId
+        args["count"] = count
+        args["direction"] = raritan.rpc.logging.RangeDirection.encode(direction)
+        rsp = agent.json_rpc(self.target, "getEntries", args)
+        entries = [
+            raritan.rpc.logging.LogEntry.decode(x0, agent) for x0 in rsp["entries"]
+        ]
         for x0 in entries:
             typecheck.is_struct(x0, raritan.rpc.logging.LogEntry, DecodeException)
         return entries
@@ -138,15 +162,19 @@ class EventLog(Interface):
         for x0 in eventClasses:
             typecheck.is_string(x0, AssertionError)
         args = {}
-        args['refId'] = refId
-        args['count'] = count
-        args['direction'] = raritan.rpc.logging.RangeDirection.encode(direction)
-        args['eventClasses'] = [x0 for x0 in eventClasses]
-        rsp = agent.json_rpc(self.target, 'getFilteredEntries', args)
-        entries = [raritan.rpc.logging.LogEntry.decode(x0, agent) for x0 in rsp['entries']]
+        args["refId"] = refId
+        args["count"] = count
+        args["direction"] = raritan.rpc.logging.RangeDirection.encode(direction)
+        args["eventClasses"] = [x0 for x0 in eventClasses]
+        rsp = agent.json_rpc(self.target, "getFilteredEntries", args)
+        entries = [
+            raritan.rpc.logging.LogEntry.decode(x0, agent) for x0 in rsp["entries"]
+        ]
         for x0 in entries:
             typecheck.is_struct(x0, raritan.rpc.logging.LogEntry, DecodeException)
         return entries
+
+
 # Do NOT edit this file!
 # It was generated by IdlC class idl.json.python.ProxyAsnVisitor.
 
@@ -155,7 +183,14 @@ class EventLog(Interface):
 #
 
 import raritan.rpc
-from raritan.rpc import Interface, Structure, ValueObject, Enumeration, typecheck, DecodeException
+from raritan.rpc import (
+    Interface,
+    Structure,
+    ValueObject,
+    Enumeration,
+    typecheck,
+    DecodeException,
+)
 import raritan.rpc.logging
 
 
@@ -166,21 +201,21 @@ class DebugLog(Interface):
     def clear(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'clear', args)
+        rsp = agent.json_rpc(self.target, "clear", args)
 
     def getFirstId(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getFirstId', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "getFirstId", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
     def getLastId(self):
         agent = self.agent
         args = {}
-        rsp = agent.json_rpc(self.target, 'getLastId', args)
-        _ret_ = rsp['_ret_']
+        rsp = agent.json_rpc(self.target, "getLastId", args)
+        _ret_ = rsp["_ret_"]
         typecheck.is_int(_ret_, DecodeException)
         return _ret_
 
@@ -190,11 +225,13 @@ class DebugLog(Interface):
         typecheck.is_int(count, AssertionError)
         typecheck.is_enum(direction, raritan.rpc.logging.RangeDirection, AssertionError)
         args = {}
-        args['refId'] = refId
-        args['count'] = count
-        args['direction'] = raritan.rpc.logging.RangeDirection.encode(direction)
-        rsp = agent.json_rpc(self.target, 'getEntries', args)
-        entries = [raritan.rpc.logging.LogEntry.decode(x0, agent) for x0 in rsp['entries']]
+        args["refId"] = refId
+        args["count"] = count
+        args["direction"] = raritan.rpc.logging.RangeDirection.encode(direction)
+        rsp = agent.json_rpc(self.target, "getEntries", args)
+        entries = [
+            raritan.rpc.logging.LogEntry.decode(x0, agent) for x0 in rsp["entries"]
+        ]
         for x0 in entries:
             typecheck.is_struct(x0, raritan.rpc.logging.LogEntry, DecodeException)
         return entries
